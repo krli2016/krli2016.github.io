@@ -1,0 +1,1413 @@
+{
+  "version": "1.0",
+  "categories": [
+    {
+      "id": "math-stats",
+      "label": "\ud83d\udcca Math & Stats",
+      "color": "#10b981",
+      "description": "SUM, AVERAGE, COUNT and friends",
+      "questions": [
+        {
+          "id": "ms1",
+          "difficulty": "beginner",
+          "q": "Which formula adds all numbers in the range A1:A50?",
+          "options": [
+            "=COUNT(A1:A50)",
+            "=SUM(A1:A50)",
+            "=TOTAL(A1:A50)",
+            "=ADD(A1:A50)"
+          ],
+          "answer": 1,
+          "explanation": "SUM is the go-to formula for adding numbers. COUNT only counts how many numbers exist \u2014 it doesn't add them."
+        },
+        {
+          "id": "ms2",
+          "difficulty": "beginner",
+          "q": "What does =AVERAGE(10, 20, 30) return?",
+          "options": [
+            "60",
+            "20",
+            "30",
+            "15"
+          ],
+          "answer": 1,
+          "explanation": "AVERAGE adds all values (10+20+30=60) then divides by how many there are (3), giving 60\u00f73 = 20."
+        },
+        {
+          "id": "ms3",
+          "difficulty": "beginner",
+          "q": "You have a list of expenses in A1:A100, some cells are empty. Which formula counts ONLY the cells with numbers?",
+          "options": [
+            "=COUNTA(A1:A100)",
+            "=COUNT(A1:A100)",
+            "=COUNTBLANK(A1:A100)",
+            "=SUM(A1:A100)"
+          ],
+          "answer": 1,
+          "explanation": "COUNT only counts cells containing numbers, skipping blanks and text. COUNTA would count anything non-empty."
+        },
+        {
+          "id": "ms4",
+          "difficulty": "beginner",
+          "q": "Which formula counts ALL non-empty cells, including those with text?",
+          "options": [
+            "=COUNT(A1:A20)",
+            "=COUNTIF(A1:A20,\"*\")",
+            "=COUNTA(A1:A20)",
+            "=SUMIF(A1:A20)"
+          ],
+          "answer": 2,
+          "explanation": "COUNTA counts any non-empty cell \u2014 numbers, text, dates, everything. COUNT only handles numbers."
+        },
+        {
+          "id": "ms5",
+          "difficulty": "intermediate",
+          "q": "=SUMIF(A2:A10, \"Food\", B2:B10) \u2014 what does this do?",
+          "options": [
+            "Adds all values in B2:B10",
+            "Counts rows where A says 'Food'",
+            "Sums values in B2:B10 only where A2:A10 equals 'Food'",
+            "Finds the average food expense"
+          ],
+          "answer": 2,
+          "explanation": "SUMIF(range, criteria, sum_range) sums the sum_range only for rows where the range matches the criteria. Here it totals column B where column A says 'Food'."
+        },
+        {
+          "id": "ms6",
+          "difficulty": "intermediate",
+          "q": "In SUMIFS, where does the sum_range go?",
+          "options": [
+            "Last argument",
+            "Second argument",
+            "First argument",
+            "It doesn't matter"
+          ],
+          "answer": 2,
+          "explanation": "SUMIFS(sum_range, range1, criteria1, ...) \u2014 the sum_range is always FIRST. This is the opposite of SUMIF where the sum_range is last!"
+        },
+        {
+          "id": "ms7",
+          "difficulty": "intermediate",
+          "q": "You want to sum sales where Region = 'East' AND Amount > 500. Which formula is correct?",
+          "options": [
+            "=SUMIF(C:C, \"East\", D:D, \">500\")",
+            "=SUMIFS(D:D, C:C, \"East\", D:D, \">500\")",
+            "=SUM(IF(C:C=\"East\",IF(D:D>500,D:D)))",
+            "=SUMIF(C:C=\"East\" AND D:D>500, D:D)"
+          ],
+          "answer": 1,
+          "explanation": "SUMIFS handles multiple conditions: SUMIFS(sum_range, criteria_range1, criteria1, criteria_range2, criteria2, ...). Sum_range (D:D) always comes first."
+        },
+        {
+          "id": "ms8",
+          "difficulty": "advanced",
+          "q": "What does =SUMPRODUCT(1/COUNTIF(A2:A100, A2:A100)) calculate?",
+          "options": [
+            "The total of all values in A2:A100",
+            "The number of unique (distinct) values in A2:A100",
+            "The average frequency of each value",
+            "It returns an error"
+          ],
+          "answer": 1,
+          "explanation": "This is a classic trick: COUNTIF returns how many times each value appears. Dividing 1 by each count, then summing, gives the count of distinct values. If 'Apple' appears 3 times, it contributes 3\u00d7(1/3)=1 to the total."
+        },
+        {
+          "id": "ms9",
+          "difficulty": "advanced",
+          "q": "Which formula gives a weighted average when you have values in B2:B10 and weights in C2:C10?",
+          "options": [
+            "=AVERAGE(B2:B10, C2:C10)",
+            "=SUMPRODUCT(B2:B10, C2:C10) / SUM(C2:C10)",
+            "=SUM(B2:B10) / SUM(C2:C10)",
+            "=AVERAGEIF(C2:C10, \">0\", B2:B10)"
+          ],
+          "answer": 1,
+          "explanation": "Weighted average = sum of (value \u00d7 weight) \u00f7 sum of weights. SUMPRODUCT(values, weights) multiplies each pair and sums them, then divide by SUM(weights)."
+        },
+        {
+          "id": "ms10",
+          "difficulty": "beginner",
+          "q": "=MIN(5, 3, 8, 1) returns:",
+          "options": [
+            "5",
+            "1",
+            "8",
+            "3"
+          ],
+          "answer": 1,
+          "explanation": "MIN returns the smallest value. Among 5, 3, 8, and 1, the smallest is 1."
+        },
+        {
+          "id": "ms11",
+          "difficulty": "beginner",
+          "q": "=MAX(5, 3, 8, 1) returns:",
+          "options": [
+            "5",
+            "1",
+            "8",
+            "3"
+          ],
+          "answer": 2,
+          "explanation": "MAX returns the largest value. Among 5, 3, 8, and 1, the largest is 8."
+        },
+        {
+          "id": "ms12",
+          "difficulty": "beginner",
+          "q": "=ROUND(3.567, 2) returns:",
+          "options": [
+            "3.5",
+            "3.56",
+            "3.57",
+            "4"
+          ],
+          "answer": 2,
+          "explanation": "ROUND rounds to the nearest value at 2 decimal places. 3.567 rounds up to 3.57 because the 3rd decimal (7) is >= 5."
+        },
+        {
+          "id": "ms13",
+          "difficulty": "intermediate",
+          "q": "=LARGE(A2:A100, 3) returns:",
+          "options": [
+            "The 3rd value in the list",
+            "The 3rd largest value",
+            "The largest value multiplied by 3",
+            "The top 3 values"
+          ],
+          "answer": 1,
+          "explanation": "LARGE(array, k) returns the k-th largest value. k=1 is the maximum, k=2 is second largest, k=3 is third largest, and so on."
+        },
+        {
+          "id": "ms14",
+          "difficulty": "intermediate",
+          "q": "=MOD(17, 5) returns:",
+          "options": [
+            "3",
+            "2",
+            "5",
+            "0"
+          ],
+          "answer": 1,
+          "explanation": "17 divided by 5 = 3 remainder 2. MOD returns the remainder, which is 2."
+        },
+        {
+          "id": "ms15",
+          "difficulty": "intermediate",
+          "q": "Which is the best way to check if a number is even?",
+          "options": [
+            "=IF(A2/2=INT(A2/2),TRUE,FALSE)",
+            "=MOD(A2,2)=0",
+            "=ISEVEN(A2)",
+            "Both B and C work"
+          ],
+          "answer": 3,
+          "explanation": "Both MOD(A2,2)=0 (returns 0 for even) and ISEVEN(A2) (dedicated function) work correctly. Both B and C are valid approaches."
+        },
+        {
+          "id": "ms16",
+          "difficulty": "advanced",
+          "q": "=SUMPRODUCT((A2:A10>5)*B2:B10) does what?",
+          "options": [
+            "Multiplies all of A by all of B",
+            "Sums B where A > 5 (multi-condition sum)",
+            "Returns TRUE/FALSE for each row",
+            "Counts rows where A > 5"
+          ],
+          "answer": 1,
+          "explanation": "(A2:A10>5) creates a TRUE/FALSE array. Multiplying by B2:B10 gives B values where condition is true, 0 otherwise. SUMPRODUCT then sums all results \u2014 effectively a conditional sum."
+        },
+        {
+          "id": "ms17",
+          "difficulty": "beginner",
+          "q": "=ABS(-42) returns:",
+          "options": [
+            "-42",
+            "42",
+            "0",
+            "Error"
+          ],
+          "answer": 1,
+          "explanation": "ABS returns the absolute value \u2014 removing any negative sign. ABS(-42) = 42. ABS(42) also = 42."
+        },
+        {
+          "id": "ms18",
+          "difficulty": "intermediate",
+          "q": "=ROUNDUP(4.1, 0) returns:",
+          "options": [
+            "4",
+            "4.1",
+            "5",
+            "Error"
+          ],
+          "answer": 2,
+          "explanation": "ROUNDUP always rounds AWAY from zero, regardless of the decimal value. Even 4.1 becomes 5 when rounding up to 0 decimal places."
+        }
+      ]
+    },
+    {
+      "id": "lookup",
+      "label": "\ud83d\udd0d Lookup & Reference",
+      "color": "#6366f1",
+      "description": "VLOOKUP, XLOOKUP, INDEX, MATCH",
+      "questions": [
+        {
+          "id": "lk1",
+          "difficulty": "beginner",
+          "q": "What does the last argument FALSE mean in =VLOOKUP(A2, B:D, 2, FALSE)?",
+          "options": [
+            "Search from bottom to top",
+            "Return FALSE if not found",
+            "Exact match \u2014 don't accept approximate matches",
+            "Look left instead of right"
+          ],
+          "answer": 2,
+          "explanation": "FALSE = exact match only. TRUE = approximate match (only for sorted data). Always use FALSE unless you specifically need approximate matching on sorted numbers."
+        },
+        {
+          "id": "lk2",
+          "difficulty": "beginner",
+          "q": "VLOOKUP always looks in which direction?",
+          "options": [
+            "Left",
+            "Right",
+            "Up",
+            "Down"
+          ],
+          "answer": 1,
+          "explanation": "VLOOKUP searches the FIRST column of your range and can only return values to the RIGHT. To look left, use XLOOKUP or INDEX+MATCH."
+        },
+        {
+          "id": "lk3",
+          "difficulty": "beginner",
+          "q": "What does XLOOKUP return if it cannot find the value?",
+          "options": [
+            "0",
+            "FALSE",
+            "#N/A by default",
+            "An empty string"
+          ],
+          "answer": 2,
+          "explanation": "#N/A is the default. But XLOOKUP has a built-in 4th argument for a custom 'not found' message: =XLOOKUP(value, lookup, return, \"Not found\")"
+        },
+        {
+          "id": "lk4",
+          "difficulty": "intermediate",
+          "q": "What does MATCH() return?",
+          "options": [
+            "The value of the found cell",
+            "TRUE or FALSE",
+            "The position (row number) of the value in the list",
+            "The column letter of the match"
+          ],
+          "answer": 2,
+          "explanation": "MATCH returns the POSITION \u2014 a number like 5 meaning 'it's the 5th item'. It doesn't return the value itself. Pair it with INDEX to retrieve the actual value."
+        },
+        {
+          "id": "lk5",
+          "difficulty": "intermediate",
+          "q": "You want to find the value in column C for the row where column A matches 'Alice'. Which is the correct INDEX+MATCH formula?",
+          "options": [
+            "=INDEX(A:A, MATCH(C:C, \"Alice\", 0))",
+            "=INDEX(C:C, MATCH(\"Alice\", A:A, 0))",
+            "=MATCH(C:C, INDEX(\"Alice\", A:A, 0))",
+            "=INDEX(\"Alice\", A:A, MATCH(C:C, 0))"
+          ],
+          "answer": 1,
+          "explanation": "INDEX(where_to_return_from, row_number). MATCH(what_to_find, where_to_look, 0). So: INDEX(C:C, MATCH(\"Alice\", A:A, 0)) \u2014 find Alice's position in column A, then return the value at that position in column C."
+        },
+        {
+          "id": "lk6",
+          "difficulty": "intermediate",
+          "q": "Why would you choose INDEX+MATCH over VLOOKUP?",
+          "options": [
+            "INDEX+MATCH is easier to write",
+            "INDEX+MATCH can look left, doesn't break when columns are inserted, and is more flexible",
+            "VLOOKUP doesn't work in Google Sheets",
+            "INDEX+MATCH handles dates better"
+          ],
+          "answer": 1,
+          "explanation": "INDEX+MATCH is superior because: it can look in any direction (including left), it references columns directly so inserting columns won't break it, and it's generally faster on large datasets."
+        },
+        {
+          "id": "lk7",
+          "difficulty": "intermediate",
+          "q": "What does INDIRECT(\"A\"&B1) do when B1 contains the number 5?",
+          "options": [
+            "Returns the text 'A5'",
+            "Looks up row 5 in column B",
+            "Returns the value from cell A5",
+            "Creates a reference error"
+          ],
+          "answer": 2,
+          "explanation": "INDIRECT converts text into a cell reference. \"A\"&5 = \"A5\" as text, then INDIRECT goes and fetches the actual value from cell A5."
+        },
+        {
+          "id": "lk8",
+          "difficulty": "advanced",
+          "q": "=XLOOKUP(1, (A2:A100=\"East\")*(B2:B100>1000), C2:C100) \u2014 what does this find?",
+          "options": [
+            "The number 1 in column C",
+            "The first row where A = 'East' AND B > 1000, returning column C",
+            "All rows where both conditions are met",
+            "The sum of C values where A = East"
+          ],
+          "answer": 1,
+          "explanation": "Multiplying two TRUE/FALSE arrays gives 1 only where BOTH are true. XLOOKUP then finds the first row where the result is 1 \u2014 effectively a multi-criteria lookup without helper columns."
+        },
+        {
+          "id": "lk9",
+          "difficulty": "advanced",
+          "q": "CHOOSECOLS(A1:F10, 1, -1) returns which columns?",
+          "options": [
+            "Column 1 only",
+            "Columns 1 and 6 (first and last)",
+            "Columns 1 through -1 (all)",
+            "An error \u2014 negative numbers are invalid"
+          ],
+          "answer": 1,
+          "explanation": "Negative column numbers count from the right. In a 6-column range, -1 = column 6 (last column). So CHOOSECOLS(A1:F10, 1, -1) returns columns A and F."
+        },
+        {
+          "id": "lk10",
+          "difficulty": "beginner",
+          "q": "=ROW(A5) returns:",
+          "options": [
+            "A",
+            "5",
+            "A5",
+            "1"
+          ],
+          "answer": 1,
+          "explanation": "ROW returns the row number of a cell reference. A5 is in row 5, so ROW(A5) = 5."
+        },
+        {
+          "id": "lk11",
+          "difficulty": "beginner",
+          "q": "=COLUMN(D1) returns:",
+          "options": [
+            "D",
+            "1",
+            "4",
+            "D1"
+          ],
+          "answer": 2,
+          "explanation": "COLUMN returns the column number. A=1, B=2, C=3, D=4. So COLUMN(D1) = 4."
+        },
+        {
+          "id": "lk12",
+          "difficulty": "intermediate",
+          "q": "OFFSET(A1, 2, 3) returns the value from which cell?",
+          "options": [
+            "A3",
+            "C2",
+            "D3",
+            "B2"
+          ],
+          "answer": 2,
+          "explanation": "OFFSET starts at A1, moves 2 rows down (to row 3) and 3 columns right (from A to D). Result: cell D3."
+        },
+        {
+          "id": "lk13",
+          "difficulty": "advanced",
+          "q": "Why is OFFSET considered 'volatile' and when should you avoid it?",
+          "options": [
+            "It deletes data",
+            "It recalculates every time any cell changes, slowing large workbooks",
+            "It only works in Excel, not Sheets",
+            "It requires the range to be sorted"
+          ],
+          "answer": 1,
+          "explanation": "Volatile functions (OFFSET, INDIRECT, NOW, TODAY, RAND) recalculate on every single change in the workbook \u2014 not just when their inputs change. In large models with many volatile functions, this causes noticeable slowdown. Use INDEX as a non-volatile alternative."
+        }
+      ]
+    },
+    {
+      "id": "logic",
+      "label": "\u2696\ufe0f Logic & Errors",
+      "color": "#f59e0b",
+      "description": "IF, IFS, AND, OR, IFERROR and more",
+      "questions": [
+        {
+          "id": "lg1",
+          "difficulty": "beginner",
+          "q": "=IF(5 > 3, \"Yes\", \"No\") returns:",
+          "options": [
+            "No",
+            "Yes",
+            "TRUE",
+            "5"
+          ],
+          "answer": 1,
+          "explanation": "5 > 3 is TRUE, so IF returns the first value: \"Yes\". If the condition were false, it would return \"No\"."
+        },
+        {
+          "id": "lg2",
+          "difficulty": "beginner",
+          "q": "A VLOOKUP returns #N/A when the value isn't found. Which formula catches this and shows 'Not Found' instead?",
+          "options": [
+            "=ISBLANK(VLOOKUP(...))",
+            "=IFERROR(VLOOKUP(...), \"Not Found\")",
+            "=IF(VLOOKUP(...), \"Not Found\")",
+            "=ISERROR(VLOOKUP(...), \"Not Found\")"
+          ],
+          "answer": 1,
+          "explanation": "IFERROR(formula, value_if_error) catches any error and returns the fallback. It's the cleanest way to handle lookup failures."
+        },
+        {
+          "id": "lg3",
+          "difficulty": "beginner",
+          "q": "=AND(TRUE, FALSE, TRUE) returns:",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "2",
+            "Error"
+          ],
+          "answer": 1,
+          "explanation": "AND returns TRUE only if ALL conditions are true. Since one is FALSE, the whole AND is FALSE \u2014 like a chain where one broken link breaks it all."
+        },
+        {
+          "id": "lg4",
+          "difficulty": "beginner",
+          "q": "=OR(FALSE, FALSE, TRUE) returns:",
+          "options": [
+            "FALSE",
+            "TRUE",
+            "1",
+            "Error"
+          ],
+          "answer": 1,
+          "explanation": "OR returns TRUE if ANY condition is true. Just one TRUE is enough. Think of it as 'at least one door is open'."
+        },
+        {
+          "id": "lg5",
+          "difficulty": "intermediate",
+          "q": "What's the key difference between IFERROR and IFNA?",
+          "options": [
+            "They are identical",
+            "IFNA only catches #N/A errors; IFERROR catches all errors",
+            "IFERROR is for Excel only; IFNA is for Sheets only",
+            "IFNA is faster"
+          ],
+          "answer": 1,
+          "explanation": "IFNA only hides #N/A (not found) errors. IFERROR hides ALL errors. IFNA is safer \u2014 if you have a real formula mistake like #REF!, you'll still see it instead of it being silently swallowed."
+        },
+        {
+          "id": "lg6",
+          "difficulty": "intermediate",
+          "q": "You want to assign grades: A for \u226590, B for \u226580, C for \u226570, F otherwise. The cleanest formula is:",
+          "options": [
+            "=IF(A2>=90,\"A\",IF(A2>=80,\"B\",IF(A2>=70,\"C\",\"F\")))",
+            "=IFS(A2>=90,\"A\",A2>=80,\"B\",A2>=70,\"C\",TRUE,\"F\")",
+            "=CHOOSE(A2,\"A\",\"B\",\"C\",\"F\")",
+            "Both A and B work, but B is cleaner"
+          ],
+          "answer": 3,
+          "explanation": "Both nested IF and IFS produce the same result, but IFS is much cleaner and easier to read/maintain. The TRUE at the end acts as the 'else' catch-all."
+        },
+        {
+          "id": "lg7",
+          "difficulty": "intermediate",
+          "q": "=ISERR(A2) vs =ISERROR(A2) \u2014 what's the difference?",
+          "options": [
+            "They are the same",
+            "ISERR returns TRUE for all errors EXCEPT #N/A; ISERROR returns TRUE for ALL errors",
+            "ISERROR returns TRUE for all errors EXCEPT #N/A; ISERR returns TRUE for ALL errors",
+            "ISERR is for Excel only"
+          ],
+          "answer": 1,
+          "explanation": "ISERR excludes #N/A from its 'error' check. Use ISERR when #N/A is an expected 'not found' state but you still want to catch formula mistakes like #DIV/0! or #REF!."
+        },
+        {
+          "id": "lg8",
+          "difficulty": "intermediate",
+          "q": "A cell appears blank but ISBLANK() returns FALSE. What's the likely cause?",
+          "options": [
+            "ISBLANK is broken",
+            "The cell contains a formula that outputs an empty string \"\"",
+            "The cell has a hidden row",
+            "The font color is white"
+          ],
+          "answer": 1,
+          "explanation": "A cell with =IF(condition, \"\", value) that evaluates to \"\" LOOKS empty but actually contains an empty string. ISBLANK only returns TRUE for truly empty cells. Use A2=\"\" to catch both cases."
+        },
+        {
+          "id": "lg9",
+          "difficulty": "advanced",
+          "q": "=IF(AND(A2>50, B2=\"Active\"), \"Eligible\", IF(A2>50, \"Pending\", \"Ineligible\")) \u2014 what happens when A2=75 and B2=\"Inactive\"?",
+          "options": [
+            "Eligible",
+            "Pending",
+            "Ineligible",
+            "Error"
+          ],
+          "answer": 1,
+          "explanation": "A2=75 > 50 is TRUE, but B2=\"Active\" is FALSE, so AND fails \u2192 first IF goes to the else branch \u2192 second IF: A2>50 is TRUE \u2192 returns \"Pending\"."
+        },
+        {
+          "id": "lg10",
+          "difficulty": "beginner",
+          "q": "=NOT(TRUE) returns:",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT",
+            "Error"
+          ],
+          "answer": 1,
+          "explanation": "NOT flips the logical value. NOT(TRUE) = FALSE, NOT(FALSE) = TRUE. Simple reversal."
+        },
+        {
+          "id": "lg11",
+          "difficulty": "beginner",
+          "q": "=ISNUMBER(\"42\") returns:",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "42",
+            "Error"
+          ],
+          "answer": 1,
+          "explanation": "\"42\" is text (note the quotes), not a number. ISNUMBER returns FALSE for text. ISNUMBER(42) without quotes would return TRUE."
+        },
+        {
+          "id": "lg12",
+          "difficulty": "intermediate",
+          "q": "=SWITCH(3, 1,\"One\", 2,\"Two\", 3,\"Three\", \"Other\") returns:",
+          "options": [
+            "Other",
+            "One",
+            "Two",
+            "Three"
+          ],
+          "answer": 3,
+          "explanation": "SWITCH checks the expression (3) against each value in order: 1? No. 2? No. 3? Yes! Returns \"Three\". The last argument \"Other\" is the default if nothing matches."
+        },
+        {
+          "id": "lg13",
+          "difficulty": "intermediate",
+          "q": "When would you use SWITCH instead of IFS?",
+          "options": [
+            "When conditions use >, <, or AND/OR",
+            "When comparing one value against multiple exact matches",
+            "When you need the result to be a number",
+            "When working with dates"
+          ],
+          "answer": 1,
+          "explanation": "SWITCH is perfect for exact value matching (like codes to labels). IFS is better when your conditions involve comparisons (>, <, AND, OR) rather than simple equality checks."
+        },
+        {
+          "id": "lg14",
+          "difficulty": "intermediate",
+          "q": "=ISTEXT(42) returns:",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "42",
+            "Error"
+          ],
+          "answer": 1,
+          "explanation": "42 is a number, not text. ISTEXT returns FALSE for numbers. ISTEXT(\"42\") with quotes would return TRUE since the quotes make it a text string."
+        }
+      ]
+    },
+    {
+      "id": "date-time",
+      "label": "\ud83d\udcc5 Date & Time",
+      "color": "#ec4899",
+      "description": "TODAY, DATE, DAY, DATEDIF",
+      "questions": [
+        {
+          "id": "dt1",
+          "difficulty": "beginner",
+          "q": "Which formula gives you today's date and updates automatically?",
+          "options": [
+            "=NOW()",
+            "=TODAY()",
+            "=DATE()",
+            "=CURRENTDATE()"
+          ],
+          "answer": 1,
+          "explanation": "TODAY() returns just the current date and refreshes every time the spreadsheet recalculates. NOW() returns date AND time. TODAY() is better when you only need the date."
+        },
+        {
+          "id": "dt2",
+          "difficulty": "beginner",
+          "q": "=TODAY() + 7 gives you:",
+          "options": [
+            "An error",
+            "The date 7 days from today",
+            "The date 7 weeks from today",
+            "Today's date with '7' appended"
+          ],
+          "answer": 1,
+          "explanation": "Dates in Excel/Sheets are stored as numbers (days since a base date). Adding 7 simply moves forward 7 days. =TODAY()-1 gives yesterday, =TODAY()+30 gives 30 days from now."
+        },
+        {
+          "id": "dt3",
+          "difficulty": "beginner",
+          "q": "=DATE(2025, 12, 25) creates:",
+          "options": [
+            "The text string '25/12/2025'",
+            "An actual date value for December 25, 2025",
+            "A number: 20251225",
+            "An error \u2014 arguments are in wrong order"
+          ],
+          "answer": 1,
+          "explanation": "DATE(year, month, day) builds a proper date value the spreadsheet understands. It's NOT text \u2014 you can do arithmetic on it like =DATE(2025,12,25)+7 to get Jan 1, 2026."
+        },
+        {
+          "id": "dt4",
+          "difficulty": "intermediate",
+          "q": "=DATEDIF(A2, TODAY(), \"Y\") calculates:",
+          "options": [
+            "Days between A2 and today",
+            "Complete years between A2 and today (useful for age)",
+            "Months between A2 and today",
+            "Years and months combined"
+          ],
+          "answer": 1,
+          "explanation": "DATEDIF with \"Y\" returns complete years \u2014 perfect for calculating age. \"M\" = months, \"D\" = days, \"YM\" = months ignoring years (for showing '35 years, 4 months')."
+        },
+        {
+          "id": "dt5",
+          "difficulty": "intermediate",
+          "q": "What does DATE(2025, 13, 1) return?",
+          "options": [
+            "An error \u2014 month 13 doesn't exist",
+            "January 1, 2026 (rolls over to next year)",
+            "December 1, 2025",
+            "The number 13"
+          ],
+          "answer": 1,
+          "explanation": "DATE handles overflow automatically! Month 13 of 2025 becomes month 1 of 2026. Similarly, DATE(2025, 0, 1) = December 1, 2024. Very useful for dynamic date calculations."
+        },
+        {
+          "id": "dt6",
+          "difficulty": "intermediate",
+          "q": "How do you get the last day of the current month?",
+          "options": [
+            "=EOMONTH(TODAY(), 0)",
+            "=DATE(YEAR(TODAY()), MONTH(TODAY())+1, 0)",
+            "Both A and B work",
+            "=TODAY()-DAY(TODAY())+30"
+          ],
+          "answer": 2,
+          "explanation": "Both EOMONTH(TODAY(), 0) and DATE(YEAR(TODAY()), MONTH(TODAY())+1, 0) work! Day 0 of the next month = last day of current month. EOMONTH is simpler if available."
+        },
+        {
+          "id": "dt7",
+          "difficulty": "advanced",
+          "q": "You need to count business days (Mon\u2013Fri) remaining until a deadline in A2. Which formula is correct?",
+          "options": [
+            "=A2-TODAY()",
+            "=NETWORKDAYS(TODAY(), A2)-1",
+            "=WORKDAY(TODAY(), A2)",
+            "=COUNTIF(TODAY():A2, \"weekday\")"
+          ],
+          "answer": 1,
+          "explanation": "NETWORKDAYS(start, end) counts working days including both start and end dates. Subtract 1 to exclude today and count only REMAINING days. You can also pass a holidays range as 3rd argument."
+        },
+        {
+          "id": "dt8",
+          "difficulty": "beginner",
+          "q": "=MONTH(DATE(2025, 8, 15)) returns:",
+          "options": [
+            "2025",
+            "15",
+            "8",
+            "August"
+          ],
+          "answer": 2,
+          "explanation": "MONTH extracts the month number from a date. DATE(2025, 8, 15) is August 15, 2025, so MONTH returns 8."
+        },
+        {
+          "id": "dt9",
+          "difficulty": "beginner",
+          "q": "=YEAR(TODAY()) returns:",
+          "options": [
+            "The current day",
+            "The current month",
+            "The current year (e.g. 2026)",
+            "TODAY"
+          ],
+          "answer": 2,
+          "explanation": "YEAR extracts the 4-digit year from a date. YEAR(TODAY()) gives the current year number."
+        },
+        {
+          "id": "dt10",
+          "difficulty": "intermediate",
+          "q": "=EOMONTH(DATE(2025,2,1), 0) returns:",
+          "options": [
+            "February 1, 2025",
+            "February 28, 2025",
+            "March 1, 2025",
+            "January 31, 2025"
+          ],
+          "answer": 1,
+          "explanation": "EOMONTH with 0 returns the last day of the SAME month as the start date. February 2025 has 28 days (not a leap year), so it returns February 28, 2025."
+        },
+        {
+          "id": "dt11",
+          "difficulty": "intermediate",
+          "q": "=WEEKDAY(A2, 2) returns 6 \u2014 what day is it?",
+          "options": [
+            "Friday",
+            "Saturday",
+            "Sunday",
+            "Monday"
+          ],
+          "answer": 1,
+          "explanation": "With return_type=2, WEEKDAY assigns: Monday=1, Tuesday=2, Wednesday=3, Thursday=4, Friday=5, Saturday=6, Sunday=7. So 6 = Saturday."
+        },
+        {
+          "id": "dt12",
+          "difficulty": "intermediate",
+          "q": "=WORKDAY(TODAY(), 5) gives you:",
+          "options": [
+            "Today plus 5 calendar days",
+            "Today plus 5 business days (Mon\u2013Fri)",
+            "The 5th working day of the month",
+            "Error \u2014 TODAY() needs a fixed date"
+          ],
+          "answer": 1,
+          "explanation": "WORKDAY calculates a future date by counting only business days (Mon\u2013Fri), skipping weekends. If today is Monday, WORKDAY(TODAY(), 5) = next Monday (skipping Sat/Sun)."
+        },
+        {
+          "id": "dt13",
+          "difficulty": "advanced",
+          "q": "=NETWORKDAYS(DATE(2025,1,1), DATE(2025,1,31)) counts:",
+          "options": [
+            "31 days",
+            "23 working days in January 2025",
+            "30 days",
+            "24 days"
+          ],
+          "answer": 1,
+          "explanation": "January 2025 has 31 calendar days. NETWORKDAYS counts only Mon\u2013Fri. January 2025 has 23 working days (31 days minus 4 Saturdays and 4 Sundays)."
+        }
+      ]
+    },
+    {
+      "id": "text",
+      "label": "\ud83d\udd24 Text Functions",
+      "color": "#8b5cf6",
+      "description": "TRIM, CLEAN, PROPER, EXACT",
+      "questions": [
+        {
+          "id": "tx1",
+          "difficulty": "beginner",
+          "q": "=TRIM(\"  Hello   World  \") returns:",
+          "options": [
+            "\"Hello World\"",
+            "\"HelloWorld\"",
+            "\"  Hello   World  \"",
+            "\"Hello   World\""
+          ],
+          "answer": 0,
+          "explanation": "TRIM removes leading spaces, trailing spaces, and collapses internal multiple spaces to single spaces. Result: \"Hello World\" \u2014 one space between words, none at edges."
+        },
+        {
+          "id": "tx2",
+          "difficulty": "beginner",
+          "q": "=PROPER(\"JOHN SMITH\") returns:",
+          "options": [
+            "\"JOHN SMITH\"",
+            "\"john smith\"",
+            "\"John Smith\"",
+            "\"John smith\""
+          ],
+          "answer": 2,
+          "explanation": "PROPER capitalizes the first letter of each word and lowercases the rest. Great for fixing ALL-CAPS or all-lowercase name data."
+        },
+        {
+          "id": "tx3",
+          "difficulty": "beginner",
+          "q": "=EXACT(\"Apple\", \"apple\") returns:",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "Error",
+            "1"
+          ],
+          "answer": 1,
+          "explanation": "EXACT is case-sensitive. 'A' \u2260 'a', so the strings are not identical. Regular = would return TRUE because it ignores case. Use EXACT when case matters."
+        },
+        {
+          "id": "tx4",
+          "difficulty": "intermediate",
+          "q": "Data pasted from a website has invisible characters causing VLOOKUP to fail. What's the best fix?",
+          "options": [
+            "=TRIM(A2)",
+            "=CLEAN(A2)",
+            "=TRIM(CLEAN(A2))",
+            "=PROPER(A2)"
+          ],
+          "answer": 2,
+          "explanation": "TRIM handles extra spaces; CLEAN removes non-printable characters (ASCII 0-31). Combining =TRIM(CLEAN(A2)) handles both issues at once \u2014 the ultimate data cleaning combo."
+        },
+        {
+          "id": "tx5",
+          "difficulty": "intermediate",
+          "q": "You want to do a case-sensitive count of exactly 'Apple' (not 'apple' or 'APPLE'). Which works?",
+          "options": [
+            "=COUNTIF(A:A, \"Apple\")",
+            "=SUMPRODUCT(EXACT(A2:A100, \"Apple\")*1)",
+            "=COUNTIFS(A:A, EXACT(\"Apple\"))",
+            "=COUNT(EXACT(A:A, \"Apple\"))"
+          ],
+          "answer": 1,
+          "explanation": "COUNTIF is NOT case-sensitive. SUMPRODUCT with EXACT is the workaround: EXACT returns TRUE/FALSE for each cell, multiplying by 1 converts to 1/0, and SUMPRODUCT sums them."
+        },
+        {
+          "id": "tx6",
+          "difficulty": "intermediate",
+          "q": "A cell has a space character ' ' in it (not empty). What does ISBLANK() return for it?",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "Error",
+            "Depends on the version"
+          ],
+          "answer": 1,
+          "explanation": "ISBLANK only returns TRUE for completely empty cells. A space is still content, so ISBLANK returns FALSE. This is a common gotcha when checking for 'empty' data."
+        },
+        {
+          "id": "tx7",
+          "difficulty": "advanced",
+          "q": "Data from the web has non-breaking spaces (CHAR(160)) that TRIM doesn't remove. How do you fix it?",
+          "options": [
+            "=CLEAN(A2)",
+            "=TRIM(SUBSTITUTE(A2, CHAR(160), \" \"))",
+            "=PROPER(TRIM(A2))",
+            "=EXACT(A2, TRIM(A2))"
+          ],
+          "answer": 1,
+          "explanation": "TRIM only removes regular spaces (ASCII 32). Non-breaking spaces (CHAR(160)) from HTML must first be replaced with regular spaces using SUBSTITUTE, then TRIM can clean them up."
+        },
+        {
+          "id": "tx8",
+          "difficulty": "beginner",
+          "q": "=LEFT(\"Singapore\", 3) returns:",
+          "options": [
+            "ore",
+            "Sin",
+            "gap",
+            "S"
+          ],
+          "answer": 1,
+          "explanation": "LEFT extracts from the beginning of text. The first 3 characters of \"Singapore\" are \"Sin\"."
+        },
+        {
+          "id": "tx9",
+          "difficulty": "beginner",
+          "q": "=RIGHT(\"Report.xlsx\", 4) returns:",
+          "options": [
+            "Repo",
+            "xlsx",
+            ".xls",
+            "port"
+          ],
+          "answer": 1,
+          "explanation": "RIGHT extracts from the end of text. The last 4 characters of \"Report.xlsx\" are \"xlsx\"."
+        },
+        {
+          "id": "tx10",
+          "difficulty": "beginner",
+          "q": "=LEN(\"Hello World\") returns:",
+          "options": [
+            "10",
+            "11",
+            "9",
+            "2"
+          ],
+          "answer": 1,
+          "explanation": "LEN counts ALL characters including spaces. \"Hello World\" has 5 + 1 space + 5 = 11 characters."
+        },
+        {
+          "id": "tx11",
+          "difficulty": "intermediate",
+          "q": "=MID(\"ID-2025-001\", 4, 4) returns:",
+          "options": [
+            "ID-2",
+            "2025",
+            "-001",
+            "025-"
+          ],
+          "answer": 1,
+          "explanation": "MID starts at position 4 and takes 4 characters. Position 4 of \"ID-2025-001\" is '2', so MID returns \"2025\"."
+        },
+        {
+          "id": "tx12",
+          "difficulty": "intermediate",
+          "q": "=SUBSTITUTE(\"Hello World\", \"World\", \"Excel\") returns:",
+          "options": [
+            "Hello World",
+            "Hello Excel",
+            "Excel World",
+            "Hello"
+          ],
+          "answer": 1,
+          "explanation": "SUBSTITUTE finds \"World\" in the text and replaces it with \"Excel\", giving \"Hello Excel\"."
+        },
+        {
+          "id": "tx13",
+          "difficulty": "intermediate",
+          "q": "=TEXTJOIN(\", \", TRUE, \"Alice\", \"\", \"Bob\") returns:",
+          "options": [
+            "Alice, , Bob",
+            "Alice, Bob",
+            "Alice Bob",
+            "AliceBob"
+          ],
+          "answer": 1,
+          "explanation": "With ignore_empty=TRUE, TEXTJOIN skips empty strings. So it joins just \"Alice\" and \"Bob\" with \", \" to give \"Alice, Bob\"."
+        },
+        {
+          "id": "tx14",
+          "difficulty": "intermediate",
+          "q": "=UPPER(\"hello\") returns:",
+          "options": [
+            "Hello",
+            "HELLO",
+            "hello",
+            "hELLO"
+          ],
+          "answer": 1,
+          "explanation": "UPPER converts all letters to uppercase. \"hello\" becomes \"HELLO\"."
+        },
+        {
+          "id": "tx15",
+          "difficulty": "intermediate",
+          "q": "=VALUE(\"  42  \") returns:",
+          "options": [
+            "Error \u2014 has spaces",
+            "42",
+            "\"42\"",
+            "0"
+          ],
+          "answer": 0,
+          "explanation": "VALUE cannot handle leading/trailing spaces \u2014 it returns #VALUE! error. The fix is =VALUE(TRIM(\"  42  \")) which first removes spaces, then converts to number."
+        },
+        {
+          "id": "tx16",
+          "difficulty": "intermediate",
+          "q": "=TEXT(1234567.8, \"$#,##0.00\") returns:",
+          "options": [
+            "1234567.8",
+            "$1,234,567.80",
+            "$1234567.80",
+            "#,##0.00"
+          ],
+          "answer": 1,
+          "explanation": "TEXT formats a number using a format code. \"$#,##0.00\" adds a dollar sign, thousands separators (commas), and 2 decimal places. Result: \"$1,234,567.80\"."
+        },
+        {
+          "id": "tx17",
+          "difficulty": "advanced",
+          "q": "=LEN(A2)-LEN(SUBSTITUTE(A2,\",\",\"\")) does what?",
+          "options": [
+            "Removes all commas",
+            "Counts how many commas are in A2",
+            "Returns TRUE if a comma exists",
+            "Replaces commas with spaces"
+          ],
+          "answer": 1,
+          "explanation": "Classic trick: SUBSTITUTE removes all commas, giving shorter text. Subtracting the shorter length from the original length = the number of commas removed = count of commas."
+        }
+      ]
+    },
+    {
+      "id": "data-tools",
+      "label": "\ud83d\uddc2\ufe0f Data Tools",
+      "color": "#0ea5e9",
+      "description": "FILTER, VSTACK, QUERY, LET, IMPORTRANGE",
+      "questions": [
+        {
+          "id": "da1",
+          "difficulty": "beginner",
+          "q": "=FILTER(A2:C100, B2:B100=\"Active\") \u2014 what does this return?",
+          "options": [
+            "TRUE/FALSE for each row",
+            "Only the rows where column B says 'Active'",
+            "The count of Active rows",
+            "Column B filtered to 'Active'"
+          ],
+          "answer": 1,
+          "explanation": "FILTER returns a new array containing only the rows that match the condition. It 'spills' all matching rows automatically into the cells below and to the right."
+        },
+        {
+          "id": "da2",
+          "difficulty": "intermediate",
+          "q": "In FILTER, how do you combine TWO conditions where BOTH must be true (AND logic)?",
+          "options": [
+            "=FILTER(range, AND(cond1, cond2))",
+            "=FILTER(range, cond1 + cond2)",
+            "=FILTER(range, cond1 * cond2)",
+            "=FILTER(range, cond1, cond2)"
+          ],
+          "answer": 2,
+          "explanation": "In FILTER array logic: multiply (*) = AND (both must be 1/true), add (+) = OR (at least one must be 1/true). So (B:B=\"East\")*(C:C>1000) returns 1 only where both conditions are met."
+        },
+        {
+          "id": "da3",
+          "difficulty": "intermediate",
+          "q": "What does VSTACK do?",
+          "options": [
+            "Stacks arrays side by side (horizontally)",
+            "Stacks arrays on top of each other (vertically)",
+            "Vertically sorts an array",
+            "Creates a vertical scrolling table"
+          ],
+          "answer": 1,
+          "explanation": "VSTACK(array1, array2, ...) stacks arrays VERTICALLY \u2014 array2 goes below array1. For horizontal stacking, use HSTACK. Perfect for combining monthly data tables."
+        },
+        {
+          "id": "da4",
+          "difficulty": "intermediate",
+          "q": "Which formula is available in Google Sheets but NOT in Excel?",
+          "options": [
+            "FILTER",
+            "XLOOKUP",
+            "QUERY",
+            "VSTACK"
+          ],
+          "answer": 2,
+          "explanation": "QUERY is a Google Sheets exclusive that lets you run SQL-like queries on your data. FILTER, XLOOKUP, and VSTACK are all available in modern Excel."
+        },
+        {
+          "id": "da5",
+          "difficulty": "intermediate",
+          "q": "What is the main benefit of using LET() in a formula?",
+          "options": [
+            "It makes formulas run in the background",
+            "It names repeated sub-calculations so they're computed once and reused",
+            "It lets you write formulas across multiple cells",
+            "It allows formulas to reference other workbooks"
+          ],
+          "answer": 1,
+          "explanation": "LET(name, value, ..., result) lets you define named variables inside a formula. If a calculation is used 3+ times, LET it! Excel/Sheets calculates it once and reuses the result \u2014 cleaner AND faster."
+        },
+        {
+          "id": "da6",
+          "difficulty": "intermediate",
+          "q": "=IMPORTRANGE(url, \"Sales!A2:D100\") \u2014 what does this require the first time it's used?",
+          "options": [
+            "The source sheet must be public",
+            "You must click 'Allow access' to authorize the connection",
+            "Both sheets must be in the same Google account",
+            "The source range must have headers"
+          ],
+          "answer": 1,
+          "explanation": "Google Sheets requires explicit authorization when IMPORTRANGE first connects to another spreadsheet. A prompt appears asking you to 'Allow access' \u2014 this is a one-time permission per spreadsheet pair."
+        },
+        {
+          "id": "da7",
+          "difficulty": "advanced",
+          "q": "=FILTER(VSTACK(Jan!A:C, Feb!A:C, Mar!A:C), VSTACK(Jan!B:B, Feb!B:B, Mar!B:B)=\"Active\") \u2014 what does this achieve?",
+          "options": [
+            "Filters January data only",
+            "Combines all three months into one table, then filters to show only 'Active' rows",
+            "Creates three separate filtered tables",
+            "This formula would cause an error"
+          ],
+          "answer": 1,
+          "explanation": "VSTACK combines the three monthly ranges into one big table. The second VSTACK creates the matching condition array. FILTER then applies the condition to the combined data \u2014 all in one formula."
+        },
+        {
+          "id": "da8",
+          "difficulty": "advanced",
+          "q": "Why is INDIRECT() considered a 'volatile' function?",
+          "options": [
+            "It can cause circular references",
+            "It recalculates every time ANY cell in the workbook changes, even unrelated ones",
+            "It deletes data unexpectedly",
+            "It only works in volatile (online) spreadsheets"
+          ],
+          "answer": 1,
+          "explanation": "Volatile functions recalculate on EVERY change in the workbook, not just when their dependencies change. INDIRECT, TODAY, NOW, RAND, and OFFSET are all volatile. Use sparingly in large models as they slow everything down."
+        },
+        {
+          "id": "da9",
+          "difficulty": "beginner",
+          "q": "=SORT(A2:A10, 1, -1) sorts the data:",
+          "options": [
+            "Ascending (A to Z, small to large)",
+            "Descending (Z to A, large to small)",
+            "By the 2nd column",
+            "Randomly"
+          ],
+          "answer": 1,
+          "explanation": "In SORT, sort_order -1 means descending (largest to smallest, Z to A). sort_order 1 means ascending."
+        },
+        {
+          "id": "da10",
+          "difficulty": "intermediate",
+          "q": "=UNIQUE(A2:A100) \u2014 what does it return if a value appears 5 times?",
+          "options": [
+            "The value 5 times",
+            "The value once",
+            "An error",
+            "The value with a count of 5"
+          ],
+          "answer": 1,
+          "explanation": "UNIQUE returns each distinct value exactly once, regardless of how many times it appears in the original data. 5 duplicates become 1 unique entry."
+        },
+        {
+          "id": "da11",
+          "difficulty": "intermediate",
+          "q": "=SEQUENCE(3, 3, 1, 1) produces:",
+          "options": [
+            "The numbers 1, 2, 3 in a column",
+            "A 3\u00d73 grid of numbers 1 through 9",
+            "Three copies of the number 1",
+            "An error \u2014 SEQUENCE only takes 2 arguments"
+          ],
+          "answer": 1,
+          "explanation": "SEQUENCE(rows, columns, start, step): 3 rows, 3 columns, starting at 1, stepping by 1. This creates a 3\u00d73 grid: 1,2,3 / 4,5,6 / 7,8,9."
+        },
+        {
+          "id": "da12",
+          "difficulty": "intermediate",
+          "q": "=SORTBY(A2:A10, B2:B10, -1) sorts column A based on:",
+          "options": [
+            "Column A values, descending",
+            "Column B values, descending",
+            "Both columns combined",
+            "The row numbers, descending"
+          ],
+          "answer": 1,
+          "explanation": "SORTBY sorts the first array (A2:A10) using another array as the sort key (B2:B10). The -1 means descending. The key doesn't have to be in the sorted range."
+        },
+        {
+          "id": "da13",
+          "difficulty": "advanced",
+          "q": "What is a LAMBDA function primarily used for?",
+          "options": [
+            "Creating random numbers",
+            "Defining reusable custom functions within formulas",
+            "Sorting data",
+            "Filtering blank cells"
+          ],
+          "answer": 1,
+          "explanation": "LAMBDA lets you create custom, reusable functions without VBA or macros. Name it in the Name Manager (Excel) or Named Functions (Sheets) and call it like any built-in formula throughout your workbook."
+        },
+        {
+          "id": "da14",
+          "difficulty": "advanced",
+          "q": "=RANDARRAY(5, 1, 1, 10, TRUE) generates:",
+          "options": [
+            "5 decimal numbers between 1 and 10",
+            "5 whole numbers between 1 and 10",
+            "A 5\u00d710 array",
+            "10 numbers between 1 and 5"
+          ],
+          "answer": 1,
+          "explanation": "RANDARRAY(rows, columns, min, max, integer): 5 rows, 1 column, range 1 to 10, integer=TRUE means whole numbers only. Result: 5 random whole numbers between 1 and 10."
+        }
+      ]
+    },
+    {
+      "id": "mixed",
+      "label": "\ud83c\udfb2 Mixed Challenge",
+      "color": "#a855f7",
+      "description": "All categories \u2014 test everything!",
+      "questions": [
+        {
+          "id": "mx1",
+          "difficulty": "beginner",
+          "q": "Which formula would you use to find the total revenue?",
+          "options": [
+            "=COUNT(B2:B100)",
+            "=SUM(B2:B100)",
+            "=AVERAGE(B2:B100)",
+            "=MAX(B2:B100)"
+          ],
+          "answer": 1,
+          "explanation": "SUM adds all the values in the range \u2014 perfect for totaling revenue, expenses, or any numeric column."
+        },
+        {
+          "id": "mx2",
+          "difficulty": "beginner",
+          "q": "Your VLOOKUP is returning #N/A for some values. The quickest fix is:",
+          "options": [
+            "Delete those rows",
+            "Wrap with IFERROR: =IFERROR(VLOOKUP(...), \"\")",
+            "Use COUNT instead",
+            "Check the column number"
+          ],
+          "answer": 1,
+          "explanation": "Wrapping with IFERROR is the fastest fix. =IFERROR(VLOOKUP(...), \"\") or =IFERROR(VLOOKUP(...), \"Not Found\") catches the #N/A and shows something friendly instead."
+        },
+        {
+          "id": "mx3",
+          "difficulty": "intermediate",
+          "q": "You need the age of a person born on the date in A2. Which formula is most accurate?",
+          "options": [
+            "=YEAR(TODAY())-YEAR(A2)",
+            "=(TODAY()-A2)/365",
+            "=DATEDIF(A2, TODAY(), \"Y\")",
+            "=INT((TODAY()-A2)/365.25)"
+          ],
+          "answer": 2,
+          "explanation": "DATEDIF with \"Y\" is the most accurate as it counts complete years including leap year handling. =YEAR(TODAY())-YEAR(A2) gives wrong results before the birthday in the current year."
+        },
+        {
+          "id": "mx4",
+          "difficulty": "intermediate",
+          "q": "Which combination is the 'ultimate data cleaning' formula?",
+          "options": [
+            "=PROPER(A2)",
+            "=TRIM(A2)",
+            "=TRIM(CLEAN(A2))",
+            "=EXACT(A2, TRIM(A2))"
+          ],
+          "answer": 2,
+          "explanation": "=TRIM(CLEAN(A2)) is the gold standard: CLEAN removes non-printable characters (from PDFs/websites), TRIM removes extra spaces. Together they handle 95% of imported data issues."
+        },
+        {
+          "id": "mx5",
+          "difficulty": "intermediate",
+          "q": "You want to look up a value but the match column is to the RIGHT of the return column. Which formula handles this?",
+          "options": [
+            "=VLOOKUP() with a negative column number",
+            "=XLOOKUP() or =INDEX(MATCH())",
+            "=HLOOKUP()",
+            "=VLOOKUP() with FALSE as the last argument"
+          ],
+          "answer": 1,
+          "explanation": "VLOOKUP can ONLY look right. For left lookups, use XLOOKUP (most modern) or INDEX+MATCH. XLOOKUP: =XLOOKUP(value, lookup_col, return_col) \u2014 no restriction on direction."
+        },
+        {
+          "id": "mx6",
+          "difficulty": "intermediate",
+          "q": "=COUNTIFS(A:A, \"Sales\", B:B, \">1000\", C:C, \"Active\") counts rows where:",
+          "options": [
+            "A = Sales OR B > 1000 OR C = Active",
+            "A = Sales AND B > 1000 AND C = Active",
+            "Only A = Sales (other conditions are ignored)",
+            "At least 2 of the 3 conditions are met"
+          ],
+          "answer": 1,
+          "explanation": "COUNTIFS requires ALL conditions to be true simultaneously (AND logic). Every pair of range+criteria is checked in the same row. For OR logic, you'd use multiple COUNTIF calls added together."
+        },
+        {
+          "id": "mx7",
+          "difficulty": "advanced",
+          "q": "What does =LET(x, A2*B2, y, x*0.9, x+y) calculate?",
+          "options": [
+            "A2 \u00d7 B2 \u00d7 1.9",
+            "A2 \u00d7 B2 + (A2 \u00d7 B2 \u00d7 0.9) = A2 \u00d7 B2 \u00d7 1.9",
+            "Error \u2014 x is used before defined",
+            "A2 \u00d7 B2 \u00d7 0.9"
+          ],
+          "answer": 1,
+          "explanation": "LET defines x = A2*B2, then y = x*0.9. Final result = x + y = A2*B2 + A2*B2*0.9 = A2*B2*(1+0.9) = A2*B2*1.9. Note: y references x, which is fine since LET evaluates in order."
+        },
+        {
+          "id": "mx8",
+          "difficulty": "advanced",
+          "q": "Which formula combination efficiently filters a merged multi-sheet dataset AND selects specific columns?",
+          "options": [
+            "=VLOOKUP(FILTER(...))",
+            "=CHOOSECOLS(FILTER(VSTACK(Sheet1!A:D, Sheet2!A:D), ...), 1, 3)",
+            "=INDEX(MATCH(FILTER(...)))",
+            "=QUERY(IMPORTRANGE(...))"
+          ],
+          "answer": 1,
+          "explanation": "The power pipeline: VSTACK merges sheets \u2192 FILTER narrows rows \u2192 CHOOSECOLS picks columns. This is a common modern pattern that avoids helper columns entirely."
+        },
+        {
+          "id": "mx9",
+          "difficulty": "advanced",
+          "q": "You have a formula that repeats a complex sub-calculation 5 times. Performance is slow. Best fix?",
+          "options": [
+            "Break it into 5 separate cells",
+            "Wrap with IFERROR",
+            "Use LET() to name the sub-calculation and reuse it",
+            "Use INDIRECT() to reference it"
+          ],
+          "answer": 2,
+          "explanation": "LET() calculates each named variable only once, then reuses the cached result. This is far better than repeating the calculation (which runs 5 times) or breaking into helper cells (which clutters the sheet)."
+        },
+        {
+          "id": "mx10",
+          "difficulty": "beginner",
+          "q": "=SUM(A1:A5) when A1=10, A2=20, A3='hello', A4=30, A5='' (empty) returns:",
+          "options": [
+            "Error",
+            "60",
+            "30",
+            "60 \u2014 SUM ignores text and blanks"
+          ],
+          "answer": 3,
+          "explanation": "SUM automatically ignores text and empty cells. It only adds numbers: 10+20+30 = 60. This is why SUM is safer than manual addition (=A1+A2+... which would error on text)."
+        },
+        {
+          "id": "mx11",
+          "difficulty": "beginner",
+          "q": "You want to extract the first 3 characters from each cell in column A. Which formula?",
+          "options": [
+            "=MID(A2, 1, 3)",
+            "=LEFT(A2, 3)",
+            "=RIGHT(A2, 3)",
+            "Both A and B return the same result"
+          ],
+          "answer": 3,
+          "explanation": "Both LEFT(A2, 3) and MID(A2, 1, 3) extract the first 3 characters. LEFT is simpler and more readable for extracting from the start."
+        },
+        {
+          "id": "mx12",
+          "difficulty": "intermediate",
+          "q": "A column of numbers is sorted. Which formula finds the top 3 values?",
+          "options": [
+            "=MAX(A2:A100)",
+            "=LARGE(A2:A100, {1,2,3})",
+            "=SORT(A2:A100,-1) then take first 3",
+            "Both B and C work"
+          ],
+          "answer": 3,
+          "explanation": "LARGE(array, {1,2,3}) returns an array of the top 3 values at once. SORT descending + taking first 3 rows also works. Both are valid approaches."
+        },
+        {
+          "id": "mx13",
+          "difficulty": "intermediate",
+          "q": "You need to join 50 names from A2:A51 with commas. Best formula?",
+          "options": [
+            "=CONCATENATE(A2, \",\", A3, \",\", ...)",
+            "=TEXTJOIN(\", \", TRUE, A2:A51)",
+            "=A2&\", \"&A3&\", \"&...",
+            "All of the above are equivalent"
+          ],
+          "answer": 1,
+          "explanation": "TEXTJOIN handles entire ranges natively \u2014 one formula for any number of cells. CONCATENATE and & would require referencing each cell individually, making them impractical for 50 names."
+        },
+        {
+          "id": "mx14",
+          "difficulty": "intermediate",
+          "q": "What does =COUNTBLANK(A2:A100) tell you?",
+          "options": [
+            "How many cells contain the word 'blank'",
+            "How many cells in A2:A100 are empty",
+            "The position of the first blank cell",
+            "How many non-empty cells there are"
+          ],
+          "answer": 1,
+          "explanation": "COUNTBLANK counts genuinely empty cells. It's the quickest way to spot missing data in a column \u2014 useful for data quality checks."
+        },
+        {
+          "id": "mx15",
+          "difficulty": "advanced",
+          "q": "=SORT(UNIQUE(FILTER(A2:A100, B2:B100=\"Active\"))) does what in one formula?",
+          "options": [
+            "Counts active items",
+            "Returns a sorted list of unique active categories",
+            "Filters and sorts but keeps duplicates",
+            "Returns an error \u2014 too many nested functions"
+          ],
+          "answer": 1,
+          "explanation": "The pipeline: FILTER keeps only Active rows \u2192 UNIQUE removes duplicates \u2192 SORT alphabetises the result. This replaces what used to require multiple helper columns or a pivot table."
+        }
+      ]
+    }
+  ]
+}
