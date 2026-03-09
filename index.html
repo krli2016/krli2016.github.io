@@ -2834,6 +2834,11 @@ function App() {
   const [aiResults, setAiResults] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState(null);
+  const [apiKey, setApiKey] = useState(() => {
+    try { return localStorage.getItem("formulalab_apikey") || ""; } catch { return ""; }
+  });
+  const [showApiKeyPanel, setShowApiKeyPanel] = useState(false);
+  const [apiKeyVisible, setApiKeyVisible] = useState(false);
 
   const formula = selectedFormula ? FORMULAS[selectedFormula] : null;
 
@@ -2907,8 +2912,21 @@ function App() {
     setQuizQuestions([]);
   };
 
+  const saveApiKey = (key) => {
+    setApiKey(key);
+    try { if (key) localStorage.setItem("formulalab_apikey", key); else localStorage.removeItem("formulalab_apikey"); } catch {}
+  };
+
   const handleAiSearch = async () => {
     if (!aiQuery.trim() || aiLoading) return;
+
+    const keyToUse = apiKey.trim();
+    if (!keyToUse) {
+      setShowApiKeyPanel(true);
+      setAiError("⚙️ An Anthropic API key is required to use AI Formula Finder. Enter your key above to get started.");
+      return;
+    }
+
     setAiLoading(true);
     setAiError(null);
     setAiResults(null);
@@ -2923,7 +2941,12 @@ function App() {
     try {
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": keyToUse,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
           max_tokens: 1000,
@@ -2932,12 +2955,22 @@ function App() {
         })
       });
       const data = await response.json();
+      if (data.error) {
+        const msg = data.error.message || "API error";
+        if (msg.toLowerCase().includes("api key") || msg.toLowerCase().includes("auth") || response.status === 401) {
+          setAiError("❌ Invalid API key. Double-check your key in the ⚙️ settings panel above.");
+          setShowApiKeyPanel(true);
+        } else {
+          setAiError("API error: " + msg);
+        }
+        return;
+      }
       const text = data.content.map(i => i.text || "").join("");
       const clean = text.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);
       setAiResults(parsed);
     } catch(e) {
-      setAiError("Something went wrong. Please try again.");
+      setAiError("Something went wrong — check your API key and internet connection.");
     } finally {
       setAiLoading(false);
     }
@@ -3060,6 +3093,64 @@ function App() {
                 <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6 }}>
                   Describe what you want to achieve in plain English — the AI will recommend the right formulas for the job.
                 </div>
+              </div>
+
+              {/* API Key Panel */}
+              <div style={{ marginBottom: 16 }}>
+                <button
+                  onClick={() => setShowApiKeyPanel(v => !v)}
+                  style={{ display: "flex", alignItems: "center", gap: 8, background: apiKey ? "#0d1f12" : "#1f120a", border: `1px solid ${apiKey ? "#1a4a2a" : "#4a2a0a"}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontFamily: "'DM Mono', monospace", fontSize: 12, color: apiKey ? "#4ade80" : "#f59e0b", width: "100%", justifyContent: "space-between" }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span>⚙️</span>
+                    <span>{apiKey ? "✓ API Key saved — AI ready" : "⚠ API Key required for AI features"}</span>
+                  </span>
+                  <span style={{ fontSize: 10, opacity: 0.7 }}>{showApiKeyPanel ? "▲ Hide" : "▼ Setup"}</span>
+                </button>
+
+                {showApiKeyPanel && (
+                  <div style={{ background: "#0a0e1a", border: "1px solid #1e2535", borderTop: "none", borderRadius: "0 0 8px 8px", padding: "16px" }}>
+                    <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 12, lineHeight: 1.7 }}>
+                      The AI Formula Finder calls the Anthropic API directly from your browser. You need your own API key — it's stored only in your browser and never shared.
+                    </div>
+                    <div style={{ fontSize: 12, color: "#475569", marginBottom: 12, lineHeight: 1.7 }}>
+                      Get a free key at <span style={{ color: "#6366f1" }}>console.anthropic.com</span> → API Keys → Create Key
+                    </div>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      <div style={{ flex: 1, position: "relative" }}>
+                        <input
+                          type={apiKeyVisible ? "text" : "password"}
+                          placeholder="sk-ant-api03-..."
+                          value={apiKey}
+                          onChange={e => saveApiKey(e.target.value)}
+                          style={{ width: "100%", background: "#0d0f14", border: "1px solid #1e2535", borderRadius: 7, padding: "9px 38px 9px 12px", color: "#e2e8f0", fontFamily: "'DM Mono', monospace", fontSize: 13, outline: "none", boxSizing: "border-box" }}
+                          onFocus={e => e.target.style.borderColor = "#6366f1"}
+                          onBlur={e => e.target.style.borderColor = "#1e2535"}
+                        />
+                        <button
+                          onClick={() => setApiKeyVisible(v => !v)}
+                          style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#475569", fontSize: 14, padding: 2 }}
+                          title={apiKeyVisible ? "Hide key" : "Show key"}>
+                          {apiKeyVisible ? "🙈" : "👁"}
+                        </button>
+                      </div>
+                      {apiKey && (
+                        <button
+                          onClick={() => { saveApiKey(""); setApiKeyVisible(false); }}
+                          style={{ background: "#2a1a1a", border: "1px solid #5a2a2a", borderRadius: 7, color: "#f87171", padding: "9px 14px", fontFamily: "'DM Mono', monospace", fontSize: 12, cursor: "pointer", whiteSpace: "nowrap" }}>
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                    {apiKey && (
+                      <div style={{ marginTop: 10, fontSize: 12, color: "#4ade80" }}>
+                        ✓ Key saved in browser storage — ready to use
+                      </div>
+                    )}
+                    <div style={{ marginTop: 10, fontSize: 11, color: "#334155", lineHeight: 1.6 }}>
+                      🔒 Your key is stored in localStorage on your device only. It is sent directly to api.anthropic.com and nowhere else.
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Input area */}
