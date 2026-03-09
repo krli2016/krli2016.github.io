@@ -94,6 +94,26 @@ input:focus { border-color: #6366f1; }
 .quiz-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 .quiz-nav-btn.primary { background: #6366f1; border-color: #6366f1; color: white; }
 .quiz-nav-btn.primary:hover:not(:disabled) { background: #5254cc; }
+
+.pg-cell { border: 1px solid #1a2035; min-width: 90px; height: 30px; padding: 0 8px; font-size: 12px; font-family: 'DM Mono', monospace; color: #e2e8f0; background: #0d0f14; cursor: default; display: flex; align-items: center; overflow: hidden; white-space: nowrap; }
+.pg-cell.header { background: #0a0c12; color: #475569; font-size: 11px; justify-content: center; min-width: 90px; font-weight: 500; border-color: #1e2535; user-select: none; }
+.pg-cell.row-header { min-width: 36px; max-width: 36px; justify-content: center; color: #334155; font-size: 11px; background: #0a0c12; border-color: #1e2535; }
+.pg-cell.active { border-color: #6366f1 !important; background: #0d1020 !important; z-index: 2; }
+.pg-cell.result-cell { color: #4ade80; background: #0a1a0d; }
+.pg-cell.error-cell { color: #f87171; background: #1a0808; }
+.pg-formula-bar { background: #0a0c12; border: 1px solid #1e2535; border-radius: 8px; padding: 9px 14px; color: #e2e8f0; font-family: 'DM Mono', monospace; font-size: 13px; outline: none; width: 100%; transition: border-color 0.15s; }
+.pg-formula-bar:focus { border-color: #6366f1; }
+.pg-scenario-btn { padding: 7px 14px; border-radius: 7px; font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; border: 1px solid #1e2535; background: #0d0f14; color: #64748b; transition: all 0.15s; }
+.pg-scenario-btn:hover { border-color: #6366f1; color: #a5b4fc; background: #1e2040; }
+.pg-scenario-btn.active { background: #1e2040; border-color: #6366f1; color: #a5b4fc; }
+.pg-run-btn { background: linear-gradient(135deg,#10b981,#059669); border: none; border-radius: 7px; color: white; padding: 8px 18px; font-family: 'DM Mono', monospace; font-size: 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.pg-run-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.pg-result-box { border-radius: 10px; padding: 14px 18px; font-size: 13px; font-family: 'DM Mono', monospace; line-height: 1.7; }
+.pg-result-ok { background: #0a1a0d; border: 1px solid #1a4a2a; color: #4ade80; }
+.pg-result-err { background: #1a0808; border: 1px solid #4a1a1a; color: #f87171; }
+.pg-challenge-card { background: #0f1420; border: 1px solid #1e2535; border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.15s; text-align: left; font-family: 'DM Mono', monospace; width: 100%; }
+.pg-challenge-card:hover { border-color: #6366f1; background: #141b2d; }
+.pg-challenge-card.done { border-color: #1a4a2a; background: #0a1a0d; }
 </style>
 </head>
 <body>
@@ -2810,6 +2830,325 @@ const QUIZ_DATA = {
   ]
 };
 
+
+// ── Playground Data ─────────────────────────────────────────────
+const PLAYGROUND_SCENARIOS = {
+  sales: {
+    label: "🛒 Sales Data",
+    description: "Monthly sales by region and product",
+    cols: ["Region", "Product", "Units", "Price", "Revenue", "Month"],
+    rows: [
+      ["East",  "Widget A", 120, 25.00, 3000,  "Jan"],
+      ["West",  "Widget B",  85, 40.00, 3400,  "Jan"],
+      ["East",  "Widget C",  60, 15.00,  900,  "Jan"],
+      ["North", "Widget A",  95, 25.00, 2375,  "Feb"],
+      ["South", "Widget B", 110, 40.00, 4400,  "Feb"],
+      ["West",  "Widget C",  70, 15.00, 1050,  "Feb"],
+      ["East",  "Widget A", 140, 25.00, 3500,  "Mar"],
+      ["North", "Widget B",  50, 40.00, 2000,  "Mar"],
+      ["South", "Widget C",  90, 15.00, 1350,  "Mar"],
+      ["West",  "Widget A",  75, 25.00, 1875,  "Apr"],
+    ],
+    challenges: [
+      { id: "s1", label: "Total Revenue", hint: "Sum all revenue values", target: "=SUM(E2:E11)", check: v => Math.abs(v - 23850) < 1, expected: "23850" },
+      { id: "s2", label: "Average Units Sold", hint: "Average of the Units column", target: "=AVERAGE(C2:C11)", check: v => Math.abs(v - 89.5) < 1, expected: "89.5" },
+      { id: "s3", label: "East Region Revenue", hint: "Sum Revenue where Region = East", target: '=SUMIF(A2:A11,"East",E2:E11)', check: v => Math.abs(v - 7400) < 1, expected: "7400" },
+      { id: "s4", label: "Count West sales", hint: "Count rows where Region = West", target: '=COUNTIF(A2:A11,"West")', check: v => v === 3, expected: "3" },
+      { id: "s5", label: "Highest Revenue", hint: "Find the maximum revenue value", target: "=MAX(E2:E11)", check: v => v === 4400, expected: "4400" },
+      { id: "s6", label: "Widget A total units", hint: "Sum Units where Product = Widget A", target: '=SUMIF(B2:B11,"Widget A",C2:C11)', check: v => Math.abs(v - 430) < 1, expected: "430" },
+    ]
+  },
+  employees: {
+    label: "👥 Employee Records",
+    description: "HR data with salaries and departments",
+    cols: ["Name", "Department", "Salary", "Years", "Rating", "Status"],
+    rows: [
+      ["Alice",   "Sales",   68000, 5, 4.2, "Active"],
+      ["Bob",     "IT",      85000, 8, 3.8, "Active"],
+      ["Carol",   "Sales",   72000, 3, 4.5, "Active"],
+      ["David",   "HR",      55000, 2, 3.2, "Active"],
+      ["Eve",     "IT",      92000, 10, 4.8, "Active"],
+      ["Frank",   "Sales",   61000, 1, 3.5, "Inactive"],
+      ["Grace",   "HR",      58000, 4, 4.0, "Active"],
+      ["Hank",    "IT",      78000, 6, 3.9, "Active"],
+      ["Iris",    "Sales",   74000, 7, 4.3, "Active"],
+      ["Jack",    "HR",      51000, 1, 2.9, "Inactive"],
+    ],
+    challenges: [
+      { id: "e1", label: "Average Salary", hint: "Average of all salaries", target: "=AVERAGE(C2:C11)", check: v => Math.abs(v - 69400) < 1, expected: "69400" },
+      { id: "e2", label: "IT Department Total Pay", hint: "Sum salaries where Dept = IT", target: '=SUMIF(B2:B11,"IT",C2:C11)', check: v => Math.abs(v - 255000) < 1, expected: "255000" },
+      { id: "e3", label: "Active employee count", hint: "Count rows where Status = Active", target: '=COUNTIF(F2:F11,"Active")', check: v => v === 8, expected: "8" },
+      { id: "e4", label: "Highest Rating", hint: "Find the maximum rating", target: "=MAX(E2:E11)", check: v => Math.abs(v - 4.8) < 0.01, expected: "4.8" },
+      { id: "e5", label: "Active Sales avg salary", hint: "Average salary: Sales AND Active", target: '=AVERAGEIFS(C2:C11,B2:B11,"Sales",F2:F11,"Active")', check: v => Math.abs(v - 71333) < 2, expected: "71333" },
+      { id: "e6", label: "Employees with 5+ years", hint: "Count where Years >= 5", target: '=COUNTIF(D2:D11,">=5")', check: v => v === 5, expected: "5" },
+    ]
+  },
+  inventory: {
+    label: "📦 Inventory",
+    description: "Stock levels and reorder tracking",
+    cols: ["Item", "Category", "Stock", "MinStock", "UnitCost", "Supplier"],
+    rows: [
+      ["Laptop",    "Electronics",  45, 20, 850.00, "TechCorp"],
+      ["Mouse",     "Electronics", 200, 50,  12.50, "TechCorp"],
+      ["Desk",      "Furniture",    12, 10, 320.00, "FurnCo"],
+      ["Chair",     "Furniture",     8, 15, 180.00, "FurnCo"],
+      ["Notebook",  "Stationery",  500, 100,  1.50, "OfficeMax"],
+      ["Pen",       "Stationery",  800, 200,  0.80, "OfficeMax"],
+      ["Monitor",   "Electronics",  30, 15, 420.00, "TechCorp"],
+      ["Keyboard",  "Electronics",  90, 30,  45.00, "TechCorp"],
+      ["Bookshelf", "Furniture",     5, 8,  260.00, "FurnCo"],
+      ["Stapler",   "Stationery",   60, 25,  8.50, "OfficeMax"],
+    ],
+    challenges: [
+      { id: "i1", label: "Total inventory value", hint: "Sum of Stock × UnitCost for all items", target: "=SUMPRODUCT(C2:C11,E2:E11)", check: v => Math.abs(v - 143430) < 5, expected: "143430" },
+      { id: "i2", label: "Items below minimum stock", hint: "Count where Stock < MinStock", target: "=COUNTIF(C2:C11,\"<\"&D2:D11)", check: v => v === 2, expected: "2 (Chair & Bookshelf)" },
+      { id: "i3", label: "Electronics total stock", hint: "Sum Stock where Category = Electronics", target: '=SUMIF(B2:B11,"Electronics",C2:C11)', check: v => Math.abs(v - 365) < 1, expected: "365" },
+      { id: "i4", label: "Cheapest item cost", hint: "Find the minimum unit cost", target: "=MIN(E2:E11)", check: v => Math.abs(v - 0.8) < 0.01, expected: "0.8" },
+      { id: "i5", label: "TechCorp item count", hint: "Count rows where Supplier = TechCorp", target: '=COUNTIF(F2:F11,"TechCorp")', check: v => v === 4, expected: "4" },
+      { id: "i6", label: "Average Electronics cost", hint: "Average unit cost for Electronics only", target: '=AVERAGEIF(B2:B11,"Electronics",E2:E11)', check: v => Math.abs(v - 331.875) < 1, expected: "331.88" },
+    ]
+  }
+};
+
+// ── Formula Engine ───────────────────────────────────────────────
+function evalFormula(formulaStr, scenarioKey) {
+  const scenario = PLAYGROUND_SCENARIOS[scenarioKey];
+  if (!scenario) return { error: "No scenario selected" };
+
+  const rawFormula = formulaStr.trim();
+  if (!rawFormula.startsWith("=")) return { error: "Formula must start with =" };
+
+  const expr = rawFormula.slice(1);
+  const rows = scenario.rows;
+  const cols = scenario.cols;
+
+  // Build column arrays: A=col0..F=col5, also named references
+  const colArrays = {};
+  const colLetters = ["A","B","C","D","E","F","G","H"];
+
+  // Col A = row labels (col index), col B onwards = data
+  // Row 1 = headers (A1..F1), Row 2..11 = data rows
+  const getCell = (col, row) => {
+    const cIdx = col.charCodeAt(0) - 65; // A=0
+    const rIdx = row - 2; // row 2 = data[0]
+    if (row === 1) return cols[cIdx] || "";
+    if (rIdx < 0 || rIdx >= rows.length) return 0;
+    const val = rows[rIdx][cIdx];
+    return val === undefined ? 0 : val;
+  };
+
+  const getRange = (col1, row1, col2, row2) => {
+    const vals = [];
+    const cStart = col1.charCodeAt(0) - 65;
+    const cEnd = col2.charCodeAt(0) - 65;
+    for (let r = row1; r <= row2; r++) {
+      for (let c = cStart; c <= cEnd; c++) {
+        const rIdx = r - 2;
+        if (rIdx >= 0 && rIdx < rows.length) {
+          const v = rows[rIdx][c];
+          vals.push(v === undefined ? 0 : v);
+        }
+      }
+    }
+    return vals;
+  };
+
+  // Parse range string like "A2:E11" → array of values
+  const parseRange = (rangeStr) => {
+    const m = rangeStr.match(/^([A-Z])(\d+):([A-Z])(\d+)$/);
+    if (!m) return null;
+    return getRange(m[1], parseInt(m[2]), m[3], parseInt(m[4]));
+  };
+
+  // Tokenize: handle range refs, cell refs, strings, numbers
+  const resolveArg = (arg) => {
+    arg = arg.trim();
+    // String literal
+    if ((arg.startsWith('"') && arg.endsWith('"')) || (arg.startsWith("'") && arg.endsWith("'"))) {
+      return arg.slice(1, -1);
+    }
+    // Range ref like A2:E11
+    if (/^[A-Z]\d+:[A-Z]\d+$/.test(arg)) {
+      return parseRange(arg);
+    }
+    // Cell ref like A2
+    const cellM = arg.match(/^([A-Z])(\d+)$/);
+    if (cellM) return getCell(cellM[1], parseInt(cellM[2]));
+    // Number
+    if (!isNaN(arg)) return parseFloat(arg);
+    return arg;
+  };
+
+  // Split function args respecting nested parens and quotes
+  const splitArgs = (str) => {
+    const args = [];
+    let depth = 0, cur = "", inQ = false, qChar = "";
+    for (let i = 0; i < str.length; i++) {
+      const ch = str[i];
+      if (inQ) { cur += ch; if (ch === qChar) inQ = false; continue; }
+      if (ch === '"' || ch === "'") { inQ = true; qChar = ch; cur += ch; continue; }
+      if (ch === '(') { depth++; cur += ch; continue; }
+      if (ch === ')') { depth--; cur += ch; continue; }
+      if (ch === ',' && depth === 0) { args.push(cur.trim()); cur = ""; continue; }
+      cur += ch;
+    }
+    if (cur.trim()) args.push(cur.trim());
+    return args;
+  };
+
+  // Helper: flatten and get numbers
+  const nums = (arr) => (Array.isArray(arr) ? arr.flat() : [arr]).filter(v => typeof v === "number" && !isNaN(v));
+  const matchCriteria = (val, crit) => {
+    if (typeof crit === "string") {
+      const m = crit.match(/^(>=|<=|<>|>|<)(.+)$/);
+      if (m) {
+        const op = m[1], num = parseFloat(m[2]);
+        if (op === ">") return val > num;
+        if (op === "<") return val < num;
+        if (op === ">=") return val >= num;
+        if (op === "<=") return val <= num;
+        if (op === "<>") return String(val).toLowerCase() !== String(num).toLowerCase();
+      }
+      if (crit.includes("*")) {
+        const re = new RegExp("^" + crit.replace(/\*/g,".*").replace(/\?/g,".") + "$", "i");
+        return re.test(String(val));
+      }
+      return String(val).toLowerCase() === crit.toLowerCase();
+    }
+    return val === crit;
+  };
+
+  // Execute a function call: name, argsStr
+  const execFunc = (name, argsStr) => {
+    const fn = name.toUpperCase();
+    const rawArgs = splitArgs(argsStr);
+    const args = rawArgs.map(resolveArg);
+
+    switch(fn) {
+      case "SUM": return nums(args).reduce((a,b) => a+b, 0);
+      case "AVERAGE": { const n = nums(args); return n.length ? n.reduce((a,b)=>a+b,0)/n.length : 0; }
+      case "COUNT": return nums(args).length;
+      case "COUNTA": return (Array.isArray(args[0]) ? args[0] : args).filter(v => v !== "" && v !== null && v !== undefined).length;
+      case "COUNTBLANK": return (Array.isArray(args[0]) ? args[0] : args).filter(v => v === "" || v === null || v === undefined || v === 0).length;
+      case "MIN": return Math.min(...nums(args));
+      case "MAX": return Math.max(...nums(args));
+      case "ABS": return Math.abs(typeof args[0]==="number" ? args[0] : 0);
+      case "ROUND": return parseFloat((args[0] * 1).toFixed(Math.max(0, args[1]||0)));
+      case "ROUNDUP": { const d = args[1]||0; const f = Math.pow(10,d); return Math.ceil(args[0]*f)/f; }
+      case "ROUNDDOWN": { const d = args[1]||0; const f = Math.pow(10,d); return Math.floor(args[0]*f)/f; }
+      case "MOD": return args[0] % args[1];
+      case "LARGE": { const sorted = nums([args[0]]).sort((a,b)=>b-a); return sorted[args[1]-1] ?? 0; }
+      case "SMALL": { const sorted = nums([args[0]]).sort((a,b)=>a-b); return sorted[args[1]-1] ?? 0; }
+      case "SUMPRODUCT": {
+        const a1 = Array.isArray(args[0]) ? args[0] : [args[0]];
+        const a2 = args[1] ? (Array.isArray(args[1]) ? args[1] : [args[1]]) : a1.map(_=>1);
+        const a3 = args[2] ? (Array.isArray(args[2]) ? args[2] : [args[2]]) : a1.map(_=>1);
+        return a1.reduce((s,v,i) => {
+          const v1 = typeof v === "number" ? v : (v===true?1:v===false?0:0);
+          const v2 = typeof a2[i] === "number" ? a2[i] : (a2[i]===true?1:a2[i]===false?0:0);
+          const v3 = typeof a3[i] === "number" ? a3[i] : (a3[i]===true?1:a3[i]===false?0:0);
+          return s + v1*v2*v3;
+        }, 0);
+      }
+      case "SUMIF": {
+        const range = Array.isArray(args[0]) ? args[0] : [args[0]];
+        const crit = args[1];
+        const sumR = args[2] ? (Array.isArray(args[2]) ? args[2] : [args[2]]) : range;
+        return range.reduce((s,v,i) => matchCriteria(v, crit) ? s + (parseFloat(sumR[i])||0) : s, 0);
+      }
+      case "SUMIFS": {
+        const sumR = Array.isArray(args[0]) ? args[0] : [args[0]];
+        let mask = sumR.map(()=>true);
+        for (let i=1; i<args.length-1; i+=2) {
+          const r = Array.isArray(args[i]) ? args[i] : [args[i]];
+          const c = args[i+1];
+          mask = mask.map((m,j) => m && matchCriteria(r[j], c));
+        }
+        return sumR.reduce((s,v,i) => mask[i] ? s+(parseFloat(v)||0) : s, 0);
+      }
+      case "COUNTIF": {
+        const range = Array.isArray(args[0]) ? args[0] : [args[0]];
+        const crit = args[1];
+        return range.filter(v => matchCriteria(v, crit)).length;
+      }
+      case "COUNTIFS": {
+        const r0 = Array.isArray(args[0]) ? args[0] : [args[0]];
+        let mask = r0.map(()=>true);
+        for (let i=0; i<args.length-1; i+=2) {
+          const r = Array.isArray(args[i]) ? args[i] : [args[i]];
+          const c = args[i+1];
+          mask = mask.map((m,j) => m && matchCriteria(r[j], c));
+        }
+        return mask.filter(Boolean).length;
+      }
+      case "AVERAGEIF": {
+        const range = Array.isArray(args[0]) ? args[0] : [args[0]];
+        const crit = args[1];
+        const avgR = args[2] ? (Array.isArray(args[2]) ? args[2] : [args[2]]) : range;
+        const matched = range.reduce((a,v,i) => matchCriteria(v,crit) ? [...a, parseFloat(avgR[i])||0] : a, []);
+        return matched.length ? matched.reduce((a,b)=>a+b,0)/matched.length : 0;
+      }
+      case "AVERAGEIFS": {
+        const avgR = Array.isArray(args[0]) ? args[0] : [args[0]];
+        let mask = avgR.map(()=>true);
+        for (let i=1; i<args.length-1; i+=2) {
+          const r = Array.isArray(args[i]) ? args[i] : [args[i]];
+          const c = args[i+1];
+          mask = mask.map((m,j) => m && matchCriteria(r[j], c));
+        }
+        const matched = avgR.filter((_,i)=>mask[i]).map(v=>parseFloat(v)||0);
+        return matched.length ? matched.reduce((a,b)=>a+b,0)/matched.length : 0;
+      }
+      case "IF": {
+        let cond = args[0];
+        if (typeof cond === "string") cond = cond.toLowerCase() === "true";
+        return cond ? args[1] : (args[2] !== undefined ? args[2] : false);
+      }
+      case "AND": return args.every(Boolean);
+      case "OR": return args.some(Boolean);
+      case "NOT": return !args[0];
+      case "LEN": return String(args[0]).length;
+      case "UPPER": return String(args[0]).toUpperCase();
+      case "LOWER": return String(args[0]).toLowerCase();
+      case "TRIM": return String(args[0]).trim().replace(/\s+/g," ");
+      case "LEFT": return String(args[0]).slice(0, args[1]||1);
+      case "RIGHT": { const s = String(args[0]); return s.slice(s.length-(args[1]||1)); }
+      case "MID": return String(args[0]).slice((args[1]||1)-1, (args[1]||1)-1+(args[2]||1));
+      case "CONCATENATE": return args.map(String).join("");
+      case "TEXTJOIN": {
+        const delim = args[0], skipEmpty = args[1], parts = args.slice(2).flat().map(String);
+        return (skipEmpty ? parts.filter(s=>s!=="") : parts).join(delim);
+      }
+      case "SUBSTITUTE": {
+        const [text, oldT, newT] = args.map(String);
+        return text.split(oldT).join(newT);
+      }
+      case "ISNUMBER": return typeof args[0] === "number";
+      case "ISTEXT": return typeof args[0] === "string";
+      case "ISBLANK": return args[0] === "" || args[0] === null || args[0] === undefined;
+      case "IFERROR": { try { return args[0]; } catch { return args[1]; } }
+      default: return { error: `Function ${fn} is not supported in the playground` };
+    }
+  };
+
+  // Parse and evaluate the expression
+  try {
+    // Match top-level function call
+    const funcMatch = expr.match(/^([A-Z]+)\(([\s\S]*)\)$/);
+    if (funcMatch) {
+      const result = execFunc(funcMatch[1], funcMatch[2]);
+      if (result && result.error) return result;
+      return { value: result };
+    }
+    // Simple value
+    const resolved = resolveArg(expr);
+    if (Array.isArray(resolved)) return { value: resolved.join(", ") };
+    return { value: resolved };
+  } catch(e) {
+    return { error: e.message };
+  }
+}
+
 function App() {
   const [level, setLevel] = useState("beginner");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -2839,6 +3178,14 @@ function App() {
   });
   const [showApiKeyPanel, setShowApiKeyPanel] = useState(false);
   const [apiKeyVisible, setApiKeyVisible] = useState(false);
+
+  // Playground state
+  const [pgScenario, setPgScenario] = React.useState("sales");
+  const [pgFormula, setPgFormula] = React.useState("");
+  const [pgResult, setPgResult] = React.useState(null);
+  const [pgCompleted, setPgCompleted] = React.useState({});
+  const [pgActiveChallenge, setPgActiveChallenge] = React.useState(null);
+  const [pgMode, setPgMode] = React.useState("free");
 
   const formula = selectedFormula ? FORMULAS[selectedFormula] : null;
 
@@ -3021,11 +3368,18 @@ function App() {
             <button className={`tab-btn ${tab === "quiz" ? "tab-active" : "tab-inactive"}`} style={{ flex: 1, fontSize: 11, padding: "7px 6px" }} onClick={() => { setTab("quiz"); setSelectedFormula(null); }}>🎯 Quiz</button>
             <button className={`tab-btn ${tab === "favs" ? "tab-active" : "tab-inactive"}`} style={{ flex: 1, fontSize: 11, padding: "7px 6px" }} onClick={() => { setTab("favs"); setSelectedFormula(null); }}>⭐ Saved</button>
           </div>
-          <button
-            style={{ width: "100%", padding: "9px", fontSize: 12, borderRadius: 6, fontFamily: "'DM Mono', monospace", cursor: "pointer", transition: "all 0.15s", border: tab === "ai" ? "none" : "1px solid #2d3a5a", background: tab === "ai" ? "linear-gradient(135deg,#6366f1,#a855f7)" : "transparent", color: tab === "ai" ? "white" : "#7c86c4" }}
-            onClick={() => { setTab("ai"); setSelectedFormula(null); }}>
-            ✨ AI Formula Finder
-          </button>
+          <div style={{ display: "flex", gap: 3 }}>
+            <button
+              style={{ flex: 1, padding: "9px 4px", fontSize: 11, borderRadius: 6, fontFamily: "'DM Mono', monospace", cursor: "pointer", transition: "all 0.15s", border: tab === "ai" ? "none" : "1px solid #2d3a5a", background: tab === "ai" ? "linear-gradient(135deg,#6366f1,#a855f7)" : "transparent", color: tab === "ai" ? "white" : "#7c86c4" }}
+              onClick={() => { setTab("ai"); setSelectedFormula(null); }}>
+              ✨ AI Finder
+            </button>
+            <button
+              style={{ flex: 1, padding: "9px 4px", fontSize: 11, borderRadius: 6, fontFamily: "'DM Mono', monospace", cursor: "pointer", transition: "all 0.15s", border: tab === "playground" ? "none" : "1px solid #1a4a2a", background: tab === "playground" ? "linear-gradient(135deg,#10b981,#059669)" : "transparent", color: tab === "playground" ? "white" : "#4ade80" }}
+              onClick={() => { setTab("playground"); setSelectedFormula(null); }}>
+              🧪 Playground
+            </button>
+          </div>
 
           {tab === "learn" && !search && (
             <div>
@@ -3575,6 +3929,315 @@ function App() {
                     </div>
                     <div className="code-block">{formula.advanced.nested}</div>
                   </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* PLAYGROUND TAB */}
+          {tab === "playground" && (
+            <div style={{ maxWidth: 900 }}>
+              {/* Header */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                <div style={{ width: 32, height: 32, background: "linear-gradient(135deg,#10b981,#059669)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🧪</div>
+                <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 22 }}>Formula Playground</div>
+              </div>
+              <div style={{ color: "#64748b", fontSize: 13, marginBottom: 20, lineHeight: 1.6 }}>
+                Practice formulas on real sample data. Type a formula and run it — the engine evaluates it live against the table below.
+              </div>
+
+              {/* Mode toggle + Scenario picker */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, marginBottom: 16 }}>
+                <div style={{ display: "flex", gap: 6 }}>
+                  {["free", "challenges"].map(m => (
+                    <button key={m} className={`tab-btn ${pgMode === m ? "tab-active" : "tab-inactive"}`}
+                      style={{ fontSize: 12, padding: "7px 14px" }}
+                      onClick={() => { setPgMode(m); setPgResult(null); setPgFormula(""); setPgActiveChallenge(null); }}>
+                      {m === "free" ? "🔓 Free Practice" : "🎯 Challenges"}
+                    </button>
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {Object.entries(PLAYGROUND_SCENARIOS).map(([key, sc]) => (
+                    <button key={key} className={`pg-scenario-btn ${pgScenario === key ? "active" : ""}`}
+                      onClick={() => { setPgScenario(key); setPgResult(null); setPgFormula(""); setPgActiveChallenge(null); setPgCompleted({}); }}>
+                      {sc.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Dataset description */}
+              <div style={{ fontSize: 12, color: "#475569", marginBottom: 12 }}>
+                📋 {PLAYGROUND_SCENARIOS[pgScenario].description} — columns A–F, rows 2–11
+              </div>
+
+              {/* Spreadsheet grid */}
+              <div style={{ overflowX: "auto", marginBottom: 18 }}>
+                <div style={{ display: "inline-block", minWidth: "100%" }}>
+                  {/* Column headers (A B C D E F) */}
+                  <div style={{ display: "flex" }}>
+                    <div className="pg-cell row-header header" style={{ height: 26 }}></div>
+                    {PLAYGROUND_SCENARIOS[pgScenario].cols.map((col, ci) => (
+                      <div key={ci} className="pg-cell header" style={{ height: 26, minWidth: 110 }}>
+                        {String.fromCharCode(65 + ci)}
+                      </div>
+                    ))}
+                  </div>
+                  {/* Row 1 — column labels */}
+                  <div style={{ display: "flex" }}>
+                    <div className="pg-cell row-header" style={{ background: "#0a0c12", color: "#334155", fontSize: 11, justifyContent: "center" }}>1</div>
+                    {PLAYGROUND_SCENARIOS[pgScenario].cols.map((col, ci) => (
+                      <div key={ci} className="pg-cell" style={{ minWidth: 110, background: "#111827", color: "#6366f1", fontWeight: 500, fontSize: 12 }}>
+                        {col}
+                      </div>
+                    ))}
+                  </div>
+                  {/* Data rows 2–11 */}
+                  {PLAYGROUND_SCENARIOS[pgScenario].rows.map((row, ri) => (
+                    <div key={ri} style={{ display: "flex" }}>
+                      <div className="pg-cell row-header">{ri + 2}</div>
+                      {row.map((cell, ci) => (
+                        <div key={ci} className="pg-cell" style={{ minWidth: 110, color: typeof cell === "number" ? "#93c5fd" : "#e2e8f0" }}>
+                          {typeof cell === "number" ? cell.toLocaleString() : cell}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* FREE PRACTICE MODE */}
+              {pgMode === "free" && (
+                <div>
+                  {/* Formula bar */}
+                  <div className="card" style={{ padding: 16, marginBottom: 16 }}>
+                    <div className="section-title" style={{ marginBottom: 8 }}>Formula Bar</div>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      <div style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 6, padding: "8px 12px", fontSize: 13, color: "#4ade80", minWidth: 36, textAlign: "center" }}>fx</div>
+                      <input
+                        className="pg-formula-bar"
+                        placeholder='Try: =SUM(C2:C11)  or  =COUNTIF(A2:A11,"East")  or  =MAX(E2:E11)'
+                        value={pgFormula}
+                        onChange={e => { setPgFormula(e.target.value); setPgResult(null); }}
+                        onKeyDown={e => {
+                          if (e.key === "Enter") {
+                            const r = evalFormula(pgFormula, pgScenario);
+                            setPgResult(r);
+                          }
+                        }}
+                      />
+                      <button className="pg-run-btn" onClick={() => { const r = evalFormula(pgFormula, pgScenario); setPgResult(r); }}>
+                        ▶ Run
+                      </button>
+                    </div>
+                    <div style={{ fontSize: 11, color: "#334155", marginTop: 8 }}>Press Enter or click Run. Columns: A={PLAYGROUND_SCENARIOS[pgScenario].cols[0]}, B={PLAYGROUND_SCENARIOS[pgScenario].cols[1]}, C={PLAYGROUND_SCENARIOS[pgScenario].cols[2]}, D={PLAYGROUND_SCENARIOS[pgScenario].cols[3]}, E={PLAYGROUND_SCENARIOS[pgScenario].cols[4]}, F={PLAYGROUND_SCENARIOS[pgScenario].cols[5]}</div>
+                  </div>
+
+                  {/* Result */}
+                  {pgResult && (
+                    <div className={`pg-result-box ${pgResult.error ? "pg-result-err" : "pg-result-ok"}`} style={{ marginBottom: 16 }}>
+                      {pgResult.error ? (
+                        <div>
+                          <div style={{ fontWeight: 600, marginBottom: 4 }}>⚠ Error</div>
+                          <div>{pgResult.error}</div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div style={{ fontSize: 11, color: "#10b981", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Result</div>
+                          <div style={{ fontSize: 22, fontWeight: 600 }}>
+                            {typeof pgResult.value === "number"
+                              ? (Number.isInteger(pgResult.value) ? pgResult.value.toLocaleString() : pgResult.value.toLocaleString(undefined, { maximumFractionDigits: 4 }))
+                              : String(pgResult.value)}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Quick formula suggestions */}
+                  <div>
+                    <div className="section-title">Try these formulas on this dataset</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {(() => {
+                        const sc = pgScenario;
+                        const suggestions = {
+                          sales: [
+                            '=SUM(E2:E11)',
+                            '=AVERAGE(C2:C11)',
+                            '=MAX(E2:E11)',
+                            '=MIN(E2:E11)',
+                            '=COUNTIF(A2:A11,"East")',
+                            '=SUMIF(A2:A11,"East",E2:E11)',
+                            '=SUMIFS(E2:E11,A2:A11,"East",F2:F11,"Jan")',
+                            '=COUNTIFS(A2:A11,"East",F2:F11,"Jan")',
+                          ],
+                          employees: [
+                            '=AVERAGE(C2:C11)',
+                            '=MAX(E2:E11)',
+                            '=COUNTIF(F2:F11,"Active")',
+                            '=SUMIF(B2:B11,"IT",C2:C11)',
+                            '=AVERAGEIF(B2:B11,"Sales",C2:C11)',
+                            '=COUNTIFS(B2:B11,"IT",F2:F11,"Active")',
+                            '=SUMIFS(C2:C11,B2:B11,"Sales",F2:F11,"Active")',
+                            '=COUNTIF(D2:D11,">=5")',
+                          ],
+                          inventory: [
+                            '=SUMPRODUCT(C2:C11,E2:E11)',
+                            '=SUMIF(B2:B11,"Electronics",C2:C11)',
+                            '=MIN(E2:E11)',
+                            '=MAX(C2:C11)',
+                            '=COUNTIF(F2:F11,"TechCorp")',
+                            '=AVERAGEIF(B2:B11,"Electronics",E2:E11)',
+                            '=SUMIFS(C2:C11,B2:B11,"Furniture")',
+                            '=LARGE(E2:E11,3)',
+                          ]
+                        };
+                        return (suggestions[sc] || []).map(s => (
+                          <button key={s} style={{ background: "#0d1020", border: "1px solid #1e2535", borderRadius: 6, color: "#4ade80", padding: "6px 10px", fontFamily: "'DM Mono', monospace", fontSize: 11, cursor: "pointer", transition: "all 0.15s" }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = "#10b981"}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = "#1e2535"}
+                            onClick={() => { setPgFormula(s); setPgResult(null); }}>
+                            {s}
+                          </button>
+                        ));
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* CHALLENGES MODE */}
+              {pgMode === "challenges" && (
+                <div>
+                  {pgActiveChallenge === null ? (
+                    <div>
+                      <div style={{ color: "#64748b", fontSize: 13, marginBottom: 16 }}>
+                        Pick a challenge. Write the formula that produces the correct answer.
+                        {Object.keys(pgCompleted).length > 0 && <span style={{ color: "#4ade80", marginLeft: 8 }}>✓ {Object.keys(pgCompleted).length}/{PLAYGROUND_SCENARIOS[pgScenario].challenges.length} completed</span>}
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {PLAYGROUND_SCENARIOS[pgScenario].challenges.map((ch, i) => (
+                          <button key={ch.id} className={`pg-challenge-card ${pgCompleted[ch.id] ? "done" : ""}`}
+                            onClick={() => { setPgActiveChallenge(ch.id); setPgFormula(""); setPgResult(null); }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                <div style={{ width: 26, height: 26, borderRadius: "50%", background: pgCompleted[ch.id] ? "#1a4a2a" : "#1e2535", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: pgCompleted[ch.id] ? "#4ade80" : "#64748b", flexShrink: 0 }}>
+                                  {pgCompleted[ch.id] ? "✓" : i + 1}
+                                </div>
+                                <div>
+                                  <div style={{ fontSize: 13, color: pgCompleted[ch.id] ? "#4ade80" : "#e2e8f0", fontWeight: 500 }}>{ch.label}</div>
+                                  <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>{ch.hint}</div>
+                                </div>
+                              </div>
+                              <div style={{ fontSize: 11, color: pgCompleted[ch.id] ? "#4ade80" : "#475569" }}>
+                                {pgCompleted[ch.id] ? "Solved ✓" : "→"}
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* All done banner */}
+                      {Object.keys(pgCompleted).length === PLAYGROUND_SCENARIOS[pgScenario].challenges.length && (
+                        <div style={{ marginTop: 16, background: "linear-gradient(135deg,#0a2a0f,#0d1a20)", border: "1px solid #1a4a2a", borderRadius: 12, padding: "20px 24px", textAlign: "center" }}>
+                          <div style={{ fontSize: 36, marginBottom: 8 }}>🏆</div>
+                          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "#4ade80", marginBottom: 4 }}>All challenges complete!</div>
+                          <div style={{ fontSize: 13, color: "#64748b" }}>Try a different dataset or switch to Free Practice.</div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (() => {
+                    const challenge = PLAYGROUND_SCENARIOS[pgScenario].challenges.find(c => c.id === pgActiveChallenge);
+                    if (!challenge) return null;
+                    const isCorrect = pgResult && !pgResult.error && challenge.check(pgResult.value);
+                    const isWrong = pgResult && !pgResult.error && !challenge.check(pgResult.value);
+
+                    return (
+                      <div>
+                        <button className="back-btn" style={{ marginBottom: 16 }} onClick={() => { setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}>← Back to challenges</button>
+
+                        <div className="card" style={{ padding: 20, marginBottom: 16 }}>
+                          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+                            <div>
+                              <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 17, color: "#e2e8f0", marginBottom: 4 }}>{challenge.label}</div>
+                              <div style={{ fontSize: 13, color: "#64748b" }}>{challenge.hint}</div>
+                            </div>
+                            <div style={{ background: "#0a1a0d", border: "1px solid #1a4a2a", borderRadius: 8, padding: "6px 14px", fontSize: 12, color: "#4ade80" }}>
+                              Expected: <strong>{challenge.expected}</strong>
+                            </div>
+                          </div>
+
+                          <div className="section-title" style={{ marginBottom: 8 }}>Your Formula</div>
+                          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                            <div style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 6, padding: "8px 12px", fontSize: 13, color: "#4ade80", minWidth: 36, textAlign: "center" }}>fx</div>
+                            <input
+                              className="pg-formula-bar"
+                              style={{ borderColor: isCorrect ? "#10b981" : isWrong ? "#ef4444" : undefined }}
+                              placeholder="Type your formula here..."
+                              value={pgFormula}
+                              onChange={e => { setPgFormula(e.target.value); setPgResult(null); }}
+                              onKeyDown={e => {
+                                if (e.key === "Enter") {
+                                  const r = evalFormula(pgFormula, pgScenario);
+                                  setPgResult(r);
+                                  if (!r.error && challenge.check(r.value)) {
+                                    setPgCompleted(prev => ({ ...prev, [challenge.id]: true }));
+                                  }
+                                }
+                              }}
+                            />
+                            <button className="pg-run-btn" onClick={() => {
+                              const r = evalFormula(pgFormula, pgScenario);
+                              setPgResult(r);
+                              if (!r.error && challenge.check(r.value)) {
+                                setPgCompleted(prev => ({ ...prev, [challenge.id]: true }));
+                              }
+                            }}>▶ Run</button>
+                          </div>
+                          <div style={{ fontSize: 11, color: "#334155", marginTop: 6 }}>
+                            Hint: A={PLAYGROUND_SCENARIOS[pgScenario].cols[0]}, B={PLAYGROUND_SCENARIOS[pgScenario].cols[1]}, C={PLAYGROUND_SCENARIOS[pgScenario].cols[2]}, D={PLAYGROUND_SCENARIOS[pgScenario].cols[3]}, E={PLAYGROUND_SCENARIOS[pgScenario].cols[4]}, F={PLAYGROUND_SCENARIOS[pgScenario].cols[5]} — data in rows 2:11
+                          </div>
+                        </div>
+
+                        {/* Result feedback */}
+                        {pgResult && (
+                          <div style={{ marginBottom: 16 }}>
+                            {pgResult.error ? (
+                              <div className="pg-result-box pg-result-err">⚠ {pgResult.error}</div>
+                            ) : isCorrect ? (
+                              <div style={{ background: "linear-gradient(135deg,#0a2a0f,#0d2010)", border: "2px solid #10b981", borderRadius: 12, padding: "18px 22px" }}>
+                                <div style={{ fontSize: 28, marginBottom: 6 }}>🎉</div>
+                                <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "#4ade80", marginBottom: 4 }}>Correct!</div>
+                                <div style={{ fontSize: 13, color: "#86efac" }}>Your result: <strong>{typeof pgResult.value === "number" ? pgResult.value.toLocaleString(undefined, { maximumFractionDigits: 4 }) : String(pgResult.value)}</strong></div>
+                                <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+                                  <button className="pg-run-btn" style={{ background: "linear-gradient(135deg,#6366f1,#a855f7)" }} onClick={() => { setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}>Next Challenge →</button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div style={{ background: "#120808", border: "1px solid #4a1a1a", borderRadius: 12, padding: "16px 20px" }}>
+                                <div style={{ fontSize: 13, color: "#f87171", marginBottom: 4, fontWeight: 600 }}>Not quite — keep trying!</div>
+                                <div style={{ fontSize: 13, color: "#94a3b8" }}>Your result: <strong style={{ color: "#fca5a5" }}>{typeof pgResult.value === "number" ? pgResult.value.toLocaleString(undefined, { maximumFractionDigits: 4 }) : String(pgResult.value)}</strong> · Expected: <strong style={{ color: "#4ade80" }}>{challenge.expected}</strong></div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Show answer */}
+                        <details style={{ marginTop: 4 }}>
+                          <summary style={{ fontSize: 12, color: "#475569", cursor: "pointer", userSelect: "none" }}>💡 Show answer</summary>
+                          <div style={{ marginTop: 10, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: "12px 16px" }}>
+                            <div style={{ fontSize: 11, color: "#475569", marginBottom: 6 }}>One valid solution:</div>
+                            <div style={{ fontSize: 13, color: "#4ade80", fontFamily: "'DM Mono', monospace" }}>{challenge.target}</div>
+                            <button style={{ marginTop: 10, fontSize: 11, background: "#1e2535", border: "1px solid #2d3748", borderRadius: 5, color: "#94a3b8", padding: "4px 10px", cursor: "pointer", fontFamily: "'DM Mono', monospace" }}
+                              onClick={() => { setPgFormula(challenge.target); setPgResult(null); }}>
+                              Use this formula
+                            </button>
+                          </div>
+                        </details>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
             </div>
