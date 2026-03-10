@@ -49,6 +49,10 @@ input:focus { border-color: #6366f1; }
 .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #475569; margin-bottom: 10px; font-family: 'Syne', sans-serif; }
 .back-btn { background: none; border: none; color: #6366f1; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; padding: 0; }
 .back-btn:hover { color: #818cf8; }
+.cat-card-active {
+  border-color: #6366f1 !important;
+  background: #11152a !important;
+}
 .cat-card { padding: 16px; cursor: pointer; transition: border-color 0.15s; background: #161b27; border: 1px solid #1e2535; border-radius: 10px; }
 .cat-card:hover { border-color: #6366f1; }
 .quick-btn { background: #1e2040; border: 1px solid #2d3a5a; color: #a5b4fc; padding: 8px 14px; border-radius: 8px; font-family: 'DM Mono', monospace; font-size: 13px; cursor: pointer; transition: all 0.15s; }
@@ -120,6 +124,126 @@ input:focus { border-color: #6366f1; }
 .pg-challenge-card { background: #0f1420; border: 1px solid #1e2535; border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.15s; text-align: left; font-family: 'DM Mono', monospace; width: 100%; }
 .pg-challenge-card:hover { border-color: #6366f1; background: #141b2d; }
 .pg-challenge-card.done { border-color: #1a4a2a; background: #0a1a0d; }
+
+/* ── Mobile / Hamburger ─────────────────────────────────── */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid #1e2535;
+  border-radius: 7px;
+  padding: 7px 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.ham-line {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #94a3b8;
+  border-radius: 2px;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+  transform-origin: center;
+}
+.ham-open-1 { transform: translateY(7px) rotate(45deg); }
+.ham-open-2 { opacity: 0; transform: scaleX(0); }
+.ham-open-3 { transform: translateY(-7px) rotate(-45deg); }
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 199;
+}
+
+/* Sidebar defaults (desktop) */
+.sidebar {
+  width: 252px;
+  border-right: 1px solid #1e2535;
+  padding: 14px 10px;
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  background: #0d0f14;
+  z-index: 200;
+  transition: transform 0.25s ease;
+}
+
+/* ── Responsive breakpoints ─────────────────────────────── */
+@media (max-width: 768px) {
+  .hamburger-btn { display: flex; }
+  .sidebar-backdrop.backdrop-visible { display: block; }
+
+  /* Sidebar slides in from left on mobile */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    transform: translateX(-100%);
+    padding-top: 60px;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+  }
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  /* Header tighter on mobile */
+  .header-subtitle { display: none; }
+  .header-progress { display: none; }
+
+  /* Main content full width, less padding */
+  .main-content {
+    padding: 16px 14px !important;
+  }
+
+  /* Stat cards row wraps nicely */
+  .stat-card { min-width: 80px !important; padding: 10px 12px !important; }
+
+  /* Category grid single column on small screens */
+  .cat-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* Formula detail wider on mobile */
+  .formula-detail { max-width: 100% !important; }
+
+  /* Quiz max-width full */
+  .quiz-container { max-width: 100% !important; }
+
+  /* Code blocks scroll horizontally */
+  .code-block { overflow-x: auto; word-break: break-all; white-space: pre-wrap; }
+
+  /* Level toggle smaller */
+  .level-toggle { gap: 2px; }
+  .level-btn { padding: 5px 10px; font-size: 11px; }
+
+  /* Playground tabs wrap */
+  .pg-tab-row { flex-wrap: wrap; gap: 4px; }
+
+  /* Quick start chips wrap */
+  .quickstart-chips { gap: 6px; }
+
+  /* Formula header wraps */
+  .formula-header { flex-direction: column; align-items: flex-start !important; gap: 10px !important; }
+  .syntax-badge { font-size: 11px !important; padding: 8px 12px !important; }
+
+  /* Back button */
+  .back-btn-wrap { margin-bottom: 14px; }
+
+  /* Tabs row in sidebar */
+  .sidebar-tabs { gap: 2px; }
+  .tab-btn { padding: 7px 8px; font-size: 10px; }
+}
+
+@media (max-width: 480px) {
+  .cat-grid { grid-template-columns: 1fr !important; }
+  .header-logo-text { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -3285,7 +3409,9 @@ function App() {
   const [pgActiveChallenge, setPgActiveChallenge] = useState(null);
   const [pgMode, setPgMode] = useState("free");
   const [showAllFormulas, setShowAllFormulas] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState(null);
   const [aiComingSoon, setAiComingSoon] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const formula = selectedFormula ? FORMULAS[selectedFormula] : null;
 
@@ -3308,6 +3434,7 @@ function App() {
     setSelectedFormula(f);
     markViewed(f);
     setTab("learn");
+    setSidebarOpen(false);
   };
 
   const handleQuizAnswer = (i) => {
@@ -3456,16 +3583,23 @@ function App() {
     <div style={{ fontFamily: "'DM Mono', 'Courier New', monospace", height: "100vh", background: "#0d0f14", color: "#e2e8f0", display: "flex", flexDirection: "column" }}>
       {/* Header */}
       <div style={{ borderBottom: "1px solid #1e2535", padding: "13px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
-          <div style={{ width: 34, height: 34, background: "linear-gradient(135deg, #6366f1, #a855f7)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0 }}>⚡</div>
-          <div>
-            <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 17, letterSpacing: "-0.5px" }}>Formula Lab</div>
-            <div style={{ fontSize: 11, color: "#475569" }}>Excel & Google Sheets — Interactive Learner</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <button className="hamburger-btn" onClick={() => setSidebarOpen(v => !v)} aria-label="Toggle menu">
+            <span className={"ham-line" + (sidebarOpen ? " ham-open-1" : "")} />
+            <span className={"ham-line" + (sidebarOpen ? " ham-open-2" : "")} />
+            <span className={"ham-line" + (sidebarOpen ? " ham-open-3" : "")} />
+          </button>
+          <div onClick={() => { setTab("learn"); setSelectedFormula(null); setSelectedCategory(null); setSearch(""); setSidebarOpen(false); }} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+            <div style={{ width: 34, height: 34, background: "linear-gradient(135deg, #6366f1, #a855f7)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0 }}>⚡</div>
+            <div>
+              <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 17, letterSpacing: "-0.5px" }}>Formula Lab</div>
+              <div className="header-subtitle" style={{ fontSize: 11, color: "#475569" }}>Excel & Google Sheets — Interactive Learner</div>
+            </div>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-          <div style={{ fontSize: 12, color: "#64748b" }}>{viewedCount}/{totalFormulas} explored</div>
-          <div style={{ width: 80 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "nowrap", overflow: "hidden" }}>
+          <div className="header-progress" style={{ fontSize: 12, color: "#64748b" }}>{viewedCount}/{totalFormulas} explored</div>
+          <div className="header-progress" style={{ width: 80 }}>
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: ((viewedCount/totalFormulas)*100) + "%" }} />
             </div>
@@ -3478,18 +3612,19 @@ function App() {
       </div>
 
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        {/* Sidebar */}
-        <div style={{ width: 252, borderRight: "1px solid #1e2535", padding: "14px 10px", overflowY: "auto", flexShrink: 0, display: "flex", flexDirection: "column", gap: 13 }}>
+        {/* Sidebar + mobile backdrop */}
+        <div className={"sidebar-backdrop" + (sidebarOpen ? " backdrop-visible" : "")} onClick={() => setSidebarOpen(false)} />
+        <div className={"sidebar" + (sidebarOpen ? " sidebar-open" : "")}>
           <input
             value={search}
             onChange={e => { setSearch(e.target.value); setSelectedCategory(null); setSelectedFormula(null); }}
             placeholder="🔍 Search formulas..."
             style={{ width: "100%" }}
           />
-          <div style={{ display: "flex", gap: 3 }}>
-            <button className={`tab-btn ${tab === "learn" ? "tab-active" : "tab-inactive"}`} style={{ flex: 1, fontSize: 11, padding: "7px 6px" }} onClick={() => setTab("learn")}>📚 Learn</button>
-            <button className={`tab-btn ${tab === "quiz" ? "tab-active" : "tab-inactive"}`} style={{ flex: 1, fontSize: 11, padding: "7px 6px" }} onClick={() => { setTab("quiz"); setSelectedFormula(null); }}>🎯 Quiz</button>
-            <button className={`tab-btn ${tab === "favs" ? "tab-active" : "tab-inactive"}`} style={{ flex: 1, fontSize: 11, padding: "7px 6px" }} onClick={() => { setTab("favs"); setSelectedFormula(null); }}>⭐ Saved</button>
+          <div className="sidebar-tabs" style={{ display: "flex", gap: 3 }}>
+            <button className={`tab-btn ${tab === "learn" ? "tab-active" : "tab-inactive"}`} style={{ flex: 1, fontSize: 11, padding: "7px 6px" }} onClick={() => { setTab("learn"); setSidebarOpen(false); }}>📚 Learn</button>
+            <button className={`tab-btn ${tab === "quiz" ? "tab-active" : "tab-inactive"}`} style={{ flex: 1, fontSize: 11, padding: "7px 6px" }} onClick={() => { setTab("quiz"); setSelectedFormula(null); setSidebarOpen(false); }}>🎯 Quiz</button>
+            <button className={`tab-btn ${tab === "favs" ? "tab-active" : "tab-inactive"}`} style={{ flex: 1, fontSize: 11, padding: "7px 6px" }} onClick={() => { setTab("favs"); setSelectedFormula(null); setSidebarOpen(false); }}>⭐ Saved</button>
           </div>
           <div style={{ display: "flex", gap: 3 }}>
             <button
@@ -3500,7 +3635,7 @@ function App() {
             </button>
             <button
               style={{ flex: 1, padding: "9px 4px", fontSize: 11, borderRadius: 6, fontFamily: "'DM Mono', monospace", cursor: "pointer", transition: "all 0.15s", border: tab === "playground" ? "none" : "1px solid #1a4a2a", background: tab === "playground" ? "linear-gradient(135deg,#10b981,#059669)" : "transparent", color: tab === "playground" ? "white" : "#4ade80" }}
-              onClick={() => { setTab("playground"); setSelectedFormula(null); }}>
+              onClick={() => { setTab("playground"); setSelectedFormula(null); setSidebarOpen(false); }}>
               🧪 Playground
             </button>
           </div>
@@ -3558,7 +3693,7 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+        <div className="main-content" style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
 
           {/* AI FORMULA FINDER */}
           {tab === "ai" && (
@@ -3755,7 +3890,7 @@ function App() {
 
           {/* QUIZ */}
           {tab === "quiz" && (
-            <div style={{ maxWidth: 680, margin: "0 auto" }}>
+            <div className="quiz-container" style={{ maxWidth: 680, margin: "0 auto" }}>
 
               {/* SCREEN: SELECT */}
               {quizScreen === "select" && (
@@ -3974,6 +4109,45 @@ function App() {
             </div>
           )}
 
+          {/* CATEGORY MODAL */}
+          {expandedCategory && CATEGORIES[expandedCategory] && (
+            <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px 16px" }} onClick={() => setExpandedCategory(null)}>
+              <div style={{ background: "#161b27", border: "1px solid #2d3748", borderRadius: 16, width: "100%", maxWidth: 640, maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.6)", animation: "fadeIn 0.18s ease" }} onClick={e => e.stopPropagation()}>
+
+                {/* Modal header */}
+                <div style={{ padding: "22px 26px 18px", borderBottom: "1px solid #1e2535", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
+                  <div>
+                    <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 20 }}>{expandedCategory}</div>
+                    <div style={{ fontSize: 12, color: "#475569", marginTop: 3 }}>{CATEGORIES[expandedCategory].length} formulas · click any to open it</div>
+                  </div>
+                  <button onClick={() => setExpandedCategory(null)} style={{ background: "#1e2535", border: "1px solid #2d3748", color: "#94a3b8", borderRadius: 8, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 16, fontFamily: "inherit", flexShrink: 0 }}>✕</button>
+                </div>
+
+                {/* Formula list */}
+                <div style={{ overflowY: "auto", padding: "18px 26px 24px", display: "flex", flexDirection: "column", gap: 6 }}>
+                  {CATEGORIES[expandedCategory].map(f => (
+                    <button key={f} onClick={() => { handleFormulaSelect(f); setExpandedCategory(null); }}
+                      style={{ background: progress[f] ? "#0b1a0b" : "#0d1117", border: "1px solid " + (progress[f] ? "#1e4a1e" : "#1e2535"), borderRadius: 10, padding: "12px 16px", cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 12, transition: "all 0.13s", width: "100%" }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = "#6366f1"; e.currentTarget.style.background = "#12163a"; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = progress[f] ? "#1e4a1e" : "#1e2535"; e.currentTarget.style.background = progress[f] ? "#0b1a0b" : "#0d1117"; }}>
+                      <div style={{ width: 36, height: 36, background: progress[f] ? "#0d2e0d" : "#161b27", border: "1px solid " + (progress[f] ? "#2d5a2d" : "#2d3748"), borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: progress[f] ? "#4ade80" : "#6366f1", fontWeight: 700, flexShrink: 0 }}>
+                        {progress[f] ? "✓" : f.slice(0, 2)}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: progress[f] ? "#4ade80" : "#e2e8f0", display: "flex", alignItems: "center", gap: 6 }}>
+                          {f}
+                          {favorites.includes(f) && <span style={{ fontSize: 11 }}>⭐</span>}
+                        </div>
+                        {FORMULAS[f] && <div style={{ fontSize: 12, color: "#64748b", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{FORMULAS[f].tagline}</div>}
+                      </div>
+                      <span style={{ color: "#2d3748", fontSize: 16, flexShrink: 0 }}>›</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* ALL FORMULAS MODAL */}
           {showAllFormulas && (
             <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "40px 16px", overflowY: "auto" }} onClick={() => setShowAllFormulas(false)}>
@@ -4007,7 +4181,7 @@ function App() {
 
           {/* FORMULA DETAIL */}
           {tab === "learn" && formula && (
-            <div style={{ maxWidth: 720 }}>
+            <div className="formula-detail" style={{ maxWidth: 720 }}>
               <button className="back-btn" style={{ marginBottom: 18 }} onClick={() => setSelectedFormula(null)}>← Back</button>
 
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 18, flexWrap: "wrap", gap: 12 }}>
@@ -4022,7 +4196,7 @@ function App() {
                     <span className={`chip ${formula.gsheet ? "tag-sheet" : "tag-no"}`}>{formula.gsheet ? "✓ Google Sheets" : "✗ Google Sheets"}</span>
                   </div>
                 </div>
-                <div style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: "10px 16px", fontSize: 13, color: "#a5b4fc", fontStyle: "italic" }}>
+                <div className="syntax-badge" style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: "10px 16px", fontSize: 13, color: "#a5b4fc", fontStyle: "italic", wordBreak: "break-all", maxWidth: "100%" }}>
                   {formula.syntax}
                 </div>
               </div>
@@ -4467,7 +4641,7 @@ function App() {
                   : "Explore nesting techniques, performance tips, and advanced patterns for power users."}
               </div>
 
-              <div style={{ display: "flex", gap: 10, marginBottom: 26, flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 10, marginBottom: 26, flexWrap: "wrap" }} className="stat-cards-row">
                 {[
                   { label: "Formulas", value: totalFormulas, icon: "⚡", onClick: () => setShowAllFormulas(true) },
                   { label: "Explored", value: viewedCount, icon: "✅" },
@@ -4483,9 +4657,9 @@ function App() {
               </div>
 
               <div className="section-title">Browse by Category</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(185px, 1fr))", gap: 10, marginBottom: 26 }}>
+              <div className="cat-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(185px, 1fr))", gap: 10, marginBottom: 26 }}>
                 {Object.entries(CATEGORIES).map(([cat, fmls]) => (
-                  <div key={cat} className="cat-card" onClick={() => { setSelectedCategory(cat); setSelectedFormula(null); }}>
+                  <div key={cat} className="cat-card" onClick={() => setExpandedCategory(cat)} style={{ cursor: "pointer" }}>
                     <div style={{ fontSize: 20, marginBottom: 6 }}>{cat.split(" ")[0]}</div>
                     <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, marginBottom: 4 }}>{cat.slice(3)}</div>
                     <div style={{ fontSize: 11, color: "#475569" }}>{fmls.length} formulas</div>
