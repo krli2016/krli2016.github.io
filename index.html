@@ -3275,6 +3275,7 @@ function App() {
   const [pgActiveChallenge, setPgActiveChallenge] = useState(null);
   const [pgMode, setPgMode] = useState("free");
   const [showAllFormulas, setShowAllFormulas] = useState(false);
+  const [aiComingSoon, setAiComingSoon] = useState(false);
 
   const formula = selectedFormula ? FORMULAS[selectedFormula] : null;
 
@@ -3412,6 +3413,13 @@ function App() {
     }
   };
 
+  // Auto-dismiss "coming soon" toast after 3 s
+  React.useEffect(() => {
+    if (!aiComingSoon) return;
+    const t = setTimeout(() => setAiComingSoon(false), 3000);
+    return () => clearTimeout(t);
+  }, [aiComingSoon]);
+
   const totalFormulas = Object.keys(FORMULAS).length;
   const viewedCount = Object.keys(progress).length;
 
@@ -3459,8 +3467,9 @@ function App() {
           </div>
           <div style={{ display: "flex", gap: 3 }}>
             <button
-              style={{ flex: 1, padding: "9px 4px", fontSize: 11, borderRadius: 6, fontFamily: "'DM Mono', monospace", cursor: "pointer", transition: "all 0.15s", border: tab === "ai" ? "none" : "1px solid #2d3a5a", background: tab === "ai" ? "linear-gradient(135deg,#6366f1,#a855f7)" : "transparent", color: tab === "ai" ? "white" : "#7c86c4" }}
-              onClick={() => { setTab("ai"); setSelectedFormula(null); }}>
+              title="Coming soon"
+              style={{ flex: 1, padding: "9px 4px", fontSize: 11, borderRadius: 6, fontFamily: "'DM Mono', monospace", cursor: "not-allowed", transition: "all 0.15s", border: "1px solid #1e2535", background: "transparent", color: "#3a4060", opacity: 0.5, position: "relative" }}
+              onClick={() => setAiComingSoon(true)}>
               ✨ AI Finder
             </button>
             <button
@@ -3924,6 +3933,18 @@ function App() {
                   })()}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* COMING SOON TOAST */}
+          {aiComingSoon && (
+            <div style={{ position: "fixed", bottom: 32, left: "50%", transform: "translateX(-50%)", zIndex: 9999, background: "#1e2535", border: "1px solid #3a4060", borderRadius: 10, padding: "14px 24px", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 8px 32px rgba(0,0,0,0.5)", animation: "fadeInUp 0.2s ease" }}>
+              <span style={{ fontSize: 18 }}>🚧</span>
+              <div>
+                <div style={{ fontSize: 14, color: "#e2e8f0", fontWeight: 500 }}>AI Finder — Coming Soon</div>
+                <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>We are working on it. Stay tuned!</div>
+              </div>
+              <button onClick={() => setAiComingSoon(false)} style={{ background: "none", border: "none", color: "#475569", cursor: "pointer", fontSize: 16, padding: "0 0 0 8px", lineHeight: 1 }}>✕</button>
             </div>
           )}
 
