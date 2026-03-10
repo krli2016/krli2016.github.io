@@ -3255,8 +3255,18 @@ function App() {
   const [quizShowExplanation, setQuizShowExplanation] = useState(false);
   const [quizHistory, setQuizHistory] = useState([]);
   const [copied, setCopied] = useState(null);
-  const [favorites, setFavorites] = useState([]);
-  const [progress, setProgress] = useState({});
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const c = document.cookie.split("; ").find(r => r.startsWith("fl_favs="));
+      return c ? JSON.parse(decodeURIComponent(c.split("=")[1])) : [];
+    } catch(_e) { return []; }
+  });
+  const [progress, setProgress] = useState(() => {
+    try {
+      const c = document.cookie.split("; ").find(r => r.startsWith("fl_prog="));
+      return c ? JSON.parse(decodeURIComponent(c.split("=")[1])) : {};
+    } catch(_e) { return {}; }
+  });
   const [aiQuery, setAiQuery] = useState("");
   const [aiResults, setAiResults] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
@@ -3412,6 +3422,22 @@ function App() {
       setAiLoading(false);
     }
   };
+
+  // Cookie helpers
+  const setCookie = (name, value, days) => {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(JSON.stringify(value)) + "; expires=" + expires + "; path=/; SameSite=Lax";
+  };
+
+  // Persist favorites to cookie whenever it changes
+  React.useEffect(() => {
+    setCookie("fl_favs", favorites, 365);
+  }, [favorites]);
+
+  // Persist progress to cookie whenever it changes
+  React.useEffect(() => {
+    setCookie("fl_prog", progress, 365);
+  }, [progress]);
 
   // Auto-dismiss "coming soon" toast after 3 s
   React.useEffect(() => {
