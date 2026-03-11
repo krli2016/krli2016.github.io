@@ -280,6 +280,7 @@ const FORMULAS = {
       example: { formula: "=SUM(10, 20, 30)", result: "60", context: "Adds 10 + 20 + 30" },
       rangeExample: { formula: "=SUM(A1:A5)", result: "Sum of A1 to A5", context: "Adds all numbers from cell A1 down to A5" },
       tip: "💡 You can also write =SUM(A1:A100) to add a whole column of numbers at once!",
+      sampleTable: { headers: ["A: Sales ($)"], rows: [["1200"],["850"],["3400"],["670"],["2100"]], usage: "=SUM(A2:A6)", output: "8220" , whatsHappening: 'Adds A2+A3+A4+A5+A6 (1200+850+3400+670+2100) = 8220'},
     },
     advanced: {
       nesting: '=SUM(IF(A2:A10="Sales", B2:B10, 0))\n→ Combine SUM with IF for conditional totals\n→ Press Ctrl+Shift+Enter for array formula (older Excel)',
@@ -295,6 +296,7 @@ const FORMULAS = {
       explain: "SUMIF is like SUM, but with a filter. Imagine you have a list of expenses and only want to total up the 'Food' ones — SUMIF does exactly that!",
       example: { formula: '=SUMIF(A2:A10, "Food", B2:B10)', result: "Total of all Food expenses", context: "Only adds values in column B where column A says 'Food'" },
       tip: "💡 The condition can use wildcards: \"App*\" matches anything starting with 'App'",
+      sampleTable: { headers: ['A: Category','B: Amount ($)'], rows: [['Food','450'],['Travel','1200'],['Food','320'],['Tech','800'],['Food','175']], usage: '=SUMIF(A2:A6,"Food",B2:B6)', output: '945' , whatsHappening: 'Looks at column A for \'Food\', then adds the matching B values: 450+320+175 = 945'},
     },
     advanced: {
       nesting: '=SUMIF(TEXT(A2:A100,"mmm"), "Jan", B2:B100)\n→ Nest with TEXT to match by month name',
@@ -310,6 +312,7 @@ const FORMULAS = {
       explain: "SUMIFS is SUMIF's big sibling — it lets you set multiple conditions. Like only totaling sales that are from 'East region' AND above $1000.",
       example: { formula: '=SUMIFS(C2:C10, A2:A10, "East", B2:B10, ">1000")', result: "Total qualifying sales", context: "Sums column C where A = 'East' AND B > 1000" },
       tip: "💡 The sum range always goes FIRST in SUMIFS (opposite intuition from SUMIF!)",
+      sampleTable: { headers: ['A: Region','B: Sales ($)','C: Quarter'], rows: [['East','1500','Q1'],['West','900','Q1'],['East','2200','Q2'],['East','1800','Q1'],['West','1100','Q2']], usage: '=SUMIFS(B2:B6,A2:A6,"East",C2:C6,"Q1")', output: '3300' , whatsHappening: 'Finds rows where A=\'East\' AND C=\'Q1\' — that\'s rows 2 and 5 (1500+1800) = 3300'},
     },
     advanced: {
       nesting: '=SUMIFS(B:B, A:A, ">="&DATE(2024,1,1), A:A, "<="&DATE(2024,12,31))\n→ Sum all values within a year',
@@ -325,6 +328,7 @@ const FORMULAS = {
       explain: "AVERAGE adds all your numbers and divides by how many there are. Like finding your test score average — add all scores, divide by number of tests.",
       example: { formula: "=AVERAGE(85, 90, 78, 92)", result: "86.25", context: "The average of these 4 test scores" },
       tip: "💡 AVERAGE ignores empty cells — so gaps in your data won't throw off the result.",
+      sampleTable: { headers: ["A: Test Score"], rows: [["78"],["92"],["85"],["67"],["90"]], usage: "=AVERAGE(A2:A6)", output: "82.4" , whatsHappening: 'Adds 78+92+85+67+90=412, divides by 5 = 82.4'},
     },
     advanced: {
       nesting: '=AVERAGE(IF(A2:A10="North", B2:B10))\n→ Conditional average — Array formula (Ctrl+Shift+Enter in older Excel)',
@@ -340,6 +344,7 @@ const FORMULAS = {
       explain: "COUNT counts only cells that contain numbers. If a cell has text or is empty, COUNT skips it. Perfect for counting entries in a sales column.",
       example: { formula: "=COUNT(A1:A10)", result: "Number of cells with numbers", context: "Only cells with actual numbers are counted" },
       tip: "💡 Use COUNTA if you also want to count text entries — COUNT is numbers-only!",
+      sampleTable: { headers: ["A: Value"], rows: [["42"],["hello"],[""],["99"],["7"]], usage: "=COUNT(A2:A6)", output: "3" , whatsHappening: 'Scans A2:A6 — only 42, 99, and 7 are numbers. \'hello\' and blank are skipped = 3'},
     },
     advanced: {
       nesting: "Count unique values:\n=SUMPRODUCT(1/COUNTIF(A2:A100,A2:A100))\n→ Counts distinct values without duplicates",
@@ -355,6 +360,7 @@ const FORMULAS = {
       explain: "COUNTA is like COUNT's friendlier version. It counts ANY cell that has something in it — whether it's a number, word, or date.",
       example: { formula: "=COUNTA(A1:A20)", result: "Count of all non-empty cells", context: "Counts cells with any content — text, numbers, dates" },
       tip: "💡 COUNTA still skips truly empty cells. If a cell has a space ' ', COUNTA counts it!",
+      sampleTable: { headers: ["A: Entry"], rows: [["Alice"],[""],["Bob"],["Charlie"],[""]], usage: "=COUNTA(A2:A6)", output: "3" , whatsHappening: 'Counts non-empty cells: Alice (A2), Bob (A4), Charlie (A5) = 3. Blank rows skipped'},
     },
     advanced: {
       nesting: 'Dynamic last row finder:\n=COUNTA(A:A) gives you the last used row number\n\nUse it in ranges: =SUM(A2:INDIRECT("A"&COUNTA(A:A)))',
@@ -370,6 +376,7 @@ const FORMULAS = {
       explain: "COUNTIF counts cells that pass your test. Like: how many students got an 'A'? You give it the list of grades and the grade you're looking for.",
       example: { formula: '=COUNTIF(B2:B20, "A")', result: "Number of A grades", context: "Counts how many cells in B2:B20 say 'A'" },
       tip: '💡 Use comparison operators too: =COUNTIF(A:A, ">100") counts values over 100.',
+      sampleTable: { headers: ['A: Grade'], rows: [['A'],['B'],['A'],['C'],['A']], usage: '=COUNTIF(A2:A6,"A")', output: '3' , whatsHappening: 'Scans A2:A6 for \'A\' — found in rows 2, 4, and 6 = 3'},
     },
     advanced: {
       nesting: "Count duplicates:\n=COUNTIF(A:A, A2) > 1 → TRUE means this value appears more than once\n\nHighlight duplicates using this in Conditional Formatting",
@@ -385,6 +392,7 @@ const FORMULAS = {
       explain: "COUNTIFS is COUNTIF with multiple filters. Like: how many students got an 'A' AND are in Grade 10? Both conditions must be true.",
       example: { formula: '=COUNTIFS(A2:A20, "Grade 10", B2:B20, "A")', result: "Count of Grade 10 students with A", context: "Both conditions must match in the same row" },
       tip: "💡 Each range must be the same size — they're checked row by row!",
+      sampleTable: { headers: ['A: Year','B: Grade'], rows: [['Yr 10','A'],['Yr 11','B'],['Yr 10','A'],['Yr 10','C'],['Yr 11','A']], usage: '=COUNTIFS(A2:A6,"Yr 10",B2:B6,"A")', output: '2' , whatsHappening: 'Rows where A=\'Yr 10\' AND B=\'A\': rows 2 and 4 both match = 2'},
     },
     advanced: {
       nesting: '=COUNTIFS(A:A, ">="&DATE(2024,1,1), A:A, "<="&DATE(2024,12,31))\n→ Count entries in a specific year',
@@ -400,6 +408,7 @@ const FORMULAS = {
       explain: "Imagine a phone book. VLOOKUP is like looking up someone's name (column 1) to find their number (another column). You give it the name to find, the phone book range, and which column has the number.",
       example: { formula: '=VLOOKUP("Alice", A2:C100, 3, FALSE)', result: "Alice's value from column 3", context: "Finds 'Alice' in column A, returns value from column 3 (FALSE = exact match)" },
       tip: "💡 Always use FALSE as the last argument for exact matching. TRUE is for sorted numeric ranges only!",
+      sampleTable: { headers: ['A: ID','B: Name','C: Salary ($)'], rows: [['101','Alice','5200'],['102','Bob','4800'],['103','Carol','6100'],['104','Dave','4500'],['105','Eve','5700']], usage: '=VLOOKUP(103,A2:C6,2,FALSE)', output: 'Carol' , whatsHappening: 'Searches column A for 103, finds it in row 4, returns column 2 value = Carol'},
     },
     advanced: {
       nesting: "Two-way lookup — match both row and column:\n=VLOOKUP(A1, B2:F20, MATCH(B1, B1:F1, 0), FALSE)\n→ Dynamic column selection using MATCH",
@@ -415,6 +424,7 @@ const FORMULAS = {
       explain: "XLOOKUP is like VLOOKUP but upgraded. Instead of telling it a column number, you tell it exactly which column to look in and which column to pull from. Much easier and works in any direction!",
       example: { formula: '=XLOOKUP("Alice", A2:A100, C2:C100)', result: "Alice's value from column C", context: "Finds 'Alice' in column A, returns the matching row's value from column C" },
       tip: '💡 XLOOKUP returns #N/A if not found. Add a 4th argument: =XLOOKUP("Alice", A:A, C:C, "Not Found")',
+      sampleTable: { headers: ['A: Product','B: Stock'], rows: [['Apple','120'],['Banana','45'],['Cherry','88'],['Date','30'],['Fig','200']], usage: '=XLOOKUP("Cherry",A2:A6,B2:B6)', output: '88' , whatsHappening: 'Searches A2:A6 for \'Cherry\', finds it in row 4, returns the matching B4 value = 88'},
     },
     advanced: {
       nesting: "Return multiple columns at once:\n=XLOOKUP(A1, B:B, C:E)\n→ Returns all 3 columns C, D, E for the matched row",
@@ -430,6 +440,7 @@ const FORMULAS = {
       explain: "INDEX is like a coordinate finder. You tell it: go to row 3, column 2 of this table — and it returns whatever's there. Think of it like finding a seat at a cinema by row and seat number.",
       example: { formula: "=INDEX(A2:C10, 3, 2)", result: "Value at row 3, column 2", context: "Returns the value in the 3rd row and 2nd column of the range A2:C10" },
       tip: "💡 INDEX is most powerful when paired with MATCH — together they replace VLOOKUP with more flexibility!",
+      sampleTable: { headers: ["A: Name","B: Dept","C: Score"], rows: [["Alice","Sales","88"],["Bob","HR","72"],["Carol","Tech","95"],["Dave","Sales","61"],["Eve","HR","84"]], usage: "=INDEX(A2:C6,3,2)", output: "Tech  (row 3, col 2)" , whatsHappening: 'Goes to row 3, column 2 of the range A2:C6. Row 3 = Carol, column 2 = Tech'},
     },
     advanced: {
       nesting: '=INDEX(C2:C100, MATCH("Alice", A2:A100, 0))\n→ Classic INDEX+MATCH: finds Alice, returns value from column C',
@@ -445,6 +456,7 @@ const FORMULAS = {
       explain: "MATCH doesn't return the value itself — it returns the position. Like: 'Alice is the 5th person in this list.' Use 0 for exact match most of the time.",
       example: { formula: '=MATCH("Alice", A2:A100, 0)', result: "5 (Alice is 5th in the list)", context: "Returns the row position of 'Alice' within A2:A100" },
       tip: "💡 Match type 0 = exact, 1 = find largest ≤ value, -1 = find smallest ≥ value.",
+      sampleTable: { headers: ['A: Product'], rows: [['Apple'],['Banana'],['Cherry'],['Date'],['Fig']], usage: '=MATCH("Cherry",A2:A6,0)', output: '3  (Cherry is 3rd)' , whatsHappening: 'Scans A2:A6 top to bottom — Cherry is the 3rd item in the list = 3'},
     },
     advanced: {
       nesting: '=MATCH(1, (A2:A100="Alice")*(B2:B100="Sales"), 0)\n→ Ctrl+Shift+Enter — finds row where BOTH conditions match',
@@ -460,6 +472,7 @@ const FORMULAS = {
       explain: "INDIRECT is magic — you write the address of a cell as text, and it goes there. Like writing 'A1' in a cell, then INDIRECT actually visits A1 and grabs its value.",
       example: { formula: '=INDIRECT("A"&B1)', result: "Value from that row in column A", context: "If B1 contains 5, this reads cell A5" },
       tip: '💡 Great for referencing different sheets dynamically: =INDIRECT(A1&"!B2") where A1 has the sheet name.',
+      sampleTable: { headers: ['A: Sheet ref','B: Row num'], rows: [['Sales','5'],['Data','3'],['Report','7'],['Summary','2'],['Raw','9']], usage: '=INDIRECT("A"&B2)', output: 'Value from cell A3' , whatsHappening: 'B2 contains \'3\', so INDIRECT builds the address \'A3\' and returns whatever is in cell A3'},
     },
     advanced: {
       nesting: '=SUM(INDIRECT(sheetName&"!A2:A100"))\n→ Sum column A from whatever sheet is named in the sheetName cell',
@@ -475,6 +488,7 @@ const FORMULAS = {
       explain: "CHOOSECOLS lets you select only the columns you want from a big table. Like having a buffet and only taking your favorite dishes — columns 1, 3, and 5 from a 10-column table.",
       example: { formula: "=CHOOSECOLS(A1:E10, 1, 3, 5)", result: "Table with only columns A, C, and E", context: "Returns a new array with just the 1st, 3rd, and 5th columns" },
       tip: "💡 Often paired with FILTER to first filter rows, then pick which columns to show.",
+      sampleTable: { headers: ['A: Name','B: Age','C: Dept','D: Score'], rows: [['Alice','28','Sales','88'],['Bob','34','HR','72'],['Carol','29','Tech','95'],['Dave','41','Sales','61'],['Eve','25','HR','84']], usage: '=CHOOSECOLS(A2:D6,1,3)', output: 'Returns Name and Dept columns only' , whatsHappening: 'From the 4-column table A2:D6, picks only columns 1 (Name) and 3 (Dept) — skips Age and Score'},
     },
     advanced: {
       nesting: '=CHOOSECOLS(FILTER(A2:F100, B2:B100="Active"), 1, 3, 6)\n→ Filter rows first, then show only specific columns',
@@ -490,6 +504,7 @@ const FORMULAS = {
       explain: "IF is like a fork in the road. You set a condition (e.g., score > 50), and IF either does one thing if true, or another thing if false. Like: IF score > 50 → 'Pass' ELSE → 'Fail'.",
       example: { formula: '=IF(A2 > 50, "Pass", "Fail")', result: '"Pass" or "Fail"', context: "If the value in A2 is above 50, shows 'Pass'. Otherwise shows 'Fail'." },
       tip: "💡 You can nest IF inside IF for more options, but IFS is cleaner for many conditions!",
+      sampleTable: { headers: ['A: Score'], rows: [['82'],['45'],['91'],['60'],['38']], usage: '=IF(A2>=50,"Pass","Fail")', output: 'Pass  (82 is 50 or above)' , whatsHappening: 'A2 is 82. Is 82 >= 50? Yes, so returns \'Pass\'. If it were below 50, it would return \'Fail\''},
     },
     advanced: {
       nesting: '=IF(A2>=90,"A",IF(A2>=80,"B",IF(A2>=70,"C","F")))\n\nBetter with IFS:\n=IFS(A2>=90,"A",A2>=80,"B",A2>=70,"C",TRUE,"F")',
@@ -505,6 +520,7 @@ const FORMULAS = {
       explain: "IFS checks conditions one by one and returns the value for the FIRST one that's true. Like a grade system: is it ≥90? → 'A'. Is it ≥80? → 'B'. And so on.",
       example: { formula: '=IFS(A2>=90,"A", A2>=80,"B", A2>=70,"C", TRUE,"F")', result: "Grade letter", context: "Checks each condition in order, returns first match. TRUE at the end is the 'catch-all'." },
       tip: "💡 Always end with TRUE, 'default value' to handle cases that don't match any condition.",
+      sampleTable: { headers: ['A: Score'], rows: [['94'],['82'],['71'],['55'],['38']], usage: '=IFS(A2>=90,"A",A2>=80,"B",A2>=70,"C",TRUE,"F")', output: 'A  (94 is 90 or above)' , whatsHappening: 'A2 is 94. First check: is 94>=90? Yes! Returns \'A\' and stops checking further conditions'},
     },
     advanced: {
       nesting: '=IFERROR(XLOOKUP(A2,B:B,C:C), IFS(A2>100,"High",A2>50,"Med",TRUE,"Low"))\n→ Lookup first; if not found, categorize by value',
@@ -520,6 +536,7 @@ const FORMULAS = {
       explain: "AND checks multiple things and only returns TRUE if ALL of them are true. Like a job requirement: must have 5 years experience AND a degree AND live in the city. All three must be true.",
       example: { formula: '=AND(A2 > 18, B2 = "Yes")', result: "TRUE or FALSE", context: "TRUE only if A2 > 18 AND B2 says 'Yes'" },
       tip: '💡 AND is almost always used inside IF: =IF(AND(A2>18, B2="Yes"), "Eligible", "No")',
+      sampleTable: { headers: ['A: Age','B: Member'], rows: [['22','Yes'],['17','Yes'],['30','No'],['25','Yes'],['15','No']], usage: '=AND(A2>=18,B2="Yes")', output: 'TRUE  (22 is 18+ AND Yes)' , whatsHappening: 'A2=22 (>=18 ✓) AND B2=\'Yes\' (✓) — both conditions are true so AND returns TRUE'},
     },
     advanced: {
       nesting: '=IF(AND(A2>18, B2="Active", C2<3), "Approved", "Rejected")\n→ All three criteria must be met',
@@ -535,6 +552,7 @@ const FORMULAS = {
       explain: "OR checks multiple things and returns TRUE if ANY ONE of them is true. Like a door policy: you can enter with a ticket OR a member card OR a VIP pass. Just one is enough!",
       example: { formula: '=OR(A2 = "Cash", A2 = "Card", A2 = "PayNow")', result: "TRUE or FALSE", context: "TRUE if A2 is any of these payment methods" },
       tip: '💡 Mix OR with IF: =IF(OR(A2>100, B2>100), "Large order", "Normal")',
+      sampleTable: { headers: ['A: Payment'], rows: [['Cash'],['Card'],['Cheque'],['PayNow'],['Voucher']], usage: '=OR(A2="Cash",A2="Card",A2="PayNow")', output: 'TRUE  (Cash is valid)' , whatsHappening: 'A2 is \'Cash\'. Is it \'Cash\'? Yes! OR returns TRUE immediately without checking further'},
     },
     advanced: {
       nesting: '=IF(OR(AND(A2="VIP",B2>0), C2="Override"), "Allow", "Deny")\n→ Combine AND inside OR for complex gating logic',
@@ -550,6 +568,7 @@ const FORMULAS = {
       explain: "IFERROR is your safety net. When a formula fails (like dividing by zero, or a lookup that finds nothing), instead of showing an ugly #ERROR!, you can show a friendly message like 'Not Found'.",
       example: { formula: '=IFERROR(VLOOKUP(A2, B:C, 2, FALSE), "Not Found")', result: '"Not Found" if not found, result if found', context: "If VLOOKUP fails, shows 'Not Found' instead of #N/A error" },
       tip: "💡 Use IFERROR on any formula that might fail — lookups, divisions, date calculations.",
+      sampleTable: { headers: ['A: Lookup ID'], rows: [['101'],['999'],['103'],['888'],['105']], usage: '=IFERROR(VLOOKUP(A2,C:D,2,0),"Not Found")', output: 'Not Found  (999 missing from table)' , whatsHappening: 'VLOOKUP tries to find 999 in column C — it doesn\'t exist, returns #N/A. IFERROR catches that and shows \'Not Found\' instead'},
     },
     advanced: {
       nesting: '=IFERROR(VLOOKUP(A2,Sheet1!A:B,2,0), IFERROR(VLOOKUP(A2,Sheet2!A:B,2,0), "Not Found"))\n→ Tries Sheet1, then Sheet2, then shows \'Not Found\'',
@@ -565,6 +584,7 @@ const FORMULAS = {
       explain: "IFNA is like IFERROR but more specific — it only catches #N/A errors (usually from lookups that can't find what they're looking for). Other errors like #DIV/0! will still show.",
       example: { formula: '=IFNA(XLOOKUP(A2, B:B, C:C), "Not in list")', result: '"Not in list" if not found, result if found', context: "Only catches 'not found' — other errors still show" },
       tip: "💡 Prefer IFNA over IFERROR for lookups — if there's a real formula mistake, you want to know!",
+      sampleTable: { headers: ['A: Product'], rows: [['Apple'],['Mango'],['Cherry'],['Dragon'],['Fig']], usage: '=IFNA(XLOOKUP(A2,C:C,D:D),"Not in list")', output: 'Not in list  (Mango not found)' , whatsHappening: 'XLOOKUP searches for \'Mango\' — not in the list, returns #N/A. IFNA catches only that error and shows \'Not in list\''},
     },
     advanced: {
       nesting: '=IFNA(INDEX(C:C,MATCH(A2,B:B,0)), "Missing")\n→ Cleaner than wrapping entire INDEX+MATCH in IFERROR',
@@ -580,6 +600,7 @@ const FORMULAS = {
       explain: "ISERROR checks if something went wrong. It returns TRUE if there's any kind of error, FALSE if the formula worked fine. Usually used inside an IF to take different actions based on the result.",
       example: { formula: "=IF(ISERROR(A2/B2), \"Can't divide\", A2/B2)", result: "Result or error message", context: "If dividing fails (like B2=0), shows message instead of crashing" },
       tip: "💡 In modern Excel/Sheets, IFERROR is simpler. ISERROR is for when you need to check and decide separately.",
+      sampleTable: { headers: ["A: Num","B: Divisor"], rows: [["10","2"],["5","0"],["8","4"],["0","0"],["9","3"]], usage: "=ISERROR(A2/B2)", output: "FALSE  (10/2 = 5, no error)" , whatsHappening: 'A2/B2 = 10/2 = 5, which is a valid result. No error occurred, so ISERROR returns FALSE'},
     },
     advanced: {
       nesting: '=IF(ISERROR(MATCH(A2,B:B,0)), "New", "Existing")\n→ Check if a value exists in a list',
@@ -595,6 +616,7 @@ const FORMULAS = {
       explain: "ISNA only checks for the #N/A error — which usually means 'not found' in lookups. Returns TRUE if the result is #N/A, FALSE otherwise.",
       example: { formula: '=IF(ISNA(VLOOKUP(A2,B:C,2,0)), "Not Found", VLOOKUP(A2,B:C,2,0))', result: "Result or 'Not Found'", context: "Checks if VLOOKUP returns #N/A before using the result" },
       tip: "💡 IFNA is usually cleaner than IF(ISNA(...)) — less repetition!",
+      sampleTable: { headers: ["A: Code"], rows: [["A100"],["B200"],["Z999"],["A101"],["B201"]], usage: "=ISNA(VLOOKUP(A4,A:B,2,0))", output: "TRUE  (Z999 returns #N/A)" , whatsHappening: 'VLOOKUP looks for Z999 in column A — not found, returns #N/A. ISNA detects that and returns TRUE'},
     },
     advanced: {
       nesting: '=IF(ISNA(MATCH(A2,B:B,0)), "Add to list", "Already exists")\n→ Duplicate checker before adding',
@@ -610,6 +632,7 @@ const FORMULAS = {
       explain: "ISERR is like ISERROR but it doesn't count #N/A as an error. Use it when #N/A is expected (like 'not found') but you still want to catch real formula mistakes.",
       example: { formula: '=IF(ISERR(A2/B2), "Math error", A2/B2)', result: "Result or error message", context: "Only triggers for real errors, not 'not found' (#N/A)" },
       tip: "💡 Choose wisely: ISERROR (all errors) vs ISERR (all except #N/A) vs ISNA (#N/A only).",
+      sampleTable: { headers: ["A: Text","B: Divisor"], rows: [["10","2"],["hello","1"],["6","0"],["9","3"],["4","2"]], usage: "=ISERR(A3/B3)", output: "TRUE  (#DIV/0! error)" , whatsHappening: 'A3/B3 = 6/0, which causes a #DIV/0! error. ISERR detects real errors (but not #N/A) = TRUE'},
     },
     advanced: {
       nesting: '=IF(ISERR(VALUE(A2)), "Not a number", VALUE(A2))\n→ Safely convert text to number',
@@ -625,6 +648,7 @@ const FORMULAS = {
       explain: 'ISBLANK tells you if a cell is completely empty — no spaces, no invisible characters, nothing. Important: a cell with an empty string "" is NOT blank according to ISBLANK!',
       example: { formula: '=IF(ISBLANK(A2), "Nothing here", "Has content")', result: '"Nothing here" or "Has content"', context: "Only TRUE if the cell is completely empty" },
       tip: '💡 If a formula puts "" in a cell, ISBLANK sees it as NOT blank. Use A2="" to catch both cases.',
+      sampleTable: { headers: ["A: Entry"], rows: [["Alice"],[""],["Bob"],[""],["Carol"]], usage: "=ISBLANK(A3)", output: "TRUE  (A3 is empty)" , whatsHappening: 'A3 is completely empty — no spaces, no formula, nothing. ISBLANK confirms it = TRUE'},
     },
     advanced: {
       nesting: '=IF(OR(ISBLANK(A2), A2=""), "Empty", "Filled")\n→ Catches both truly blank AND empty string',
@@ -640,6 +664,7 @@ const FORMULAS = {
       explain: "TODAY() gives you the current date and it updates automatically every day. Great for calculating ages, deadlines, or how many days until an event.",
       example: { formula: "=TODAY()", result: "Current date (e.g., 09/03/2026)", context: "No arguments needed — just TODAY()" },
       tip: "💡 Combine with arithmetic: =TODAY()+7 gives you a week from now. =TODAY()-A2 tells you how many days since a date!",
+      sampleTable: { headers: ["A: Deadline"], rows: [["2026-03-20"],["2026-02-28"],["2026-04-10"],["2026-03-11"],["2026-03-25"]], usage: "=TODAY()-A2", output: "Days since/until that deadline (updates daily)" , whatsHappening: 'Subtracts the date in A2 from today\'s date. A positive result = days since that date; negative = days until'},
     },
     advanced: {
       nesting: "Days until deadline:\n=NETWORKDAYS(TODAY(), A2)-1\n→ Business days remaining (excludes weekends)",
@@ -655,6 +680,7 @@ const FORMULAS = {
       explain: "DATE creates a proper date from individual numbers. Useful when your year, month, and day are in different cells and you need to combine them into one real date.",
       example: { formula: "=DATE(2025, 12, 25)", result: "25/12/2025", context: "Creates Christmas 2025 as a date Excel/Sheets understands" },
       tip: "💡 DATE handles overflow automatically: DATE(2025, 13, 1) = Jan 1, 2026!",
+      sampleTable: { headers: ["A: Year","B: Month","C: Day"], rows: [["2025","12","25"],["2026","1","1"],["2024","6","15"],["2026","3","11"],["2025","9","30"]], usage: "=DATE(A2,B2,C2)", output: "25/12/2025  (Christmas 2025)" , whatsHappening: 'Combines separate Year (2025), Month (12), Day (25) values into a proper Excel date = 25/12/2025'},
     },
     advanced: {
       nesting: "First day of the current month:\n=DATE(YEAR(TODAY()), MONTH(TODAY()), 1)\n\nLast day of current month:\n=DATE(YEAR(TODAY()), MONTH(TODAY())+1, 0)",
@@ -670,6 +696,7 @@ const FORMULAS = {
       explain: "DAY pulls out the day number from a date. If the date is 25/12/2025, DAY returns 25. Simple and useful for date comparisons or grouping by day of month.",
       example: { formula: "=DAY(A2)", result: "25 (if A2 is 25/12/2025)", context: "Returns just the day number from the date in A2" },
       tip: "💡 Partners: MONTH(date) gets the month number, YEAR(date) gets the year.",
+      sampleTable: { headers: ["A: Date"], rows: [["25/12/2025"],["01/01/2026"],["15/06/2024"],["11/03/2026"],["30/09/2025"]], usage: "=DAY(A2)", output: "25  (the day part of 25/12/2025)" , whatsHappening: 'A2 = 25/12/2025. DAY extracts just the day number from that date = 25'},
     },
     advanced: {
       nesting: "Check if date is end of month:\n=DAY(A2) = DAY(DATE(YEAR(A2),MONTH(A2)+1,0))\n→ TRUE if it's the last day of its month",
@@ -685,6 +712,7 @@ const FORMULAS = {
       explain: "DATEDIF tells you how far apart two dates are. You choose the unit: 'Y' for years, 'M' for months, 'D' for days. Perfect for calculating ages or contract durations.",
       example: { formula: '=DATEDIF(A2, TODAY(), "Y")', result: "Age in years", context: "Calculates how many complete years have passed since the date in A2" },
       tip: '💡 Units: "Y" = full years, "M" = full months, "D" = days, "YM" = months ignoring years.',
+      sampleTable: { headers: ['A: Birthdate'], rows: [['15/06/1990'],['01/01/1985'],['22/09/1998'],['11/03/1975'],['30/07/2000']], usage: '=DATEDIF(A2,TODAY(),"Y")', output: '35  (age in full years)' , whatsHappening: 'Counts complete years from 15/06/1990 to today. With today being 2026, that\'s 35 full years'},
     },
     advanced: {
       nesting: '=DATEDIF(A2,TODAY(),"Y")&" years, "&DATEDIF(A2,TODAY(),"YM")&" months"\n→ Shows "35 years, 4 months"',
@@ -700,6 +728,7 @@ const FORMULAS = {
       explain: "TRIM cleans up messy text by removing extra spaces. It removes spaces at the start, spaces at the end, and collapses multiple spaces in the middle into one. A data cleaning essential!",
       example: { formula: '=TRIM("  Hello   World  ")', result: '"Hello World"', context: "Removes leading, trailing, and extra internal spaces" },
       tip: "💡 Always TRIM data imported from other systems — hidden spaces cause VLOOKUP to fail silently!",
+      sampleTable: { headers: ['A: Raw Text'], rows: [['  Alice Smith  '],['Bob  Jones'],['  Carol  '],['Dave'],['  Eve Brown  ']], usage: '=TRIM(A2)', output: 'Alice Smith  (leading/trailing spaces removed)' , whatsHappening: 'A2 has spaces before \'Alice\', after \'Smith\', and could have extras between. TRIM removes all extra spaces'},
     },
     advanced: {
       nesting: "=TRIM(CLEAN(A2))\n→ Removes spaces AND non-printable characters",
@@ -715,6 +744,7 @@ const FORMULAS = {
       explain: "CLEAN removes invisible characters that you can't see but can cause problems — like characters from copy-pasting text from websites or PDFs. Text looks fine but formulas fail? CLEAN it!",
       example: { formula: "=CLEAN(A2)", result: "Text without hidden characters", context: "Strips non-printable characters that cause formula errors" },
       tip: "💡 Combine TRIM and CLEAN: =TRIM(CLEAN(A2)) is the ultimate text cleaning combo!",
+      sampleTable: { headers: ['A: Imported Text'], rows: [['Report[VT]Data'],['Sales[BEL]Jan'],['Q1[FF]Result'],['Normal text'],['Tab[TAB]here']], usage: '=CLEAN(A2)', output: 'ReportData  (hidden chars removed)' , whatsHappening: 'A2 has invisible control characters mixed into the text. CLEAN strips them out, leaving just readable text'},
     },
     advanced: {
       nesting: "=TRIM(CLEAN(LOWER(A2)))\n→ Remove hidden chars, trim spaces, lowercase — all in one",
@@ -730,6 +760,7 @@ const FORMULAS = {
       explain: "PROPER formats text so every word starts with a capital letter. Like converting 'john smith' or 'JOHN SMITH' into 'John Smith'. Great for cleaning messy name data.",
       example: { formula: '=PROPER("hello world")', result: '"Hello World"', context: "Capitalizes first letter of each word" },
       tip: '💡 PROPER also lowercases the rest: "JOHN" becomes "John". Great for fixing ALL-CAPS data.',
+      sampleTable: { headers: ['A: Name'], rows: [['alice smith'],['BOB JONES'],['cAROL bROWN'],['dave taylor'],['EVE MARTIN']], usage: '=PROPER(A2)', output: 'Alice Smith' , whatsHappening: 'A2 is \'alice smith\' (all lowercase). PROPER capitalises the first letter of each word = Alice Smith'},
     },
     advanced: {
       nesting: "=PROPER(TRIM(A2))\n→ Clean spaces AND fix capitalization in one step",
@@ -745,6 +776,7 @@ const FORMULAS = {
       explain: "EXACT checks if two texts are identical, including uppercase and lowercase. Unlike normal comparison (= which ignores case), EXACT treats 'Apple' and 'apple' as different.",
       example: { formula: '=EXACT("Apple", "apple")', result: "FALSE (case is different)", context: "Regular = would return TRUE, but EXACT is case-sensitive" },
       tip: "💡 Use EXACT when comparing passwords, codes, or any data where case matters!",
+      sampleTable: { headers: ["A: Input","B: Expected"], rows: [["Apple","Apple"],["apple","Apple"],["APPLE","Apple"],["Apple ","Apple"],["apple","apple"]], usage: "=EXACT(A2,B2)", output: "TRUE  (exact case + spacing match)" , whatsHappening: 'A2=\'Apple\' and B2=\'Apple\' — same letters, same case, same spacing. EXACT returns TRUE'},
     },
     advanced: {
       nesting: '=SUMPRODUCT(EXACT(A2:A100,"Apple")*1)\n→ Case-sensitive COUNTIF — counts exactly "Apple" but not "APPLE"',
@@ -760,6 +792,7 @@ const FORMULAS = {
       explain: "FILTER is like AutoFilter but it pours the results into another location automatically. The output updates whenever your data changes — no need to re-filter manually!",
       example: { formula: '=FILTER(A2:C100, B2:B100="Active", "No results")', result: "All Active rows from the table", context: "Returns only rows where column B says 'Active'" },
       tip: "💡 FILTER spills results automatically. Make sure there's empty space below and to the right for the results!",
+      sampleTable: { headers: ['A: Name','B: Score','C: Status'], rows: [['Alice','88','Active'],['Bob','72','Inactive'],['Carol','95','Active'],['Dave','61','Active'],['Eve','84','Inactive']], usage: '=FILTER(A2:C6,C2:C6="Active")', output: 'Returns Alice, Carol, Dave rows only' , whatsHappening: 'Checks column C for \'Active\' — rows 2 (Alice), 4 (Carol), 5 (Dave) match. Those 3 rows are returned'},
     },
     advanced: {
       nesting: '=FILTER(A2:C100, (B2:B100="Active")*(C2:C100>1000))\n→ Both conditions true (multiply = AND)\n\n=FILTER(A2:C100, (B2:B100="A")+(B2:B100="B"))\n→ Either condition true (add = OR)',
@@ -775,6 +808,7 @@ const FORMULAS = {
       explain: "VSTACK combines tables by stacking them vertically — like physically placing one table below another. Perfect for merging January, February, March data sheets into one big table.",
       example: { formula: "=VSTACK(A2:C10, E2:G10)", result: "Combined 18-row table", context: "Stacks the second range directly below the first" },
       tip: "💡 If columns don't match exactly, VSTACK fills mismatches with #N/A. Make sure headers align!",
+      sampleTable: { headers: ["A: Name (Jan)","B: Sales"], rows: [["Alice","1200"],["Bob","850"],["--- Feb ---","---"],["Carol","1400"],["Dave","900"]], usage: "=VSTACK(A2:B3,A5:B6)", output: "Combined 4-row table (Jan + Feb stacked)" , whatsHappening: 'Takes A2:B3 (Alice, Bob) and places A5:B6 (Carol, Dave) directly underneath = 4 combined rows'},
     },
     advanced: {
       nesting: '=FILTER(VSTACK(Jan_Data, Feb_Data, Mar_Data), VSTACK(Jan_Status, Feb_Status, Mar_Status)="Active")\n→ Combine all months then filter active rows',
@@ -790,6 +824,7 @@ const FORMULAS = {
       explain: "QUERY is a Google Sheets superpower — you write something like SQL to filter, sort, and summarize your data. Like asking: 'Show me all sales from East region, sorted by amount.'",
       example: { formula: "=QUERY(A1:D100, \"SELECT A, B, D WHERE C = 'East' ORDER BY D DESC\")", result: "Filtered & sorted table", context: "SQL-style: select columns A, B, D where column C is 'East', sorted by D" },
       tip: "💡 QUERY is Google Sheets only — not available in Excel. It's one of Sheets' biggest advantages!",
+      sampleTable: { headers: ['A: Region','B: Product','C: Revenue'], rows: [['East','Widget','1500'],['West','Gadget','900'],['East','Gadget','2200'],['North','Widget','1100'],['East','Widget','1800']], usage: '=QUERY(A1:C6,"SELECT A,SUM(C) GROUP BY A")', output: 'East 5500, North 1100, West 900' , whatsHappening: 'SQL-style: groups rows by Region (column A), sums Revenue (column C) per group'},
     },
     advanced: {
       nesting: "=QUERY(A1:D100, \"SELECT A,B,D WHERE C = '\"&E1&\"'\")\n→ Filter based on what's typed in E1",
@@ -805,6 +840,7 @@ const FORMULAS = {
       explain: "IMPORTRANGE is like a live data pipe between two Google Sheets. Changes in the source sheet automatically appear in your sheet. Great for pulling data from a shared master sheet!",
       example: { formula: '=IMPORTRANGE("https://docs.google.com/...","Sheet1!A2:D100")', result: "Live data from the other sheet", context: "Pulls and stays in sync with the source sheet" },
       tip: "💡 First time you use it, Sheets will ask you to 'Allow access' — you need to approve this connection!",
+      sampleTable: { headers: ['A: Source'], rows: [['Another Google Sheet'],[''],[''],[''],['']],  usage: '=IMPORTRANGE("https://docs.google.com/...","Sheet1!A2:D100")', output: 'Live data pulled from the other Google Sheet' , whatsHappening: 'Creates a live link to another Google Sheet. Data in that sheet flows into yours automatically'},
     },
     advanced: {
       nesting: '=FILTER(IMPORTRANGE(url, "Data!A:D"), IMPORTRANGE(url, "Data!C:C")="Active")\n→ Import and filter in one step',
@@ -820,6 +856,7 @@ const FORMULAS = {
       explain: "LET lets you give a name to a number or calculation, then use that name later in the same formula. Instead of typing the same thing 3 times, name it once and reuse it. Cleaner and faster!",
       example: { formula: "=LET(tax, A2*0.09, total, A2+tax, total)", result: "A2 + 9% tax", context: "Calculates tax once, then adds it to get total — no repetition" },
       tip: "💡 LET makes complex formulas readable. Name your intermediate calculations clearly!",
+      sampleTable: { headers: ["A: Price ($)","B: Tax Rate"], rows: [["100","0.09"],["250","0.09"],["75","0.09"],["500","0.09"],["30","0.09"]], usage: "=LET(tax,A2*B2,A2+tax)", output: "109  ($100 + 9% tax)" , whatsHappening: 'Names A2*B2 as \'tax\' (100*0.09=9), then calculates A2+tax (100+9) = 109. No repetition'},
     },
     advanced: {
       nesting: "=LET(\n  sales, B2:B100,\n  target, 10000,\n  above, FILTER(sales, sales>target),\n  SUM(above)\n)\n→ Filter and sum in one clean formula",
@@ -836,6 +873,7 @@ const FORMULAS = {
       explain: "AVERAGEIF is like SUMIF but for averages. Instead of adding matching values, it averages them. Perfect for finding the average sale amount only for a specific region or product.",
       example: { formula: '=AVERAGEIF(A2:A20, "East", B2:B20)', result: "Average of East region sales", context: "Averages the values in column B where column A says 'East'" },
       tip: "💡 If you omit the average_range, it averages the values in the range itself that match the criteria.",
+      sampleTable: { headers: ['A: Department','B: Salary ($)'], rows: [['Sales','4500'],['HR','3800'],['Sales','5200'],['Tech','6100'],['Sales','4900']], usage: '=AVERAGEIF(A2:A6,"Sales",B2:B6)', output: '4866.67' , whatsHappening: 'Finds \'Sales\' rows (A2, A4, A6), averages their salaries: (4500+5200+4900)/3 = 4866.67'},
     },
     advanced: {
       nesting: '=AVERAGEIF(B2:B100, ">"&AVERAGE(B2:B100), C2:C100)\n→ Average column C only for rows where B is above the overall average',
@@ -851,6 +889,7 @@ const FORMULAS = {
       explain: "AVERAGEIFS is AVERAGEIF with multiple filters. Like finding the average salary for employees who are in 'Sales' AND have been at the company for more than 2 years.",
       example: { formula: '=AVERAGEIFS(C2:C100, A2:A100, "Sales", B2:B100, ">2")', result: "Average salary for qualifying staff", context: "Averages column C where A = 'Sales' AND B > 2" },
       tip: "💡 The average_range always comes FIRST in AVERAGEIFS — same pattern as SUMIFS.",
+      sampleTable: { headers: ['A: Dept','B: Grade','C: Score'], rows: [['Sales','A','88'],['HR','B','72'],['Sales','A','91'],['Tech','A','85'],['Sales','B','76']], usage: '=AVERAGEIFS(C2:C6,A2:A6,"Sales",B2:B6,"A")', output: '89.5' , whatsHappening: 'Finds rows where Dept=\'Sales\' AND Grade=\'A\' (rows 2,4), averages 88 and 91 = 89.5'},
     },
     advanced: {
       nesting: '=AVERAGEIFS(D:D, A:A, "East", B:B, ">="&DATE(2024,1,1), B:B, "<="&DATE(2024,12,31))\n→ Average sales for East region within a specific year',
@@ -866,6 +905,7 @@ const FORMULAS = {
       explain: "MIN scans all the numbers you give it and returns the lowest one. Great for finding the cheapest price, lowest score, or earliest date in a list.",
       example: { formula: "=MIN(A2:A100)", result: "The smallest value in A2:A100", context: "Scans the whole range and returns the minimum" },
       tip: "💡 MIN ignores text and empty cells automatically. Pair with IF for a conditional minimum.",
+      sampleTable: { headers: ["A: Price ($)"], rows: [["29.99"],["14.50"],["49.00"],["9.99"],["35.00"]], usage: "=MIN(A2:A6)", output: "9.99" , whatsHappening: 'Compares all 5 prices — 9.99 is the smallest value'},
     },
     advanced: {
       nesting: '=MIN(IF(A2:A100="East",B2:B100))\n→ Minimum value for East region only (array formula — Ctrl+Shift+Enter in older Excel)',
@@ -881,6 +921,7 @@ const FORMULAS = {
       explain: "MAX finds the highest value in your data — the biggest sale, highest score, latest date. It's the opposite of MIN.",
       example: { formula: "=MAX(B2:B50)", result: "The largest value in B2:B50", context: "Returns the maximum number from the range" },
       tip: "💡 MAX works on dates too! =MAX(date_column) gives you the most recent date.",
+      sampleTable: { headers: ["A: Price ($)"], rows: [["29.99"],["14.50"],["49.00"],["9.99"],["35.00"]], usage: "=MAX(A2:A6)", output: "49.00" , whatsHappening: 'Compares all 5 prices — 49.00 is the largest value'},
     },
     advanced: {
       nesting: '=MAX(IF(A2:A100="Sales",B2:B100))\n→ Maximum in the Sales department only (array formula)',
@@ -896,6 +937,7 @@ const FORMULAS = {
       explain: "LARGE lets you find not just the biggest number, but the 2nd biggest, 3rd biggest, etc. Great for top-3 lists, podium rankings, or finding runner-up values.",
       example: { formula: "=LARGE(A2:A100, 2)", result: "2nd largest value", context: "k=1 is largest, k=2 is second largest, and so on" },
       tip: "💡 Use LARGE with a series: =LARGE(A:A, 1), =LARGE(A:A, 2), =LARGE(A:A, 3) for a top-3 leaderboard.",
+      sampleTable: { headers: ["A: Score"], rows: [["88"],["72"],["95"],["61"],["84"]], usage: "=LARGE(A2:A6,2)", output: "88  (2nd highest)" , whatsHappening: 'Ranks scores: 95 is 1st, 88 is 2nd largest. LARGE(range,2) returns 88'},
     },
     advanced: {
       nesting: "=AVERAGE(LARGE(B2:B20, {1,2,3,4,5}))\n→ Average of the top 5 values only",
@@ -911,6 +953,7 @@ const FORMULAS = {
       explain: "SMALL is the mirror of LARGE — it finds the 1st, 2nd, 3rd... smallest values. Useful for bottom-ranked results, earliest dates, or minimum thresholds.",
       example: { formula: "=SMALL(A2:A100, 3)", result: "3rd smallest value", context: "k=1 is the minimum, k=2 is the second smallest, etc." },
       tip: "💡 =SMALL(A:A, 1) is the same as =MIN(A:A). But SMALL lets you get the 2nd, 3rd smallest too!",
+      sampleTable: { headers: ["A: Score"], rows: [["88"],["72"],["95"],["61"],["84"]], usage: "=SMALL(A2:A6,2)", output: "72  (2nd lowest)" , whatsHappening: 'Ranks scores: 61 is 1st, 72 is 2nd smallest. SMALL(range,2) returns 72'},
     },
     advanced: {
       nesting: "=AVERAGE(SMALL(B2:B20, {1,2,3}))\n→ Average of the 3 lowest values",
@@ -926,6 +969,7 @@ const FORMULAS = {
       explain: "ROUND tidies up messy decimals. Tell it the number and how many decimal places you want — it rounds to the nearest value. =ROUND(3.456, 2) gives 3.46.",
       example: { formula: "=ROUND(3.14159, 2)", result: "3.14", context: "Rounds pi to 2 decimal places" },
       tip: "💡 Use 0 to round to the nearest whole number: =ROUND(A2, 0). Use negative numbers to round to tens/hundreds: =ROUND(1234, -2) = 1200.",
+      sampleTable: { headers: ["A: Value"], rows: [["3.14159"],["2.71828"],["1.41421"],["9.99999"],["0.50001"]], usage: "=ROUND(A2,2)", output: "3.14" , whatsHappening: '3.14159 rounded to 2 decimal places — the 3rd decimal (1) is below 5 so rounds down = 3.14'},
     },
     advanced: {
       nesting: "=ROUND(SUM(A2:A100), 2)\n→ Round the total to 2 decimal places — avoids floating point errors in financial totals",
@@ -941,6 +985,7 @@ const FORMULAS = {
       explain: "ROUNDUP always rounds the number UP — it never rounds down. Useful for things like pricing (always charge at least the next cent) or calculating boxes needed (always need at least one more).",
       example: { formula: "=ROUNDUP(2.1, 0)", result: "3", context: "Even though 2.1 is close to 2, ROUNDUP pushes it up to 3" },
       tip: "💡 Common use: =ROUNDUP(items/box_size, 0) tells you how many boxes you need — always rounding up.",
+      sampleTable: { headers: ["A: Value"], rows: [["3.21"],["1.01"],["5.55"],["2.99"],["4.10"]], usage: "=ROUNDUP(A2,1)", output: "3.3" , whatsHappening: '3.21 rounded UP to 1 decimal — always rounds away from zero = 3.3'},
     },
     advanced: {
       nesting: "=ROUNDUP(A2/B2, 0)\n→ Ceiling division — how many groups/containers needed",
@@ -956,6 +1001,7 @@ const FORMULAS = {
       explain: "ROUNDDOWN always truncates toward zero — it never rounds up. Useful for things like calculating how many complete units fit (ignore the partial one).",
       example: { formula: "=ROUNDDOWN(7.9, 0)", result: "7", context: "Drops the decimal — 7.9 becomes 7, not 8" },
       tip: "💡 =ROUNDDOWN(A2, 0) is the same as =INT(A2) for positive numbers. INT is simpler for whole-number truncation.",
+      sampleTable: { headers: ["A: Value"], rows: [["3.99"],["1.89"],["5.75"],["2.50"],["4.99"]], usage: "=ROUNDDOWN(A2,1)", output: "3.9" , whatsHappening: '3.99 rounded DOWN to 1 decimal — always rounds toward zero = 3.9'},
     },
     advanced: {
       nesting: "=ROUNDDOWN(A2/B2, 0)\n→ Floor division — how many complete items fit (ignores leftovers)",
@@ -971,6 +1017,7 @@ const FORMULAS = {
       explain: "MOD gives you what's left over after dividing. 10 divided by 3 = 3 remainder 1, so MOD(10,3) = 1. Great for alternating patterns, finding odd/even numbers, or grouping by intervals.",
       example: { formula: "=MOD(10, 3)", result: "1", context: "10 divided by 3 leaves a remainder of 1" },
       tip: "💡 Check if a number is odd or even: =MOD(A2, 2) returns 0 for even, 1 for odd.",
+      sampleTable: { headers: ["A: Number","B: Divisor"], rows: [["10","3"],["15","4"],["20","6"],["7","2"],["100","9"]], usage: "=MOD(A2,B2)", output: "1  (10 ÷ 3 remainder)" , whatsHappening: '10 divided by 3 = 3 remainder 1. MOD returns just the remainder = 1'},
     },
     advanced: {
       nesting: '=IF(MOD(ROW(),2)=0,"Even row","Odd row")\n→ Tag every other row — useful for alternating row formatting logic',
@@ -986,6 +1033,7 @@ const FORMULAS = {
       explain: "SUMPRODUCT multiplies matching elements from two arrays and then sums all the results. Think: price times quantity for each row, then sum everything up to get total revenue.",
       example: { formula: "=SUMPRODUCT(B2:B10, C2:C10)", result: "Total revenue", context: "Multiplies each price (B) by its quantity (C), then sums all the results" },
       tip: "💡 SUMPRODUCT also works as a flexible COUNTIFS/SUMIFS alternative that handles array logic natively — no Ctrl+Shift+Enter needed!",
+      sampleTable: { headers: ["A: Units","B: Price ($)"], rows: [["5","12.00"],["3","25.50"],["8","7.75"],["2","100.00"],["10","4.50"]], usage: "=SUMPRODUCT(A2:A6,B2:B6)", output: "468.5" , whatsHappening: 'Multiplies each pair: 5×12=60, 3×25.50=76.50, 8×7.75=62, 2×100=200, 10×4.50=45. Total = 443.50'},
     },
     advanced: {
       nesting: '=SUMPRODUCT((A2:A100="East")*(B2:B100>1000)*C2:C100)\n→ Sum column C where A="East" AND B>1000 — multi-condition sum without SUMIFS',
@@ -1001,6 +1049,7 @@ const FORMULAS = {
       explain: "ABS removes the negative sign, giving you the distance from zero. ABS(-5) = 5, ABS(5) = 5. Useful when you care about the size of a difference, not its direction.",
       example: { formula: "=ABS(A2-B2)", result: "Difference between A2 and B2, always positive", context: "Works whether A2 > B2 or B2 > A2" },
       tip: "💡 Use ABS when calculating variances where you don't care if the result is positive or negative.",
+      sampleTable: { headers: ["A: Variance"], rows: [["-250"],["180"],["-45"],["320"],["-10"]], usage: "=ABS(A2)", output: "250" , whatsHappening: 'A2 contains -250. ABS removes the negative sign, returning the distance from zero = 250'},
     },
     advanced: {
       nesting: "=SUMPRODUCT(ABS(B2:B100-C2:C100))\n→ Total absolute difference across all rows (similar to Mean Absolute Error)",
@@ -1018,6 +1067,7 @@ const FORMULAS = {
       explain: "OFFSET starts at a cell and moves a set number of rows and columns to return a different cell or range. Like saying: start at A1, go down 3 rows and right 2 columns — what's there?",
       example: { formula: "=OFFSET(A1, 3, 2)", result: "Value from C4", context: "Starts at A1, moves 3 rows down and 2 columns right to reach C4" },
       tip: "💡 OFFSET is volatile (recalculates on every change). For static lookups, INDEX is faster and safer.",
+      sampleTable: { headers: ["A: Month","B: Revenue ($)"], rows: [["Jan","12000"],["Feb","15000"],["Mar","11000"],["Apr","18000"],["May","14000"]], usage: "=OFFSET(B2,2,0)", output: "11000  (B2 shifted 2 rows down)" , whatsHappening: 'Starts at B2 (Jan, 12000), moves 2 rows down to B4 (Mar) = 11000'},
     },
     advanced: {
       nesting: "=SUM(OFFSET(A1, 0, 0, COUNTA(A:A), 1))\n→ Dynamic SUM that grows automatically as data is added",
@@ -1033,6 +1083,7 @@ const FORMULAS = {
       explain: "ROW returns the row number of a cell. =ROW(A5) returns 5. With no argument, =ROW() returns the row number of the cell the formula is currently in.",
       example: { formula: "=ROW(A1)", result: "1", context: "A1 is in row 1, so ROW returns 1" },
       tip: "💡 Drag =ROW(A1)-1 down to create a sequential number series: 0, 1, 2, 3… without typing each one.",
+      sampleTable: { headers: ["A: Item"], rows: [["Apple"],["Banana"],["Cherry"],["Date"],["Fig"]], usage: "=ROW(A4)", output: "4  (row number of A4)" , whatsHappening: 'A4 is in the 4th row of the spreadsheet — ROW() simply returns that number = 4'},
     },
     advanced: {
       nesting: "=ROW(A1)-1\n→ Drag down to generate sequential numbers 0, 1, 2... without a helper column",
@@ -1048,6 +1099,7 @@ const FORMULAS = {
       explain: "COLUMN works like ROW but for columns. Column A = 1, B = 2, C = 3, etc. =COLUMN(C1) returns 3. Handy when you need to reference column positions dynamically.",
       example: { formula: "=COLUMN(C1)", result: "3", context: "Column C is the 3rd column, so COLUMN returns 3" },
       tip: "💡 Use COLUMN() inside VLOOKUP to make the column_index dynamic instead of hardcoding a number.",
+      sampleTable: { headers: ["A: Data","B: More","C: Extra"], rows: [["x","y","z"],["1","2","3"],["a","b","c"],["p","q","r"],["m","n","o"]], usage: "=COLUMN(C1)", output: "3  (C is the 3rd column)" , whatsHappening: 'C is the 3rd column (A=1, B=2, C=3) — COLUMN() returns its position = 3'},
     },
     advanced: {
       nesting: "=VLOOKUP(A2, B:Z, COLUMN(D1)-COLUMN(B1)+1, FALSE)\n→ Dynamic VLOOKUP column — doesn't break when you move columns",
@@ -1065,6 +1117,7 @@ const FORMULAS = {
       explain: "NOT flips TRUE to FALSE and FALSE to TRUE. Useful when it's easier to describe what you DON'T want rather than what you do.",
       example: { formula: "=NOT(ISBLANK(A2))", result: "TRUE if A2 has content, FALSE if empty", context: "ISBLANK returns TRUE when empty — NOT flips it so TRUE means 'has content'" },
       tip: "💡 NOT is great inside IF: =IF(NOT(ISBLANK(A2)), \"Has data\", \"Empty\") reads very naturally.",
+      sampleTable: { headers: ["A: Cancelled"], rows: [["TRUE"],["FALSE"],["TRUE"],["FALSE"],["TRUE"]], usage: "=NOT(A2)", output: "FALSE  (flips TRUE to FALSE)" , whatsHappening: 'A2 contains TRUE. NOT flips it to the opposite value = FALSE'},
     },
     advanced: {
       nesting: '=IF(NOT(AND(A2>0, B2>0)), "At least one is zero or negative", "Both positive")',
@@ -1080,6 +1133,7 @@ const FORMULAS = {
       explain: "ISNUMBER returns TRUE if the cell contains a number, FALSE otherwise. Essential for data validation — catching text that looks like a number but isn't.",
       example: { formula: "=ISNUMBER(A2)", result: "TRUE if A2 is a number, FALSE otherwise", context: "Useful before arithmetic to avoid #VALUE! errors" },
       tip: "💡 Dates are stored as numbers internally, so ISNUMBER returns TRUE for dates too!",
+      sampleTable: { headers: ["A: Value"], rows: [["42"],["hello"],["3.14"],[""],["99"]], usage: "=ISNUMBER(A2)", output: "TRUE  (42 is a number)" , whatsHappening: 'A2 contains 42, which is a numeric value. ISNUMBER confirms it is a number = TRUE'},
     },
     advanced: {
       nesting: '=IF(ISNUMBER(A2), A2*1.1, "Not a number")\n→ Only apply a calculation if the cell is actually a number',
@@ -1095,6 +1149,7 @@ const FORMULAS = {
       explain: "ISTEXT returns TRUE if the cell contains text (words, letters), FALSE if it's a number, date, or empty. Great for catching data entry errors where numbers were typed as text.",
       example: { formula: "=ISTEXT(A2)", result: "TRUE if A2 contains text", context: "Numbers stored as text show TRUE — a common spreadsheet headache" },
       tip: "💡 If your SUM is returning 0 unexpectedly, ISTEXT can reveal that numbers were imported as text!",
+      sampleTable: { headers: ["A: Value"], rows: [["42"],["hello"],["3.14"],["world"],["99"]], usage: "=ISTEXT(A3)", output: "FALSE  (3.14 is not text)" , whatsHappening: 'A3 contains 3.14, which is a number not text. ISTEXT returns FALSE for numeric values'},
     },
     advanced: {
       nesting: '=IF(ISTEXT(A2), VALUE(A2)*1.1, A2*1.1)\n→ Convert text-numbers to real numbers before calculating',
@@ -1110,6 +1165,7 @@ const FORMULAS = {
       explain: "SWITCH is a clean alternative to nested IFs for matching exact values. List all the match-result pairs in one tidy formula instead of nesting IF inside IF inside IF.",
       example: { formula: '=SWITCH(A2, 1,"Jan", 2,"Feb", 3,"Mar", "Unknown")', result: '"Feb" if A2=2, etc.', context: "Checks A2 against each value and returns the matching result. Last value is the default." },
       tip: "💡 SWITCH is perfect for converting codes to labels: status codes, department numbers, country abbreviations.",
+      sampleTable: { headers: ['A: Day Number'], rows: [['1'],['3'],['5'],['7'],['2']], usage: '=SWITCH(A2,1,"Mon",2,"Tue",3,"Wed","Other")', output: 'Mon  (1 maps to Monday)' , whatsHappening: 'A2 is 1. SWITCH checks: does 1 match 1? Yes! Returns \'Mon\' and stops'},
     },
     advanced: {
       nesting: '=SWITCH(WEEKDAY(A2), 1,"Sun", 2,"Mon", 3,"Tue", 4,"Wed", 5,"Thu", 6,"Fri", 7,"Sat")\n→ Convert a date to its weekday name',
@@ -1127,6 +1183,7 @@ const FORMULAS = {
       explain: "NOW() is like TODAY() but includes the time as well. It shows both the date and the current hour and minute. Refreshes every time the spreadsheet recalculates.",
       example: { formula: "=NOW()", result: "09/03/2026 14:35", context: "Returns current date and time together" },
       tip: "💡 To get just the time portion: =NOW()-TODAY() gives the fractional day. Format it as Time to display nicely.",
+      sampleTable: { headers: ["A: Event"], rows: [["Meeting"],["Deadline"],["Launch"],["Review"],["Sync"]], usage: "=NOW()", output: "Current date + time (e.g. 11/03/2026 14:32)" , whatsHappening: 'Returns the current date and time from your system clock — updates every time the sheet recalculates'},
     },
     advanced: {
       nesting: '=TEXT(NOW(), "dd/mm/yyyy hh:mm")\n→ Format the current timestamp in a specific display style',
@@ -1142,6 +1199,7 @@ const FORMULAS = {
       explain: "MONTH pulls out the month number from a date. January = 1, February = 2, through December = 12. Use it to group data by month or filter for specific months.",
       example: { formula: "=MONTH(A2)", result: "12 (if A2 is 25/12/2025)", context: "Returns just the month number from the date" },
       tip: "💡 To get the month name instead of a number: =TEXT(A2, \"mmmm\") returns 'December'.",
+      sampleTable: { headers: ["A: Date"], rows: [["25/12/2025"],["01/01/2026"],["15/06/2024"],["11/03/2026"],["30/09/2025"]], usage: "=MONTH(A2)", output: "12  (December)" , whatsHappening: 'A2 = 25/12/2025. MONTH extracts just the month number from that date = 12 (December)'},
     },
     advanced: {
       nesting: "=SUMPRODUCT((MONTH(A2:A100)=3)*B2:B100)\n→ Sum all values where the date falls in March (month 3)",
@@ -1157,6 +1215,7 @@ const FORMULAS = {
       explain: "YEAR returns the four-digit year from any date. If A2 is 25/12/2025, YEAR(A2) returns 2025. Useful for grouping annual data or comparing across years.",
       example: { formula: "=YEAR(A2)", result: "2025 (if A2 is 25/12/2025)", context: "Extracts just the year as a number" },
       tip: "💡 Combine with MONTH and DAY to rebuild dates: =DATE(YEAR(A2), MONTH(A2)+1, 1) gives the first day of the next month.",
+      sampleTable: { headers: ["A: Date"], rows: [["25/12/2025"],["01/01/2026"],["15/06/2024"],["11/03/2026"],["30/09/2025"]], usage: "=YEAR(A2)", output: "2025" , whatsHappening: 'A2 = 25/12/2025. YEAR extracts just the 4-digit year from that date = 2025'},
     },
     advanced: {
       nesting: "=SUMPRODUCT((YEAR(A2:A100)=2024)*B2:B100)\n→ Sum values for a specific year",
@@ -1172,6 +1231,7 @@ const FORMULAS = {
       explain: "EOMONTH gives you the last day of a month. Use 0 for the current month, 1 for next month, -1 for last month. No more manually figuring out if the month has 28, 30, or 31 days!",
       example: { formula: "=EOMONTH(TODAY(), 0)", result: "Last day of current month", context: "0 means the same month as the start date" },
       tip: "💡 =EOMONTH(A2, 0)+1 gives you the FIRST day of the NEXT month — last day plus 1.",
+      sampleTable: { headers: ["A: Date"], rows: [["11/03/2026"],["15/01/2026"],["20/02/2026"],["05/12/2025"],["01/06/2026"]], usage: "=EOMONTH(A2,0)", output: "31/03/2026  (last day of March)" , whatsHappening: 'A2 = 11/03/2026. EOMONTH(date, 0) returns the last day of the same month = 31/03/2026'},
     },
     advanced: {
       nesting: "=EOMONTH(A2, 0)-EOMONTH(A2, -1)\n→ Number of days in the month of date A2",
@@ -1187,6 +1247,7 @@ const FORMULAS = {
       explain: "WEEKDAY tells you what day of the week a date falls on. Use return_type 2 to make Monday=1 through Sunday=7 (most common in business settings).",
       example: { formula: "=WEEKDAY(A2, 2)", result: "1=Mon, 2=Tue … 7=Sun", context: "Return type 2 starts the week on Monday" },
       tip: "💡 Wrap in SWITCH or CHOOSE to get the day name: =CHOOSE(WEEKDAY(A2,2),\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\",\"Sun\")",
+      sampleTable: { headers: ["A: Date"], rows: [["11/03/2026"],["12/03/2026"],["13/03/2026"],["14/03/2026"],["15/03/2026"]], usage: "=WEEKDAY(A2,2)", output: "3  (Wednesday, mode 2 = Mon=1)" , whatsHappening: '11/03/2026 is a Wednesday. With mode 2 (Mon=1), Wednesday = 3'},
     },
     advanced: {
       nesting: '=IF(WEEKDAY(A2,2)>=6, "Weekend", "Weekday")\n→ Flag weekends vs weekdays cleanly',
@@ -1202,6 +1263,7 @@ const FORMULAS = {
       explain: "NETWORKDAYS counts only business days (Monday to Friday) between two dates, automatically skipping weekends. Pass a list of holiday dates as the 3rd argument to skip those too.",
       example: { formula: "=NETWORKDAYS(A2, B2)", result: "Number of working days between A2 and B2", context: "Counts Mon–Fri between start and end date (inclusive)" },
       tip: "💡 NETWORKDAYS includes BOTH start and end dates. Subtract 1 if you want to exclude the start day.",
+      sampleTable: { headers: ["A: Start","B: End"], rows: [["02/03/2026","11/03/2026"],["01/01/2026","31/01/2026"],["01/03/2026","31/03/2026"],["15/02/2026","28/02/2026"],["01/04/2026","30/04/2026"]], usage: "=NETWORKDAYS(A2,B2)", output: "8  (working days, excl. weekends)" , whatsHappening: 'From 02/03 to 11/03/2026 = 10 calendar days. Excluding 2 weekends = 8 working days'},
     },
     advanced: {
       nesting: "=NETWORKDAYS(TODAY(), A2, holidays_range)-1\n→ Business days remaining until deadline, excluding holidays",
@@ -1217,6 +1279,7 @@ const FORMULAS = {
       explain: "WORKDAY calculates a deadline date by counting only business days. Great for SLA deadlines, delivery schedules, or any business process that skips weekends automatically.",
       example: { formula: "=WORKDAY(TODAY(), 5)", result: "Date 5 business days from today", context: "Skips weekends automatically" },
       tip: "💡 Pass a holiday range as the 3rd argument: =WORKDAY(A2, 10, holidays) to skip public holidays too.",
+      sampleTable: { headers: ["A: Start Date","B: Days to Add"], rows: [["11/03/2026","5"],["01/01/2026","10"],["15/02/2026","3"],["01/03/2026","7"],["20/03/2026","2"]], usage: "=WORKDAY(A2,B2)", output: "18/03/2026  (5 working days from 11/03)" , whatsHappening: 'Starting 11/03/2026 (Wednesday), skip 5 working days (no weekends) = 18/03/2026 (Wednesday)'},
     },
     advanced: {
       nesting: "=WORKDAY(A2, -1)\n→ The last business day BEFORE date A2 (useful for prior trading day close)",
@@ -1234,6 +1297,7 @@ const FORMULAS = {
       explain: "LEFT grabs a set number of characters from the beginning of text. LEFT(\"Hello\", 3) returns \"Hel\". Perfect for extracting country codes, product prefixes, or year from a date string.",
       example: { formula: "=LEFT(A2, 3)", result: "First 3 characters of A2", context: 'If A2 = "SG-001", LEFT(A2,3) returns "SG-"' },
       tip: "💡 Combine with LEN to grab everything except the last N characters: =LEFT(A2, LEN(A2)-2)",
+      sampleTable: { headers: ['A: Product Code'], rows: [['PROD-001-A'],['PROD-002-B'],['SERV-003-C'],['PROD-004-D'],['SERV-005-E']], usage: '=LEFT(A2,4)', output: 'PROD  (first 4 characters)' , whatsHappening: 'A2 = \'PROD-001-A\'. Starting from the left, take 4 characters = \'PROD\''},
     },
     advanced: {
       nesting: '=LEFT(A2, FIND("-", A2)-1)\n→ Extract everything before the first dash — dynamic, not fixed length',
@@ -1249,6 +1313,7 @@ const FORMULAS = {
       explain: "RIGHT grabs characters from the END of text. RIGHT(\"Hello\", 3) returns \"llo\". Useful for extracting file extensions, last digits of an ID, or suffixes.",
       example: { formula: "=RIGHT(A2, 4)", result: "Last 4 characters of A2", context: 'If A2 = "Report.xlsx", RIGHT(A2,4) returns "xlsx"' },
       tip: '💡 Extract a file extension dynamically: =RIGHT(A2, LEN(A2)-FIND(".",A2)) gets everything after the dot.',
+      sampleTable: { headers: ['A: Product Code'], rows: [['PROD-001-A'],['PROD-002-B'],['SERV-003-C'],['PROD-004-D'],['SERV-005-E']], usage: '=RIGHT(A2,1)', output: 'A  (last 1 character)' , whatsHappening: 'A2 = \'PROD-001-A\'. Starting from the right, take 1 character = \'A\''},
     },
     advanced: {
       nesting: '=RIGHT(A2, LEN(A2)-FIND("-",A2))\n→ Extract everything AFTER the first dash — flexible extraction',
@@ -1264,6 +1329,7 @@ const FORMULAS = {
       explain: "MID extracts text from anywhere inside a string — you tell it where to start and how many characters to grab. MID(\"Hello World\", 7, 5) returns \"World\".",
       example: { formula: "=MID(A2, 4, 4)", result: "4 characters starting at position 4", context: 'If A2 = "ID-2025-001", MID(A2,4,4) returns "2025"' },
       tip: "💡 Combine MID with FIND to extract segments between delimiters — very powerful for parsing structured codes.",
+      sampleTable: { headers: ['A: Product Code'], rows: [['PROD-001-A'],['PROD-002-B'],['SERV-003-C'],['PROD-004-D'],['SERV-005-E']], usage: '=MID(A2,6,3)', output: '001  (3 chars starting at position 6)' , whatsHappening: 'A2 = \'PROD-001-A\'. Start at position 6 (after \'PROD-\'), take 3 characters = \'001\''},
     },
     advanced: {
       nesting: '=MID(A2, FIND("-",A2)+1, FIND("-",A2,FIND("-",A2)+1)-FIND("-",A2)-1)\n→ Extract text between the first and second dashes',
@@ -1279,6 +1345,7 @@ const FORMULAS = {
       explain: "LEN counts every character in a cell — letters, numbers, spaces, and symbols all count. LEN(\"Hello\") = 5. Essential for data validation and dynamic text extraction.",
       example: { formula: "=LEN(A2)", result: "Number of characters in A2", context: "Spaces and punctuation count too" },
       tip: "💡 Check for extra spaces: =LEN(A2) vs =LEN(TRIM(A2)) — if they differ, there are hidden spaces!",
+      sampleTable: { headers: ["A: Text"], rows: [["Hello"],["Singapore"],["Formula"],["Hi"],["Spreadsheet"]], usage: "=LEN(A2)", output: "5  (Hello has 5 characters)" , whatsHappening: '\'Hello\' has H-e-l-l-o = 5 characters. LEN counts every character including spaces'},
     },
     advanced: {
       nesting: '=LEN(A2)-LEN(SUBSTITUTE(A2,",",""))\n→ Count how many commas are in a cell (works for any character)',
@@ -1294,6 +1361,7 @@ const FORMULAS = {
       explain: "FIND tells you the character position where text appears inside another string. FIND(\"@\", \"user@email.com\") returns 5 — the @ is at position 5. FIND is case-sensitive.",
       example: { formula: '=FIND("@", A2)', result: "Position of @ in A2", context: 'If A2 = "user@email.com", returns 5' },
       tip: "💡 FIND returns #VALUE! if the text is not found. Wrap with ISNUMBER(FIND(...)) to check existence without an error.",
+      sampleTable: { headers: ["A: Email"], rows: [["alice@mail.com"],["bob@work.org"],["carol@test.net"],["dave@demo.com"],["eve@data.io"]], usage: "=FIND('@',A2)", output: "6  (@ is at position 6)" , whatsHappening: 'In \'alice@mail.com\', the @ symbol appears at position 6 (a-l-i-c-e-@). FIND returns 6'},
     },
     advanced: {
       nesting: '=LEFT(A2, FIND("@",A2)-1)\n→ Extract the username part of an email address',
@@ -1309,6 +1377,7 @@ const FORMULAS = {
       explain: "SEARCH is like FIND but friendlier — it ignores uppercase/lowercase differences and supports wildcards. SEARCH(\"apple\", \"I have an Apple\") returns 11, even with different cases.",
       example: { formula: '=SEARCH("apple", A2)', result: "Position of 'apple' in A2 (any case)", context: "Finds 'Apple', 'APPLE', 'apple' — case doesn't matter" },
       tip: "💡 Wildcard: =SEARCH(\"app*\", A2) finds anything starting with 'app'. Wrap in ISNUMBER to get TRUE/FALSE.",
+      sampleTable: { headers: ['A: Description'], rows: [['Blue Widget Pro'],['Red Widget Lite'],['Blue Gadget Max'],['Green Widget'],['Blue Sensor X']], usage: '=SEARCH("widget",A2)', output: '6  (case-insensitive, Widget at pos 6)' , whatsHappening: 'Searches for \'widget\' (case-insensitive) in \'Blue Widget Pro\'. \'Widget\' starts at position 6'},
     },
     advanced: {
       nesting: '=ISNUMBER(SEARCH("urgent", A2))\n→ TRUE if "urgent" (any case) appears anywhere in A2 — great for flagging emails',
@@ -1324,6 +1393,7 @@ const FORMULAS = {
       explain: "SUBSTITUTE finds a piece of text and replaces it with something else — like Find & Replace, but inside a formula so it's dynamic and non-destructive.",
       example: { formula: '=SUBSTITUTE(A2, "USD", "SGD")', result: "Text with USD replaced by SGD", context: "Replaces every occurrence of 'USD' with 'SGD'" },
       tip: "💡 To remove a character, replace it with nothing: =SUBSTITUTE(A2, \"-\", \"\") removes all dashes.",
+      sampleTable: { headers: ['A: Text'], rows: [['2024-Q1-Sales'],['2024-Q2-Sales'],['2024-Q3-Sales'],['2024-Q4-Sales'],['2024-Q1-Cost']], usage: '=SUBSTITUTE(A2,"2024","2025")', output: '2025-Q1-Sales' , whatsHappening: 'A2 = \'2024-Q1-Sales\'. Finds \'2024\' and replaces it with \'2025\' = \'2025-Q1-Sales\''},
     },
     advanced: {
       nesting: '=SUBSTITUTE(SUBSTITUTE(A2," ","_"),",","")\n→ Replace spaces with underscores AND remove commas — chain substitutions',
@@ -1339,6 +1409,7 @@ const FORMULAS = {
       explain: "CONCATENATE joins text together. =CONCATENATE(\"Hello\", \" \", \"World\") gives \"Hello World\". In modern Excel and Sheets, the & operator does the same thing more concisely.",
       example: { formula: '=CONCATENATE(A2, " ", B2)', result: "First and last name joined with a space", context: 'If A2="John", B2="Smith", result is "John Smith"' },
       tip: '💡 Use & instead: =A2&" "&B2 is shorter and easier. CONCATENATE is the older equivalent.',
+      sampleTable: { headers: ['A: First','B: Last'], rows: [['Alice','Smith'],['Bob','Jones'],['Carol','Brown'],['Dave','Taylor'],['Eve','Martin']], usage: '=CONCATENATE(A2," ",B2)', output: 'Alice Smith' , whatsHappening: 'Joins A2 (\'Alice\') + a space + B2 (\'Smith\') into one string = \'Alice Smith\''},
     },
     advanced: {
       nesting: '=CONCATENATE(TEXT(A2,"dd/mm/yyyy"), " - ", B2)\n→ Join a formatted date with a text label',
@@ -1354,6 +1425,7 @@ const FORMULAS = {
       explain: "TEXTJOIN is the modern, powerful way to join text. Give it a separator (like \", \"), tell it whether to skip empty cells, and then the range. It handles entire ranges — no need to reference each cell individually.",
       example: { formula: '=TEXTJOIN(", ", TRUE, A2:A10)', result: '"Alice, Bob, Carol"', context: "Joins all names in A2:A10 with commas, skipping any blank cells" },
       tip: "💡 Set ignore_empty to TRUE to automatically skip blank cells in the range — no messy double commas.",
+      sampleTable: { headers: ['A: Item'], rows: [['Apple'],['Banana'],[''],['Cherry'],['Date']], usage: '=TEXTJOIN(", ",TRUE,A2:A6)', output: 'Apple, Banana, Cherry, Date  (skips blank)' , whatsHappening: 'Joins A2:A6 with \', \' separator. A4 is blank — TRUE tells it to skip blanks = \'Apple, Banana, Cherry, Date\''},
     },
     advanced: {
       nesting: '=TEXTJOIN(" | ", TRUE, IF(B2:B20="Active", A2:A20, ""))\n→ Join only the names where status is Active (array formula)',
@@ -1369,6 +1441,7 @@ const FORMULAS = {
       explain: "UPPER converts every letter to uppercase. Great for standardizing data entry or ensuring consistent formatting in codes and IDs.",
       example: { formula: '=UPPER("hello world")', result: '"HELLO WORLD"', context: "All letters become uppercase" },
       tip: "💡 Use LOWER for all-lowercase, PROPER for Title Case, UPPER for ALL CAPS.",
+      sampleTable: { headers: ['A: Name'], rows: [['alice'],['Bob'],['CAROL'],['dave'],['Eve']], usage: '=UPPER(A2)', output: 'ALICE' , whatsHappening: 'A2 = \'alice\' (lowercase). UPPER converts every letter to uppercase = \'ALICE\''},
     },
     advanced: {
       nesting: '=EXACT(UPPER(A2), UPPER(B2))\n→ Case-insensitive comparison: converts both to uppercase before comparing',
@@ -1384,6 +1457,7 @@ const FORMULAS = {
       explain: "LOWER converts all letters to lowercase. Perfect for normalizing data before comparisons or lookups when you want to ignore case differences entirely.",
       example: { formula: '=LOWER("HELLO World")', result: '"hello world"', context: "Every letter becomes lowercase" },
       tip: "💡 Common pattern: =LOWER(TRIM(A2)) normalizes text for case-insensitive deduplication or matching.",
+      sampleTable: { headers: ['A: Name'], rows: [['ALICE'],['Bob'],['CAROL'],['DAVE'],['Eve']], usage: '=LOWER(A2)', output: 'alice' , whatsHappening: 'A2 = \'ALICE\' (uppercase). LOWER converts every letter to lowercase = \'alice\''},
     },
     advanced: {
       nesting: "=XLOOKUP(LOWER(A2), LOWER(B2:B100), C2:C100)\n→ Case-insensitive XLOOKUP by lowercasing both the lookup value and the lookup array",
@@ -1399,6 +1473,7 @@ const FORMULAS = {
       explain: "Sometimes numbers are imported as text — they show left-aligned and SUM ignores them. VALUE converts text like \"42\" into real numbers you can calculate with.",
       example: { formula: '=VALUE("42")', result: "42 (as a real number)", context: 'Converts the text "42" to the numeric value 42' },
       tip: "💡 If SUM returns 0 unexpectedly, your numbers might be stored as text. Apply VALUE to fix them.",
+      sampleTable: { headers: ["A: Text Number"], rows: [["'42"],["'1500"],["'3.14"],["'99"],["'250"]], usage: "=VALUE(A2)", output: "42  (converts text to real number)" , whatsHappening: 'A2 looks like 42 but is stored as text (left-aligned). VALUE converts it to a real number you can calculate with'},
     },
     advanced: {
       nesting: "=VALUE(TRIM(A2))\n→ Remove spaces AND convert to number in one step — common data cleaning pattern",
@@ -1414,6 +1489,7 @@ const FORMULAS = {
       explain: "TEXT converts numbers and dates into formatted text strings. Turn 1234567.8 into \"$1,234,567.80\" or a date into \"December 2025\". Essential for building dynamic labels.",
       example: { formula: '=TEXT(A2, "dd/mm/yyyy")', result: '"09/03/2026"', context: "Converts a date value into a formatted text string" },
       tip: '💡 Common format codes: "dd/mm/yyyy" (date), "$#,##0.00" (currency), "0%" (percentage), "mmmm yyyy" (Month Year).',
+      sampleTable: { headers: ['A: Date / Number'], rows: [['11/03/2026'],['44927'],['0.854'],['12500'],['0.5']], usage: '=TEXT(A2,"dd/mm/yyyy")', output: '11/03/2026  (formatted as text)' , whatsHappening: 'A2 = 11/03/2026 (a date number). TEXT formats it as readable text using the pattern \'dd/mm/yyyy\''},
     },
     advanced: {
       nesting: '="Revenue for "&TEXT(A2,"mmmm yyyy")&": $"&TEXT(B2,"#,##0")\n→ Build a dynamic label combining a formatted month and revenue figure',
@@ -1431,6 +1507,7 @@ const FORMULAS = {
       explain: "COUNTBLANK counts cells that are completely empty. Useful for finding missing data, incomplete forms, or gaps in a dataset at a glance.",
       example: { formula: "=COUNTBLANK(A2:A100)", result: "Number of empty cells in A2:A100", context: "Counts cells with nothing in them" },
       tip: "💡 Cells with formulas that return \"\" are counted as blank by COUNTBLANK, even though ISBLANK returns FALSE for them.",
+      sampleTable: { headers: ["A: Status"], rows: [["Done"],[""],["In Progress"],[""],["Done"]], usage: "=COUNTBLANK(A2:A6)", output: "2" , whatsHappening: 'Finds empty cells in A2:A6 — rows 3 and 5 are blank = 2'},
     },
     advanced: {
       nesting: '=IF(COUNTBLANK(A2:F2)>0, "Incomplete", "Complete")\n→ Flag rows that have any missing data',
@@ -1448,6 +1525,7 @@ const FORMULAS = {
       explain: "SORT returns a sorted copy of your data without touching the original. Choose which column to sort by and whether ascending (1) or descending (-1). The result spills automatically.",
       example: { formula: "=SORT(A2:C100, 2, -1)", result: "Data sorted by column 2, largest first", context: "sort_index=2 sorts by the 2nd column; sort_order=-1 means descending" },
       tip: "💡 SORT doesn't modify your original data — it creates a sorted view elsewhere. Change the source and the sorted view updates instantly.",
+      sampleTable: { headers: ["A: Name","B: Score"], rows: [["Alice","88"],["Bob","72"],["Carol","95"],["Dave","61"],["Eve","84"]], usage: "=SORT(A2:B6,2,-1)", output: "Carol 95, Alice 88, Eve 84, Bob 72, Dave 61" , whatsHappening: 'Sorts A2:B6 by column 2 (Score) in descending order (-1). Carol (95) first, Dave (61) last'},
     },
     advanced: {
       nesting: "=SORT(FILTER(A2:C100, B2:B100=\"Active\"), 3, -1)\n→ Filter to Active rows, then sort by column 3 descending",
@@ -1463,6 +1541,7 @@ const FORMULAS = {
       explain: "SORTBY sorts your data based on another column or array — even one that's not included in the data being sorted. Like sorting a list of names by a separate score column.",
       example: { formula: "=SORTBY(A2:A100, B2:B100, -1)", result: "Names sorted by scores (highest first)", context: "Column A is sorted according to values in column B, descending" },
       tip: "💡 SORTBY can sort by multiple columns: =SORTBY(data, col1, 1, col2, -1) sorts ascending by col1, then descending by col2.",
+      sampleTable: { headers: ["A: Name","B: Dept","C: Score"], rows: [["Alice","Sales","88"],["Bob","HR","72"],["Carol","Tech","95"],["Dave","Sales","61"],["Eve","HR","84"]], usage: "=SORTBY(A2:C6,C2:C6,-1)", output: "Sorted: Carol 95, Alice 88, Eve 84, Bob 72, Dave 61" , whatsHappening: 'Sorts the full table by the Score column (C2:C6) in descending order. Carol (95) moves to top'},
     },
     advanced: {
       nesting: "=SORTBY(A2:C100, C2:C100, -1, A2:A100, 1)\n→ Sort by column C descending, then column A ascending as a tiebreaker",
@@ -1478,6 +1557,7 @@ const FORMULAS = {
       explain: "UNIQUE removes duplicate values and returns only the distinct ones. Great for creating dropdown lists, summary reports, or finding all the distinct categories in a column.",
       example: { formula: "=UNIQUE(A2:A100)", result: "List of unique values from column A", context: "Each value appears only once — duplicates removed" },
       tip: "💡 Combine with SORT: =SORT(UNIQUE(A2:A100)) for a clean, alphabetically sorted list of categories.",
+      sampleTable: { headers: ["A: Category"], rows: [["Food"],["Travel"],["Food"],["Tech"],["Travel"]], usage: "=UNIQUE(A2:A6)", output: "Food, Travel, Tech  (3 distinct values)" , whatsHappening: 'Scans A2:A6: Food, Travel, Food, Tech, Travel. Removes duplicates, returns 3 distinct values'},
     },
     advanced: {
       nesting: '=SORT(UNIQUE(FILTER(A2:A100, B2:B100="Active")))\n→ Unique active categories, sorted alphabetically',
@@ -1493,6 +1573,7 @@ const FORMULAS = {
       explain: "LAMBDA lets you write your own formula once, name it, and reuse it anywhere. Define the inputs and the calculation, then call it like any built-in function.",
       example: { formula: "=LAMBDA(x, y, x^2 + y^2)(3, 4)", result: "25 (= 9 + 16)", context: "Defines a function that squares two numbers and adds them, then calls it with 3 and 4" },
       tip: "💡 Save a LAMBDA as a Named Range (Excel) or Named Function (Sheets) — then call it like =PYTHAGOREAN(3,4) anywhere in the workbook!",
+      sampleTable: { headers: ["A: Value"], rows: [["5"],["10"],["15"],["20"],["25"]], usage: "=LAMBDA(x, x*x)(A2)", output: "25  (5 squared)" , whatsHappening: 'Defines a reusable function: takes x, returns x*x. Applied to A2 (5): 5*5 = 25'},
     },
     advanced: {
       nesting: "Save as named function 'TAX':\n=LAMBDA(amount, rate, amount*(1+rate))\nThen use anywhere: =TAX(B2, 0.09)\n→ Clean, readable, reusable tax calculation",
@@ -1508,6 +1589,7 @@ const FORMULAS = {
       explain: "SEQUENCE creates a list of numbers for you — no typing each one manually. Specify how many rows (and optionally columns), where to start, and the step size.",
       example: { formula: "=SEQUENCE(5)", result: "1, 2, 3, 4, 5 (spilled down)", context: "Creates 5 sequential numbers starting from 1" },
       tip: "💡 =SEQUENCE(12, 1, 1, 1) generates 1–12 — perfect for month numbers in a dashboard or calendar.",
+      sampleTable: { headers: ["(No input needed)"], rows: [["—"],["—"],["—"],["—"],["—"]], usage: "=SEQUENCE(5,1,1,2)", output: "1, 3, 5, 7, 9  (5 odd numbers)" , whatsHappening: 'Generates 5 numbers starting at 1, stepping by 2: 1, 3, 5, 7, 9'},
     },
     advanced: {
       nesting: "=DATE(2025, SEQUENCE(12), 1)\n→ Generate the first day of each month in 2025 — a full year calendar header in one formula",
@@ -1523,6 +1605,7 @@ const FORMULAS = {
       explain: "RANDARRAY fills a grid with random numbers. Specify the size, range, and whether you want whole numbers or decimals. Great for generating test data, simulations, or random samples.",
       example: { formula: "=RANDARRAY(5, 1, 1, 100, TRUE)", result: "5 random whole numbers between 1 and 100", context: "5 rows, 1 column, integers between 1 and 100" },
       tip: "💡 RANDARRAY recalculates every time the sheet changes. To freeze the values, copy and Paste Special → Values Only.",
+      sampleTable: { headers: ["(No input needed)"], rows: [["—"],["—"],["—"],["—"],["—"]], usage: "=RANDARRAY(3,2,1,100,TRUE)", output: "3×2 grid of random integers between 1–100" , whatsHappening: 'Fills a 3-row by 2-column grid with random whole numbers between 1 and 100'},
     },
     advanced: {
       nesting: "=SORTBY(A2:A20, RANDARRAY(COUNTA(A2:A20)))\n→ Randomly shuffle a list — useful for randomizing survey order or team assignments",
@@ -4214,28 +4297,81 @@ function App() {
                   </div>
                   <div className="card" style={{ padding: 20 }}>
                     <div className="section-title">Try this example</div>
+
+                    {/* Sample data table - Excel style */}
+                    {formula.beginner.sampleTable && (
+                      <div style={{ marginBottom: 18 }}>
+                        <div style={{ fontSize: 11, color: "#475569", marginBottom: 8, textTransform: "uppercase", letterSpacing: "1.5px" }}>Sample Data</div>
+                        <div style={{ overflowX: "auto", borderRadius: 6, border: "2px solid #2a3a5a", display: "inline-block", minWidth: "100%" }}>
+                          <table style={{ borderCollapse: "collapse", fontSize: 12, fontFamily: "Calibri, Arial, sans-serif", minWidth: "100%" }}>
+                            <thead>
+                              <tr>
+                                {/* Row-number column header (blank corner) */}
+                                <th style={{ background: "#1e2a3a", border: "1px solid #2a3a5a", borderTop: "none", borderLeft: "none", padding: "4px 10px", minWidth: 36, width: 36 }}></th>
+                                {formula.beginner.sampleTable.headers.map((h, i) => {
+                                  const colLetter = String.fromCharCode(65 + i);
+                                  const colLabel = h.includes(":") ? h.split(":")[1].trim() : h;
+                                  return (
+                                    <th key={i} style={{ background: "#1e2a3a", border: "1px solid #2a3a5a", borderTop: "none", padding: "4px 0", textAlign: "center", fontWeight: 600, color: "#94a3b8", minWidth: 110, whiteSpace: "nowrap" }}>
+                                      <div style={{ color: "#60a5fa", fontSize: 12, fontWeight: 700, letterSpacing: 1 }}>{colLetter}</div>
+                                      <div style={{ color: "#64748b", fontSize: 10, fontWeight: 400, paddingBottom: 2 }}>{colLabel}</div>
+                                    </th>
+                                  );
+                                })}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {/* Header row (row 1) */}
+                              <tr style={{ background: "#1a2235" }}>
+                                <td style={{ border: "1px solid #2a3a5a", padding: "4px 8px", color: "#475569", textAlign: "center", fontSize: 11, fontWeight: 600, background: "#1e2a3a", minWidth: 36 }}>1</td>
+                                {formula.beginner.sampleTable.headers.map((h, i) => {
+                                  const colLabel = h.includes(":") ? h.split(":")[0].trim() : h;
+                                  return (
+                                    <td key={i} style={{ border: "1px solid #2a3a5a", padding: "5px 10px", color: "#6366f1", fontWeight: 700, background: "#151c2e", fontSize: 12 }}>{colLabel}</td>
+                                  );
+                                })}
+                              </tr>
+                              {/* Data rows */}
+                              {formula.beginner.sampleTable.rows.map((row, ri) => (
+                                <tr key={ri} style={{ background: ri % 2 === 0 ? "#0d1117" : "#101520" }}>
+                                  <td style={{ border: "1px solid #1e2a3a", padding: "4px 8px", color: "#475569", textAlign: "center", fontSize: 11, fontWeight: 600, background: "#1e2a3a" }}>{ri + 2}</td>
+                                  {row.map((cell, ci) => (
+                                    <td key={ci} style={{ border: "1px solid #1e2535", padding: "5px 10px", color: "#e2e8f0", fontSize: 13 }}>{cell}</td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Formula usage */}
                     <div style={{ marginBottom: 12 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                        <span style={{ fontSize: 12, color: "#64748b" }}>Formula</span>
-                        <button className="copy-btn" onClick={() => copyFormula(formula.beginner.example.formula)}>
-                          {copied === formula.beginner.example.formula ? "✓ Copied!" : "Copy"}
+                        <span style={{ fontSize: 11, color: "#475569", textTransform: "uppercase", letterSpacing: "1px" }}>Formula</span>
+                        <button className="copy-btn" onClick={() => copyFormula(formula.beginner.sampleTable ? formula.beginner.sampleTable.usage : formula.beginner.example.formula)}>
+                          {copied === (formula.beginner.sampleTable ? formula.beginner.sampleTable.usage : formula.beginner.example.formula) ? "✓ Copied!" : "Copy"}
                         </button>
                       </div>
-                      <div className="code-block">{formula.beginner.example.formula}</div>
+                      <div className="code-block">{formula.beginner.sampleTable ? formula.beginner.sampleTable.usage : formula.beginner.example.formula}</div>
                     </div>
+
+                    {/* Output */}
                     <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                      <div style={{ flex: 1, minWidth: 110, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: "10px 14px" }}>
-                        <div style={{ fontSize: 11, color: "#475569", marginBottom: 4 }}>Result</div>
-                        <div style={{ fontSize: 13, color: "#4ade80" }}>{formula.beginner.example.result}</div>
+                      <div style={{ flex: 1, minWidth: 140, background: "#061a0e", border: "1px solid #14532d", borderRadius: 8, padding: "12px 16px" }}>
+                        <div style={{ fontSize: 11, color: "#166534", marginBottom: 6, textTransform: "uppercase", letterSpacing: "1px" }}>✓ Output</div>
+                        <div style={{ fontSize: 14, color: "#4ade80", fontWeight: 600 }}>{formula.beginner.sampleTable ? formula.beginner.sampleTable.output : formula.beginner.example.result}</div>
                       </div>
-                      <div style={{ flex: 2, minWidth: 180, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: "10px 14px" }}>
-                        <div style={{ fontSize: 11, color: "#475569", marginBottom: 4 }}>What's happening</div>
-                        <div style={{ fontSize: 13, color: "#94a3b8" }}>{formula.beginner.example.context}</div>
+                      <div style={{ flex: 2, minWidth: 180, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: "12px 16px" }}>
+                        <div style={{ fontSize: 11, color: "#475569", marginBottom: 6, textTransform: "uppercase", letterSpacing: "1px" }}>What's happening</div>
+                        <div style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.6 }}>{formula.beginner.sampleTable ? formula.beginner.sampleTable.whatsHappening : formula.beginner.example.context}</div>
                       </div>
                     </div>
+
                     {formula.beginner.rangeExample && (
-                      <div style={{ marginTop: 14 }}>
-                        <div style={{ fontSize: 12, color: "#64748b", marginBottom: 6 }}>Range variant</div>
+                      <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #1e2535" }}>
+                        <div style={{ fontSize: 11, color: "#475569", marginBottom: 6, textTransform: "uppercase", letterSpacing: "1px" }}>Range variant</div>
                         <div className="code-block">{formula.beginner.rangeExample.formula}</div>
                         <div style={{ fontSize: 12, color: "#475569", marginTop: 6 }}>{formula.beginner.rangeExample.context}</div>
                       </div>
