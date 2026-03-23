@@ -472,7 +472,7 @@ const FORMULAS = {
       explain: "INDIRECT is magic — you write the address of a cell as text, and it goes there. Like writing 'A1' in a cell, then INDIRECT actually visits A1 and grabs its value.",
       example: { formula: '=INDIRECT("A"&B1)', result: "Value from that row in column A", context: "If B1 contains 5, this reads cell A5" },
       tip: '💡 Great for referencing different sheets dynamically: =INDIRECT(A1&"!B2") where A1 has the sheet name.',
-      sampleTable: { headers: ['A: Sheet ref','B: Row num'], rows: [['Sales','5'],['Data','3'],['Report','7'],['Summary','2'],['Raw','9']], usage: '=INDIRECT("A"&B2)', output: 'Value from cell A3' , whatsHappening: 'B2 contains \'3\', so INDIRECT builds the address \'A3\' and returns whatever is in cell A3'},
+      sampleTable: { headers: ['A: City','B: Row num'], rows: [['Singapore','3'],['Tokyo','5'],['London','2'],['Paris','4'],['Sydney','3']], usage: '=INDIRECT("A"&B2)', output: 'London', whatsHappening: 'B2 contains 3, so INDIRECT builds the text address "A3" and fetches whatever is in cell A3 = London' },
     },
     advanced: {
       nesting: '=SUM(INDIRECT(sheetName&"!A2:A100"))\n→ Sum column A from whatever sheet is named in the sheetName cell',
@@ -568,7 +568,7 @@ const FORMULAS = {
       explain: "IFERROR is your safety net. When a formula fails (like dividing by zero, or a lookup that finds nothing), instead of showing an ugly #ERROR!, you can show a friendly message like 'Not Found'.",
       example: { formula: '=IFERROR(VLOOKUP(A2, B:C, 2, FALSE), "Not Found")', result: '"Not Found" if not found, result if found', context: "If VLOOKUP fails, shows 'Not Found' instead of #N/A error" },
       tip: "💡 Use IFERROR on any formula that might fail — lookups, divisions, date calculations.",
-      sampleTable: { headers: ['A: Lookup ID'], rows: [['101'],['999'],['103'],['888'],['105']], usage: '=IFERROR(VLOOKUP(A2,C:D,2,0),"Not Found")', output: 'Not Found  (999 missing from table)' , whatsHappening: 'VLOOKUP tries to find 999 in column C — it doesn\'t exist, returns #N/A. IFERROR catches that and shows \'Not Found\' instead'},
+      sampleTable: { headers: ['A: ID','B: Name'], rows: [['101','Alice'],['102','Bob'],['103','Carol'],['104','Dave'],['105','Eve']], usage: '=IFERROR(VLOOKUP(999,A2:B6,2,0),"Not Found")', output: 'Not Found', whatsHappening: 'VLOOKUP searches for 999 in column A — it does not exist in the table. It returns #N/A, and IFERROR catches that, showing Not Found instead' },
     },
     advanced: {
       nesting: '=IFERROR(VLOOKUP(A2,Sheet1!A:B,2,0), IFERROR(VLOOKUP(A2,Sheet2!A:B,2,0), "Not Found"))\n→ Tries Sheet1, then Sheet2, then shows \'Not Found\'',
@@ -584,7 +584,7 @@ const FORMULAS = {
       explain: "IFNA is like IFERROR but more specific — it only catches #N/A errors (usually from lookups that can't find what they're looking for). Other errors like #DIV/0! will still show.",
       example: { formula: '=IFNA(XLOOKUP(A2, B:B, C:C), "Not in list")', result: '"Not in list" if not found, result if found', context: "Only catches 'not found' — other errors still show" },
       tip: "💡 Prefer IFNA over IFERROR for lookups — if there's a real formula mistake, you want to know!",
-      sampleTable: { headers: ['A: Product'], rows: [['Apple'],['Mango'],['Cherry'],['Dragon'],['Fig']], usage: '=IFNA(XLOOKUP(A2,C:C,D:D),"Not in list")', output: 'Not in list  (Mango not found)' , whatsHappening: 'XLOOKUP searches for \'Mango\' — not in the list, returns #N/A. IFNA catches only that error and shows \'Not in list\''},
+      sampleTable: { headers: ['A: Product','B: Price'], rows: [['Apple','1.20'],['Cherry','2.50'],['Fig','3.00'],['Date','1.80'],['Grape','2.20']], usage: '=IFNA(VLOOKUP("Mango",A2:B6,2,0),"Not in list")', output: 'Not in list', whatsHappening: 'VLOOKUP searches for Mango in column A — Mango is not in the table, returns #N/A. IFNA catches only that specific error and shows Not in list' },
     },
     advanced: {
       nesting: '=IFNA(INDEX(C:C,MATCH(A2,B:B,0)), "Missing")\n→ Cleaner than wrapping entire INDEX+MATCH in IFERROR',
@@ -616,7 +616,7 @@ const FORMULAS = {
       explain: "ISNA only checks for the #N/A error — which usually means 'not found' in lookups. Returns TRUE if the result is #N/A, FALSE otherwise.",
       example: { formula: '=IF(ISNA(VLOOKUP(A2,B:C,2,0)), "Not Found", VLOOKUP(A2,B:C,2,0))', result: "Result or 'Not Found'", context: "Checks if VLOOKUP returns #N/A before using the result" },
       tip: "💡 IFNA is usually cleaner than IF(ISNA(...)) — less repetition!",
-      sampleTable: { headers: ["A: Code"], rows: [["A100"],["B200"],["Z999"],["A101"],["B201"]], usage: "=ISNA(VLOOKUP(A4,A:B,2,0))", output: "TRUE  (Z999 returns #N/A)" , whatsHappening: 'VLOOKUP looks for Z999 in column A — not found, returns #N/A. ISNA detects that and returns TRUE'},
+      sampleTable: { headers: ['A: Code','B: Label'], rows: [['A100','Alpha'],['B200','Beta'],['Z999',''],['A101','Alpha2'],['B201','Beta2']], usage: '=ISNA(VLOOKUP(A3,A2:B6,2,0))', output: 'TRUE  (Z999 has no label)', whatsHappening: 'VLOOKUP looks for Z999 in A2:B6 column 2 — its B column is empty, returning #N/A. ISNA detects that and returns TRUE' },
     },
     advanced: {
       nesting: '=IF(ISNA(MATCH(A2,B:B,0)), "Add to list", "Already exists")\n→ Duplicate checker before adding',
@@ -1033,7 +1033,7 @@ const FORMULAS = {
       explain: "SUMPRODUCT multiplies matching elements from two arrays and then sums all the results. Think: price times quantity for each row, then sum everything up to get total revenue.",
       example: { formula: "=SUMPRODUCT(B2:B10, C2:C10)", result: "Total revenue", context: "Multiplies each price (B) by its quantity (C), then sums all the results" },
       tip: "💡 SUMPRODUCT also works as a flexible COUNTIFS/SUMIFS alternative that handles array logic natively — no Ctrl+Shift+Enter needed!",
-      sampleTable: { headers: ["A: Units","B: Price ($)"], rows: [["5","12.00"],["3","25.50"],["8","7.75"],["2","100.00"],["10","4.50"]], usage: "=SUMPRODUCT(A2:A6,B2:B6)", output: "468.5" , whatsHappening: 'Multiplies each pair: 5×12=60, 3×25.50=76.50, 8×7.75=62, 2×100=200, 10×4.50=45. Total = 443.50'},
+      sampleTable: { headers: ['A: Units','B: Price ($)'], rows: [['5','12.00'],['3','25.50'],['8','7.75'],['2','100.00'],['10','4.50']], usage: '=SUMPRODUCT(A2:A6,B2:B6)', output: '443.50', whatsHappening: 'Multiplies each pair row by row: 5×12=60, 3×25.50=76.50, 8×7.75=62, 2×100=200, 10×4.50=45. Sums all = 443.50' },
     },
     advanced: {
       nesting: '=SUMPRODUCT((A2:A100="East")*(B2:B100>1000)*C2:C100)\n→ Sum column C where A="East" AND B>1000 — multi-condition sum without SUMIFS',
@@ -1473,7 +1473,7 @@ const FORMULAS = {
       explain: "Sometimes numbers are imported as text — they show left-aligned and SUM ignores them. VALUE converts text like \"42\" into real numbers you can calculate with.",
       example: { formula: '=VALUE("42")', result: "42 (as a real number)", context: 'Converts the text "42" to the numeric value 42' },
       tip: "💡 If SUM returns 0 unexpectedly, your numbers might be stored as text. Apply VALUE to fix them.",
-      sampleTable: { headers: ["A: Text Number"], rows: [["'42"],["'1500"],["'3.14"],["'99"],["'250"]], usage: "=VALUE(A2)", output: "42  (converts text to real number)" , whatsHappening: 'A2 looks like 42 but is stored as text (left-aligned). VALUE converts it to a real number you can calculate with'},
+      sampleTable: { headers: ['A: Text Number'], rows: [['42 (text)'],['1500 (text)'],['3.14 (text)'],['99 (text)'],['250 (text)']], usage: '=VALUE(A2)', output: '42', whatsHappening: 'A2 looks like 42 but is stored as text (shown left-aligned in Excel). VALUE() converts it to a real number you can calculate with' },
     },
     advanced: {
       nesting: "=VALUE(TRIM(A2))\n→ Remove spaces AND convert to number in one step — common data cleaning pattern",
@@ -3042,82 +3042,122 @@ const QUIZ_DATA = {
   ]
 };
 const PLAYGROUND_SCENARIOS = {
-  sales: {
-    label: "🛒 Sales Data",
-    description: "Monthly sales by region and product",
-    cols: ["Region", "Product", "Units", "Price", "Revenue", "Month"],
-    rows: [
-      ["East",  "Widget A", 120, 25.00, 3000,  "Jan"],
-      ["West",  "Widget B",  85, 40.00, 3400,  "Jan"],
-      ["East",  "Widget C",  60, 15.00,  900,  "Jan"],
-      ["North", "Widget A",  95, 25.00, 2375,  "Feb"],
-      ["South", "Widget B", 110, 40.00, 4400,  "Feb"],
-      ["West",  "Widget C",  70, 15.00, 1050,  "Feb"],
-      ["East",  "Widget A", 140, 25.00, 3500,  "Mar"],
-      ["North", "Widget B",  50, 40.00, 2000,  "Mar"],
-      ["South", "Widget C",  90, 15.00, 1350,  "Mar"],
-      ["West",  "Widget A",  75, 25.00, 1875,  "Apr"],
-    ],
-    challenges: [
-      { id: "s1", label: "Total Revenue", hint: "Sum all revenue values", target: "=SUM(E2:E11)", check: v => Math.abs(v - 23850) < 1, expected: "23850" },
-      { id: "s2", label: "Average Units Sold", hint: "Average of the Units column", target: "=AVERAGE(C2:C11)", check: v => Math.abs(v - 89.5) < 1, expected: "89.5" },
-      { id: "s3", label: "East Region Revenue", hint: "Sum Revenue where Region = East", target: '=SUMIF(A2:A11,"East",E2:E11)', check: v => Math.abs(v - 7400) < 1, expected: "7400" },
-      { id: "s4", label: "Count West sales", hint: "Count rows where Region = West", target: '=COUNTIF(A2:A11,"West")', check: v => v === 3, expected: "3" },
-      { id: "s5", label: "Highest Revenue", hint: "Find the maximum revenue value", target: "=MAX(E2:E11)", check: v => v === 4400, expected: "4400" },
-      { id: "s6", label: "Widget A total units", hint: "Sum Units where Product = Widget A", target: '=SUMIF(B2:B11,"Widget A",C2:C11)', check: v => Math.abs(v - 430) < 1, expected: "430" },
-    ]
-  },
   employees: {
-    label: "👥 Employee Records",
-    description: "HR data with salaries and departments",
-    cols: ["Name", "Department", "Salary", "Years", "Rating", "Status"],
+    label: "👥 Employees",
+    tableLabel: "Employees",
+    description: "Staff records — ID, name, department, salary, join date, status",
+    cols: ["EmpID", "Name", "Department", "Salary", "JoinDate", "Status"],
     rows: [
-      ["Alice",   "Sales",   68000, 5, 4.2, "Active"],
-      ["Bob",     "IT",      85000, 8, 3.8, "Active"],
-      ["Carol",   "Sales",   72000, 3, 4.5, "Active"],
-      ["David",   "HR",      55000, 2, 3.2, "Active"],
-      ["Eve",     "IT",      92000, 10, 4.8, "Active"],
-      ["Frank",   "Sales",   61000, 1, 3.5, "Inactive"],
-      ["Grace",   "HR",      58000, 4, 4.0, "Active"],
-      ["Hank",    "IT",      78000, 6, 3.9, "Active"],
-      ["Iris",    "Sales",   74000, 7, 4.3, "Active"],
-      ["Jack",    "HR",      51000, 1, 2.9, "Inactive"],
+      ["E01", "Alice",   "Sales",   68000, "2020-03-15", "Active"],
+      ["E02", "Bob",     "IT",      85000, "2018-07-22", "Active"],
+      ["E03", "Carol",   "Sales",   72000, "2021-01-10", "Active"],
+      ["E04", "Dave",    "HR",      55000, "2022-06-05", "Inactive"],
+      ["E05", "Eve",     "IT",      92000, "2015-11-30", "Active"],
+      ["E06", "Frank",   "Sales",   61000, "2023-02-14", "Active"],
+      ["E07", "Grace",   "HR",      58000, "2019-09-01", "Inactive"],
+      ["E08", "Hank",    "IT",      78000, "2017-04-18", "Active"],
+      ["E09", "Iris",    "Sales",   74000, "2020-08-25", "Active"],
+      ["E10", "Jack",    "HR",      51000, "2023-12-01", "Active"],
     ],
     challenges: [
-      { id: "e1", label: "Average Salary", hint: "Average of all salaries", target: "=AVERAGE(C2:C11)", check: v => Math.abs(v - 69400) < 1, expected: "69400" },
-      { id: "e2", label: "IT Department Total Pay", hint: "Sum salaries where Dept = IT", target: '=SUMIF(B2:B11,"IT",C2:C11)', check: v => Math.abs(v - 255000) < 1, expected: "255000" },
-      { id: "e3", label: "Active employee count", hint: "Count rows where Status = Active", target: '=COUNTIF(F2:F11,"Active")', check: v => v === 8, expected: "8" },
-      { id: "e4", label: "Highest Rating", hint: "Find the maximum rating", target: "=MAX(E2:E11)", check: v => Math.abs(v - 4.8) < 0.01, expected: "4.8" },
-      { id: "e5", label: "Active Sales avg salary", hint: "Average salary: Sales AND Active", target: '=AVERAGEIFS(C2:C11,B2:B11,"Sales",F2:F11,"Active")', check: v => Math.abs(v - 71333) < 2, expected: "71333" },
-      { id: "e6", label: "Employees with 5+ years", hint: "Count where Years >= 5", target: '=COUNTIF(D2:D11,">=5")', check: v => v === 5, expected: "5" },
+      { id: "e01", label: "Total payroll (SUM)", hint: "Sum all salaries in column D", target: "=SUM(D2:D11)", check: v => Math.abs(v - 694000) < 1, expected: "694000" },
+      { id: "e02", label: "Average salary (AVERAGE)", hint: "Average of column D", target: "=AVERAGE(D2:D11)", check: v => Math.abs(v - 69400) < 1, expected: "69400" },
+      { id: "e03", label: "Count staff (COUNT)", hint: "COUNT numeric values in salary column", target: "=COUNT(D2:D11)", check: v => v === 10, expected: "10" },
+      { id: "e04", label: "Count all names (COUNTA)", hint: "COUNTA counts any non-empty cell in col B", target: "=COUNTA(B2:B11)", check: v => v === 10, expected: "10" },
+      { id: "e05", label: "Count inactive staff (COUNTBLANK)", hint: "Count blank cells? No blanks here — try COUNTIF for Inactive", target: '=COUNTIF(F2:F11,"Inactive")', check: v => v === 2, expected: "2" },
+      { id: "e06", label: "Highest salary (MAX)", hint: "MAX of column D", target: "=MAX(D2:D11)", check: v => v === 92000, expected: "92000" },
+      { id: "e07", label: "Lowest salary (MIN)", hint: "MIN of column D", target: "=MIN(D2:D11)", check: v => v === 51000, expected: "51000" },
+      { id: "e08", label: "2nd highest salary (LARGE)", hint: "LARGE(D2:D11, 2)", target: "=LARGE(D2:D11,2)", check: v => v === 85000, expected: "85000" },
+      { id: "e09", label: "2nd lowest salary (SMALL)", hint: "SMALL(D2:D11, 2)", target: "=SMALL(D2:D11,2)", check: v => v === 55000, expected: "55000" },
+      { id: "e10", label: "Sales dept total (SUMIF)", hint: "Sum D where C = Sales", target: '=SUMIF(C2:C11,"Sales",D2:D11)', check: v => Math.abs(v - 275000) < 1, expected: "275000" },
+      { id: "e11", label: "Average IT salary (AVERAGEIF)", hint: "Average D where C = IT", target: '=AVERAGEIF(C2:C11,"IT",D2:D11)', check: v => Math.abs(v - 85000) < 1, expected: "85000" },
+      { id: "e12", label: "Count Active (COUNTIF)", hint: "Count F where = Active", target: '=COUNTIF(F2:F11,"Active")', check: v => v === 8, expected: "8" },
+      { id: "e13", label: "Active Sales total (SUMIFS)", hint: "Sum D where C=Sales AND F=Active", target: '=SUMIFS(D2:D11,C2:C11,"Sales",F2:F11,"Active")', check: v => Math.abs(v - 275000) < 1, expected: "275000" },
+      { id: "e14", label: "Active IT count (COUNTIFS)", hint: "Count where C=IT AND F=Active", target: '=COUNTIFS(C2:C11,"IT",F2:F11,"Active")', check: v => v === 3, expected: "3" },
+      { id: "e15", label: "Avg Active Sales salary (AVERAGEIFS)", hint: "Average D where C=Sales AND F=Active", target: '=AVERAGEIFS(D2:D11,C2:C11,"Sales",F2:F11,"Active")', check: v => Math.abs(v - 68750) < 10, expected: "68750" },
+      { id: "e16", label: "Find Eve salary (VLOOKUP)", hint: "VLOOKUP Eve in col B, return col 4 (salary)", target: '=VLOOKUP("Eve",B2:F11,3,FALSE)', check: v => v === 92000, expected: "92000" },
+      { id: "e17", label: "Find Hank dept (XLOOKUP)", hint: "XLOOKUP Hank in B, return C", target: '=XLOOKUP("Hank",B2:B11,C2:C11)', check: v => v === "IT", expected: "IT" },
+      { id: "e18", label: "Position of Grace (MATCH)", hint: "MATCH Grace in column B, exact match", target: '=MATCH("Grace",B2:B11,0)', check: v => v === 7, expected: "7" },
+      { id: "e19", label: "INDEX row 5 col 2 (INDEX)", hint: "INDEX(B2:F11, 5, 1) — row 5, col 1", target: "=INDEX(B2:F11,5,1)", check: v => v === "Eve", expected: "Eve" },
+      { id: "e20", label: "IF salary above avg (IF)", hint: "IF(D2 > AVERAGE(D2:D11), High, Low)", target: '=IF(D2>AVERAGE(D2:D11),"High","Low")', check: v => v === "Low", expected: "Low" },
+      { id: "e21", label: "IFS salary bands (IFS)", hint: "IFS: >=80k Senior, >=60k Mid, else Junior", target: '=IFS(D2>=80000,"Senior",D2>=60000,"Mid",TRUE,"Junior")', check: v => v === "Mid", expected: "Mid" },
+      { id: "e22", label: "AND: Sales + Active (AND)", hint: "AND(C2=Sales, F2=Active)", target: '=AND(C2="Sales",F2="Active")', check: v => v === true || v === "TRUE" || v === 1, expected: "TRUE" },
+      { id: "e23", label: "OR: HR or Inactive (OR)", hint: "OR(C2=HR, F2=Inactive) for row 2", target: '=OR(C2="HR",F2="Inactive")', check: v => v === false || v === "FALSE" || v === 0, expected: "FALSE" },
+      { id: "e24", label: "NOT active (NOT)", hint: "NOT(F2=Active)", target: '=NOT(F2="Active")', check: v => v === false || v === "FALSE" || v === 0, expected: "FALSE" },
+      { id: "e25", label: "IFERROR missing lookup (IFERROR)", hint: "Wrap VLOOKUP for missing name", target: '=IFERROR(VLOOKUP("Zara",B2:D11,3,FALSE),"Not found")', check: v => v === "Not found", expected: "Not found" },
+      { id: "e26", label: "IFNA missing match (IFNA)", hint: "IFNA catches only #N/A", target: '=IFNA(MATCH("Zara",B2:B11,0),"Missing")', check: v => v === "Missing", expected: "Missing" },
+      { id: "e27", label: "SWITCH department (SWITCH)", hint: "SWITCH(C2, Sales, S, IT, I, HR, H)", target: '=SWITCH(C2,"Sales","S","IT","I","HR","H")', check: v => v === "S", expected: "S" },
+      { id: "e28", label: "LET net salary (LET)", hint: "LET(tax, D2*0.2, D2-tax)", target: "=LET(tax,D2*0.2,D2-tax)", check: v => Math.abs(v - 54400) < 1, expected: "54400" },
+      { id: "e29", label: "Year from JoinDate (YEAR)", hint: "YEAR(E2)", target: "=YEAR(E2)", check: v => v === 2020, expected: "2020" },
+      { id: "e30", label: "Month from JoinDate (MONTH)", hint: "MONTH(E2)", target: "=MONTH(E2)", check: v => v === 3, expected: "3" },
+      { id: "e31", label: "Day from JoinDate (DAY)", hint: "DAY(E2)", target: "=DAY(E2)", check: v => v === 15, expected: "15" },
+      { id: "e32", label: "Build a date (DATE)", hint: "DATE(2026, 6, 1)", target: "=DATE(2026,6,1)", check: v => { try { var d=new Date(v); return d.getFullYear()===2026; } catch(_e){ return String(v).includes("2026"); }}, expected: "01/06/2026" },
+      { id: "e33", label: "Weekday of join date (WEEKDAY)", hint: "WEEKDAY(E2, 2) — Mon=1", target: "=WEEKDAY(E2,2)", check: v => v >= 1 && v <= 7, expected: "7 (Sunday)" },
+      { id: "e34", label: "UPPER name (UPPER)", hint: "=UPPER(B2)", target: "=UPPER(B2)", check: v => v === "ALICE", expected: "ALICE" },
+      { id: "e35", label: "LOWER dept (LOWER)", hint: "=LOWER(C2)", target: "=LOWER(C2)", check: v => v === "sales", expected: "sales" },
+      { id: "e36", label: "LEFT 3 chars of name (LEFT)", hint: "LEFT(B2, 3)", target: "=LEFT(B2,3)", check: v => v === "Ali", expected: "Ali" },
+      { id: "e37", label: "LEN of name (LEN)", hint: "LEN(B2) — how many characters", target: "=LEN(B2)", check: v => v === 5, expected: "5" },
+      { id: "e38", label: "CONCAT name + dept (CONCATENATE)", hint: 'Join B2 and C2 with " - "', target: '=CONCATENATE(B2," - ",C2)', check: v => v === "Alice - Sales", expected: "Alice - Sales" },
+      { id: "e39", label: "UNIQUE departments (UNIQUE)", hint: "UNIQUE values from column C", target: "=UNIQUE(C2:C11)", check: v => Array.isArray(v) && v.length === 3, expected: "Sales, IT, HR" },
+      { id: "e40", label: "FILTER Active staff (FILTER)", hint: "FILTER names where F = Active", target: '=FILTER(B2:B11,F2:F11="Active")', check: v => Array.isArray(v) && v.length === 8, expected: "8 Active names" },
+      { id: "e41", label: "SORT names A-Z (SORT)", hint: "SORT(B2:B11) ascending", target: "=SORT(B2:B11)", check: v => Array.isArray(v) && v[0] === "Alice", expected: "Alice first" },
+      { id: "e42", label: "CHOOSECOLS Name + Salary (CHOOSECOLS)", hint: "Pick cols 2 and 4 from A2:F11", target: "=CHOOSECOLS(A2:F11,2,4)", check: v => Array.isArray(v) && v.length === 10, expected: "10 rows: Name + Salary" },
     ]
   },
-  inventory: {
-    label: "📦 Inventory",
-    description: "Stock levels and reorder tracking",
-    cols: ["Item", "Category", "Stock", "MinStock", "UnitCost", "Supplier"],
+  sales: {
+    label: "💰 Sales Orders",
+    tableLabel: "Sales Orders",
+    description: "Order records — order ID, employee ID, product, quantity, unit price, order date",
+    cols: ["OrderID", "EmpID", "Product", "Qty", "UnitPrice", "OrderDate"],
     rows: [
-      ["Laptop",    "Electronics",  45, 20, 850.00, "TechCorp"],
-      ["Mouse",     "Electronics", 200, 50,  12.50, "TechCorp"],
-      ["Desk",      "Furniture",    12, 10, 320.00, "FurnCo"],
-      ["Chair",     "Furniture",     8, 15, 180.00, "FurnCo"],
-      ["Notebook",  "Stationery",  500, 100,  1.50, "OfficeMax"],
-      ["Pen",       "Stationery",  800, 200,  0.80, "OfficeMax"],
-      ["Monitor",   "Electronics",  30, 15, 420.00, "TechCorp"],
-      ["Keyboard",  "Electronics",  90, 30,  45.00, "TechCorp"],
-      ["Bookshelf", "Furniture",     5, 8,  260.00, "FurnCo"],
-      ["Stapler",   "Stationery",   60, 25,  8.50, "OfficeMax"],
+      ["ORD-001", "E01", "Widget A",  5,  120.00, "2026-01-05"],
+      ["ORD-002", "E03", "Widget B",  3,  250.00, "2026-01-08"],
+      ["ORD-003", "E06", "Gadget X",  8,   75.00, "2026-01-15"],
+      ["ORD-004", "E09", "Widget A",  2,  120.00, "2026-02-01"],
+      ["ORD-005", "E01", "Gadget Y",  6,   90.00, "2026-02-10"],
+      ["ORD-006", "E03", "Widget B",  4,  250.00, "2026-02-14"],
+      ["ORD-007", "E06", "Gadget X", 10,   75.00, "2026-03-01"],
+      ["ORD-008", "E09", "Widget A",  1,  120.00, "2026-03-05"],
+      ["ORD-009", "E01", "Gadget Y",  3,   90.00, "2026-03-10"],
+      ["ORD-010", "E03", "Widget B",  7,  250.00, "2026-03-15"],
     ],
     challenges: [
-      { id: "i1", label: "Total inventory value", hint: "Sum of Stock × UnitCost for all items", target: "=SUMPRODUCT(C2:C11,E2:E11)", check: v => Math.abs(v - 143430) < 5, expected: "143430" },
-      { id: "i2", label: "Items below minimum stock", hint: "Count where Stock < MinStock", target: "=COUNTIF(C2:C11,\"<\"&D2:D11)", check: v => v === 2, expected: "2 (Chair & Bookshelf)" },
-      { id: "i3", label: "Electronics total stock", hint: "Sum Stock where Category = Electronics", target: '=SUMIF(B2:B11,"Electronics",C2:C11)', check: v => Math.abs(v - 365) < 1, expected: "365" },
-      { id: "i4", label: "Cheapest item cost", hint: "Find the minimum unit cost", target: "=MIN(E2:E11)", check: v => Math.abs(v - 0.8) < 0.01, expected: "0.8" },
-      { id: "i5", label: "TechCorp item count", hint: "Count rows where Supplier = TechCorp", target: '=COUNTIF(F2:F11,"TechCorp")', check: v => v === 4, expected: "4" },
-      { id: "i6", label: "Average Electronics cost", hint: "Average unit cost for Electronics only", target: '=AVERAGEIF(B2:B11,"Electronics",E2:E11)', check: v => Math.abs(v - 331.875) < 1, expected: "331.88" },
+      { id: "s01", label: "Total revenue (SUMPRODUCT)", hint: "Multiply Qty × UnitPrice then sum", target: "=SUMPRODUCT(D2:D11,E2:E11)", check: v => Math.abs(v - 8545) < 5, expected: "8545" },
+      { id: "s02", label: "Total Widget A qty (SUMIF)", hint: "Sum D where C = Widget A", target: '=SUMIF(C2:C11,"Widget A",D2:D11)', check: v => Math.abs(v - 8) < 1, expected: "8" },
+      { id: "s03", label: "Count Widget B orders (COUNTIF)", hint: "Count rows where C = Widget B", target: '=COUNTIF(C2:C11,"Widget B")', check: v => v === 3, expected: "3" },
+      { id: "s04", label: "Max unit price (MAX)", hint: "MAX of column E", target: "=MAX(E2:E11)", check: v => v === 250, expected: "250" },
+      { id: "s05", label: "Average qty sold (AVERAGE)", hint: "Average of column D", target: "=AVERAGE(D2:D11)", check: v => Math.abs(v - 4.9) < 0.1, expected: "4.9" },
+      { id: "s06", label: "Orders in Jan (COUNTIFS)", hint: "COUNTIFS — match year+month in OrderDate col", target: '=COUNTIFS(C2:C11,"Widget A",D2:D11,">1")', check: v => v === 2, expected: "2 (Widget A, Qty>1)" },
+      { id: "s07", label: "Find ORD-005 product (XLOOKUP)", hint: "XLOOKUP ORD-005 in col A, return col C", target: '=XLOOKUP("ORD-005",A2:A11,C2:C11)', check: v => v === "Gadget Y", expected: "Gadget Y" },
+      { id: "s08", label: "Find ORD-003 EmpID (VLOOKUP)", hint: "VLOOKUP ORD-003, return col 2", target: '=VLOOKUP("ORD-003",A2:F11,2,FALSE)', check: v => v === "E06", expected: "E06" },
+      { id: "s09", label: "Position of ORD-007 (MATCH)", hint: "MATCH ORD-007 in col A", target: '=MATCH("ORD-007",A2:A11,0)', check: v => v === 7, expected: "7" },
+      { id: "s10", label: "INDEX: row 4 product (INDEX)", hint: "INDEX(A2:F11, 4, 3) — row 4, col 3", target: "=INDEX(A2:F11,4,3)", check: v => v === "Widget A", expected: "Widget A" },
+      { id: "s11", label: "Round unit price (ROUND)", hint: "ROUND(E2, 0) — nearest whole number", target: "=ROUND(E2,0)", check: v => v === 120, expected: "120" },
+      { id: "s12", label: "Year from OrderDate (YEAR)", hint: "YEAR(F2)", target: "=YEAR(F2)", check: v => v === 2026, expected: "2026" },
+      { id: "s13", label: "Month from OrderDate (MONTH)", hint: "MONTH(F2)", target: "=MONTH(F2)", check: v => v === 1, expected: "1" },
+      { id: "s14", label: "IFERROR missing order (IFERROR)", hint: "Wrap VLOOKUP for ORD-999", target: '=IFERROR(VLOOKUP("ORD-999",A2:C11,3,FALSE),"Not found")', check: v => v === "Not found", expected: "Not found" },
+      { id: "s15", label: "UPPER product name (UPPER)", hint: "UPPER(C2)", target: "=UPPER(C2)", check: v => v === "WIDGET A", expected: "WIDGET A" },
+      { id: "s16", label: "LEFT 3 chars of OrderID (LEFT)", hint: "LEFT(A2, 3)", target: "=LEFT(A2,3)", check: v => v === "ORD", expected: "ORD" },
+      { id: "s17", label: "SUBSTITUTE in OrderID (SUBSTITUTE)", hint: "Replace ORD with ORDER in A2", target: '=SUBSTITUTE(A2,"ORD","ORDER")', check: v => v === "ORDER-001", expected: "ORDER-001" },
+      { id: "s18", label: "FILTER Gadget orders (FILTER)", hint: "FILTER where product contains... use SEARCH", target: '=FILTER(A2:A11,C2:C11="Gadget X")', check: v => Array.isArray(v) && v.length === 2, expected: "ORD-003, ORD-007" },
+      { id: "s19", label: "UNIQUE products (UNIQUE)", hint: "Distinct products in column C", target: "=UNIQUE(C2:C11)", check: v => Array.isArray(v) && v.length === 3, expected: "Widget A, Widget B, Gadget X, Gadget Y" },
+      { id: "s20", label: "SORT by qty desc (SORT)", hint: "SORT(A2:E11, 4, -1) — sort by col 4 desc", target: "=SORT(A2:E11,4,-1)", check: v => Array.isArray(v) && v[0][3] === 10, expected: "ORD-007 (qty 10) first" },
     ]
   }
 };
+
+// Cross-reference challenges (uses both tables together)
+const CROSS_CHALLENGES = [
+  { id: "x01", label: "Alice total order value", hint: "Her EmpID is E01 — SUMIF sales table EmpID = E01, sum Qty×Price... or just sum by EmpID", desc: "Use the Sales table. Alice's EmpID is E01. Sum all revenue (Qty × UnitPrice) for E01 orders.", target: '=SUMPRODUCT((B2:B11="E01")*D2:D11*E2:E11)', check: v => Math.abs(v - 1830) < 5, expected: "1830", activeTable: "sales" },
+  { id: "x02", label: "Look up Alice salary from Sales table", hint: "Her EmpID is E01 — use VLOOKUP on Employees table", desc: "You are in the Sales table. Use VLOOKUP on a known EmpID to get the employee name from Employees (simulate: VLOOKUP E01 in col B of employees).", target: '=XLOOKUP("E01",A2:A11,B2:B11)', check: v => v === "Alice", expected: "Alice", activeTable: "employees" },
+  { id: "x03", label: "How many orders did E03 make?", hint: "COUNTIF the EmpID column in Sales table", desc: "In the Sales table, count how many orders belong to EmpID E03 (Carol).", target: '=COUNTIF(B2:B11,"E03")', check: v => v === 3, expected: "3", activeTable: "sales" },
+  { id: "x04", label: "Total revenue for E06 orders", hint: "SUMPRODUCT where EmpID = E06", desc: "In the Sales table, calculate total revenue (Qty × UnitPrice) for Frank (E06).", target: '=SUMPRODUCT((B2:B11="E06")*D2:D11*E2:E11)', check: v => Math.abs(v - 1350) < 5, expected: "1350", activeTable: "sales" },
+  { id: "x05", label: "Verify E09 is Active", hint: "XLOOKUP EmpID E09 in Employees table, return Status", desc: "In the Employees table, look up EmpID E09 (Iris) and return her Status.", target: '=XLOOKUP("E09",A2:A11,F2:F11)', check: v => v === "Active", expected: "Active", activeTable: "employees" },
+  { id: "x06", label: "Which dept has the most orders?", hint: "First find the EmpIDs in Sales, then match to Employees dept", desc: "In the Sales table: count orders by E01 (Sales), E03 (Sales), E06 (Sales), E09 (Sales) — all are Sales staff. Total Sales-dept orders:", target: '=COUNTIFS(B2:B11,"E01")', check: v => v === 3, expected: "3 (E01 alone)", activeTable: "sales" },
+  { id: "x07", label: "IF E01 salary above avg", hint: "In Employees, compare E01 salary to average", desc: "In the Employees table, look up E01 salary and check if it's above the column average.", target: '=IF(XLOOKUP("E01",A2:A11,D2:D11)>AVERAGE(D2:D11),"Above avg","Below avg")', check: v => v === "Below avg", expected: "Below avg (68000 < 69400)", activeTable: "employees" },
+  { id: "x08", label: "Concat EmpID + Product for row 1", hint: "Join col B and col C of Sales table with a dash", desc: "In the Sales table, create a combined label from EmpID and Product.", target: '=CONCATENATE(B2," | ",C2)', check: v => v === "E01 | Widget A", expected: "E01 | Widget A", activeTable: "sales" },
+];
+
 function evalFormula(formulaStr, scenarioKey) {
   const scenario = PLAYGROUND_SCENARIOS[scenarioKey];
   if (!scenario) return { error: "No scenario selected" };
@@ -3412,6 +3452,138 @@ function evalFormula(formulaStr, scenarioKey) {
       case "IFNA": {
         return (args[0] === null || args[0] === undefined) ? args[1] : args[0];
       }
+      case "ISERROR": {
+        return (args[0] && typeof args[0] === "object" && args[0].error) ? true : false;
+      }
+      case "ISERR": {
+        return (args[0] && typeof args[0] === "object" && args[0].error) ? true : false;
+      }
+      case "ISNA": {
+        return (args[0] === null || args[0] === undefined) ? true : false;
+      }
+      case "EXACT": {
+        return String(args[0]) === String(args[1]);
+      }
+      case "CLEAN": {
+        return String(args[0]).replace(/[\x00-\x1F\x7F]/g, "");
+      }
+      case "FIND": {
+        var fidx = String(args[1]).indexOf(String(args[0]));
+        return fidx === -1 ? { error: "#VALUE!" } : fidx + 1;
+      }
+      case "SEARCH": {
+        var sidx = String(args[1]).toLowerCase().indexOf(String(args[0]).toLowerCase());
+        return sidx === -1 ? { error: "#VALUE!" } : sidx + 1;
+      }
+      case "YEAR": {
+        var yd = new Date(args[0]); return isNaN(yd) ? { error: "#VALUE!" } : yd.getFullYear();
+      }
+      case "MONTH": {
+        var md = new Date(args[0]); return isNaN(md) ? { error: "#VALUE!" } : md.getMonth() + 1;
+      }
+      case "DAY": {
+        var dd = new Date(args[0]); return isNaN(dd) ? { error: "#VALUE!" } : dd.getDate();
+      }
+      case "DATE": {
+        var dt = new Date(args[0], args[1] - 1, args[2]);
+        return isNaN(dt) ? { error: "#VALUE!" } : dt.toLocaleDateString("en-GB");
+      }
+      case "WEEKDAY": {
+        var wd = new Date(args[0]);
+        if (isNaN(wd)) return { error: "#VALUE!" };
+        var mode = args[1] || 1;
+        var day = wd.getDay();
+        if (mode === 2) return day === 0 ? 7 : day;
+        return day + 1;
+      }
+      case "NETWORKDAYS": {
+        var nd1 = new Date(args[0]), nd2 = new Date(args[1]);
+        if (isNaN(nd1) || isNaN(nd2)) return { error: "#VALUE!" };
+        var count = 0, cur = new Date(nd1);
+        while (cur <= nd2) { var dw = cur.getDay(); if (dw !== 0 && dw !== 6) count++; cur.setDate(cur.getDate() + 1); }
+        return count;
+      }
+      case "SWITCH": {
+        var sw_val = args[0];
+        for (var si = 1; si < args.length - 1; si += 2) {
+          if (sw_val == args[si]) return args[si + 1];
+        }
+        return args.length % 2 === 0 ? args[args.length - 1] : { error: "#N/A" };
+      }
+      case "LET": {
+        // LET(name, val, ..., expr) — last arg is the expression result already evaluated
+        return args[args.length - 1];
+      }
+      case "VLOOKUP": {
+        var vl_val = args[0], vl_range = args[1], vl_col = args[2];
+        if (!Array.isArray(vl_range)) return { error: "#VALUE!" };
+        for (var vi = 0; vi < vl_range.length; vi++) {
+          var vl_row = Array.isArray(vl_range[vi]) ? vl_range[vi] : [vl_range[vi]];
+          if (String(vl_row[0]) === String(vl_val) || vl_row[0] == vl_val) {
+            return vl_row[vl_col - 1] !== undefined ? vl_row[vl_col - 1] : { error: "#REF!" };
+          }
+        }
+        return { error: "#N/A" };
+      }
+      case "XLOOKUP": {
+        var xl_val = args[0], xl_look = args[1], xl_ret = args[2], xl_def = args[3];
+        var xl_arr = Array.isArray(xl_look) ? xl_look : [xl_look];
+        var xl_ret_arr = Array.isArray(xl_ret) ? xl_ret : [xl_ret];
+        for (var xi = 0; xi < xl_arr.length; xi++) {
+          if (String(xl_arr[xi]) === String(xl_val) || xl_arr[xi] == xl_val) return xl_ret_arr[xi];
+        }
+        return xl_def !== undefined ? xl_def : { error: "#N/A" };
+      }
+      case "MATCH": {
+        var mt_val = args[0], mt_arr = Array.isArray(args[1]) ? args[1] : [args[1]];
+        for (var mi = 0; mi < mt_arr.length; mi++) {
+          if (String(mt_arr[mi]) === String(mt_val) || mt_arr[mi] == mt_val) return mi + 1;
+        }
+        return { error: "#N/A" };
+      }
+      case "INDEX": {
+        var ix_range = args[0], ix_row = args[1], ix_col = args[2] || 1;
+        if (!Array.isArray(ix_range)) return { error: "#VALUE!" };
+        var ix_r = Array.isArray(ix_range[ix_row - 1]) ? ix_range[ix_row - 1] : [ix_range[ix_row - 1]];
+        return ix_r[ix_col - 1] !== undefined ? ix_r[ix_col - 1] : { error: "#REF!" };
+      }
+      case "FILTER": {
+        var fl_range = args[0], fl_cond = args[1];
+        if (!Array.isArray(fl_range) || !Array.isArray(fl_cond)) return { error: "#VALUE!" };
+        return fl_range.filter(function(_r, fi) { return !!fl_cond[fi]; });
+      }
+      case "SORT": {
+        var so_range = args[0], so_col = (args[1] || 1) - 1, so_dir = args[2] || 1;
+        if (!Array.isArray(so_range)) return { error: "#VALUE!" };
+        return so_range.slice().sort(function(a, b) {
+          var av = Array.isArray(a) ? a[so_col] : a;
+          var bv = Array.isArray(b) ? b[so_col] : b;
+          return so_dir * (av > bv ? 1 : av < bv ? -1 : 0);
+        });
+      }
+      case "UNIQUE": {
+        var uq_arr = Array.isArray(args[0]) ? args[0] : [args[0]];
+        return uq_arr.filter(function(v, i) { return uq_arr.indexOf(v) === i; });
+      }
+      case "CHOOSECOLS": {
+        var cc_range = args[0];
+        var cc_cols = args.slice(1).map(function(n) { return n - 1; });
+        if (!Array.isArray(cc_range)) return { error: "#VALUE!" };
+        return cc_range.map(function(row) {
+          var r = Array.isArray(row) ? row : [row];
+          return cc_cols.length === 1 ? r[cc_cols[0]] : cc_cols.map(function(ci) { return r[ci]; });
+        });
+      }
+      case "SORTBY": {
+        var sb_range = args[0], sb_by = args[1], sb_dir = args[2] || 1;
+        if (!Array.isArray(sb_range)) return { error: "#VALUE!" };
+        var sb_by_arr = Array.isArray(sb_by) ? sb_by : [sb_by];
+        return sb_range.slice().sort(function(a, b) {
+          var ai = sb_range.indexOf(a), bi = sb_range.indexOf(b);
+          var av = sb_by_arr[ai], bv = sb_by_arr[bi];
+          return sb_dir * (av > bv ? 1 : av < bv ? -1 : 0);
+        });
+      }
       default: return { error: "Function " + fn + " is not supported in the playground yet." };
     }
   };
@@ -3485,12 +3657,13 @@ function App() {
   const [apiKeyVisible, setApiKeyVisible] = useState(false);
 
   // Playground state
-  const [pgScenario, setPgScenario] = useState("sales");
+  const [pgScenario, setPgScenario] = useState("main");
   const [pgFormula, setPgFormula] = useState("");
   const [pgResult, setPgResult] = useState(null);
   const [pgCompleted, setPgCompleted] = useState({});
   const [pgActiveChallenge, setPgActiveChallenge] = useState(null);
   const [pgMode, setPgMode] = useState("free");
+  const [activeTable, setActiveTable] = useState("employees");
   const [showAllFormulas, setShowAllFormulas] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [aiComingSoon, setAiComingSoon] = useState(false);
@@ -4298,46 +4471,41 @@ function App() {
                   <div className="card" style={{ padding: 20 }}>
                     <div className="section-title">Try this example</div>
 
-                    {/* Sample data table - Excel style */}
+                    {/* Excel-style sample table */}
                     {formula.beginner.sampleTable && (
-                      <div style={{ marginBottom: 18 }}>
+                      <div style={{ marginBottom: 20 }}>
                         <div style={{ fontSize: 11, color: "#475569", marginBottom: 8, textTransform: "uppercase", letterSpacing: "1.5px" }}>Sample Data</div>
-                        <div style={{ overflowX: "auto", borderRadius: 6, border: "2px solid #2a3a5a", display: "inline-block", minWidth: "100%" }}>
-                          <table style={{ borderCollapse: "collapse", fontSize: 12, fontFamily: "Calibri, Arial, sans-serif", minWidth: "100%" }}>
+                        <div style={{ overflowX: "auto", display: "inline-block", maxWidth: "100%", boxShadow: "2px 2px 12px rgba(0,0,0,0.5)" }}>
+                          <table style={{ borderCollapse: "collapse", fontFamily: "Calibri, 'Segoe UI', Arial, sans-serif", fontSize: 13 }}>
                             <thead>
                               <tr>
-                                {/* Row-number column header (blank corner) */}
-                                <th style={{ background: "#1e2a3a", border: "1px solid #2a3a5a", borderTop: "none", borderLeft: "none", padding: "4px 10px", minWidth: 36, width: 36 }}></th>
-                                {formula.beginner.sampleTable.headers.map((h, i) => {
-                                  const colLetter = String.fromCharCode(65 + i);
-                                  const colLabel = h.includes(":") ? h.split(":")[1].trim() : h;
-                                  return (
-                                    <th key={i} style={{ background: "#1e2a3a", border: "1px solid #2a3a5a", borderTop: "none", padding: "4px 0", textAlign: "center", fontWeight: 600, color: "#94a3b8", minWidth: 110, whiteSpace: "nowrap" }}>
-                                      <div style={{ color: "#60a5fa", fontSize: 12, fontWeight: 700, letterSpacing: 1 }}>{colLetter}</div>
-                                      <div style={{ color: "#64748b", fontSize: 10, fontWeight: 400, paddingBottom: 2 }}>{colLabel}</div>
-                                    </th>
-                                  );
-                                })}
+                                <td style={{ background: "#1d2433", border: "1px solid #374151", borderRight: "2px solid #4b5563", borderBottom: "2px solid #4b5563", width: 36, minWidth: 36, padding: "3px 0" }}></td>
+                                {formula.beginner.sampleTable.headers.map((h, i) => (
+                                  <td key={i} style={{ background: "#1d2433", border: "1px solid #374151", borderBottom: "2px solid #4b5563", padding: "4px 0", textAlign: "center", minWidth: 90, color: "#9ca3af", fontSize: 12, fontWeight: 600, letterSpacing: "0.5px" }}>
+                                    {String.fromCharCode(65 + i)}
+                                  </td>
+                                ))}
                               </tr>
                             </thead>
                             <tbody>
-                              {/* Header row (row 1) */}
-                              <tr style={{ background: "#1a2235" }}>
-                                <td style={{ border: "1px solid #2a3a5a", padding: "4px 8px", color: "#475569", textAlign: "center", fontSize: 11, fontWeight: 600, background: "#1e2a3a", minWidth: 36 }}>1</td>
+                              <tr style={{ background: "#1e3a5f" }}>
+                                <td style={{ background: "#1d2433", border: "1px solid #374151", borderRight: "2px solid #4b5563", padding: "4px 0", textAlign: "center", color: "#6b7280", fontSize: 11, width: 36 }}>1</td>
                                 {formula.beginner.sampleTable.headers.map((h, i) => {
-                                  const colLabel = h.includes(":") ? h.split(":")[0].trim() : h;
+                                  const label = h.includes(":") ? h.split(":").slice(1).join(":").trim() : h;
                                   return (
-                                    <td key={i} style={{ border: "1px solid #2a3a5a", padding: "5px 10px", color: "#6366f1", fontWeight: 700, background: "#151c2e", fontSize: 12 }}>{colLabel}</td>
+                                    <td key={i} style={{ border: "1px solid #2d4a6a", padding: "5px 12px", color: "#93c5fd", fontWeight: 700, fontSize: 12, whiteSpace: "nowrap" }}>{label}</td>
                                   );
                                 })}
                               </tr>
-                              {/* Data rows */}
                               {formula.beginner.sampleTable.rows.map((row, ri) => (
-                                <tr key={ri} style={{ background: ri % 2 === 0 ? "#0d1117" : "#101520" }}>
-                                  <td style={{ border: "1px solid #1e2a3a", padding: "4px 8px", color: "#475569", textAlign: "center", fontSize: 11, fontWeight: 600, background: "#1e2a3a" }}>{ri + 2}</td>
-                                  {row.map((cell, ci) => (
-                                    <td key={ci} style={{ border: "1px solid #1e2535", padding: "5px 10px", color: "#e2e8f0", fontSize: 13 }}>{cell}</td>
-                                  ))}
+                                <tr key={ri} style={{ background: ri % 2 === 0 ? "#0f172a" : "#111827" }}>
+                                  <td style={{ background: "#1d2433", border: "1px solid #374151", borderRight: "2px solid #4b5563", padding: "4px 0", textAlign: "center", color: "#6b7280", fontSize: 11 }}>{ri + 2}</td>
+                                  {row.map((cell, ci) => {
+                                    const isNum = cell !== "" && cell !== "—" && !isNaN(cell.toString().replace(/[,$% ]/g, ""));
+                                    return (
+                                      <td key={ci} style={{ border: "1px solid #1f2937", padding: "5px 12px", color: "#e2e8f0", textAlign: isNum ? "right" : "left", whiteSpace: "nowrap", minWidth: 80 }}>{cell}</td>
+                                    );
+                                  })}
                                 </tr>
                               ))}
                             </tbody>
@@ -4346,26 +4514,32 @@ function App() {
                       </div>
                     )}
 
-                    {/* Formula usage */}
-                    <div style={{ marginBottom: 12 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                        <span style={{ fontSize: 11, color: "#475569", textTransform: "uppercase", letterSpacing: "1px" }}>Formula</span>
-                        <button className="copy-btn" onClick={() => copyFormula(formula.beginner.sampleTable ? formula.beginner.sampleTable.usage : formula.beginner.example.formula)}>
+                    {/* Formula bar — mimics Excel */}
+                    <div style={{ marginBottom: 14 }}>
+                      <div style={{ display: "flex", alignItems: "center", background: "#1a1f2e", border: "1px solid #374151", borderRadius: 6, overflow: "hidden" }}>
+                        <div style={{ padding: "6px 12px", background: "#111827", borderRight: "1px solid #374151", color: "#6b7280", fontSize: 12, fontStyle: "italic", minWidth: 36, textAlign: "center" }}>fx</div>
+                        <div style={{ flex: 1, padding: "7px 12px", color: "#a5f3a5", fontSize: 13, fontFamily: "'DM Mono', monospace", letterSpacing: "0.3px" }}>
+                          {formula.beginner.sampleTable ? formula.beginner.sampleTable.usage : formula.beginner.example.formula}
+                        </div>
+                        <button className="copy-btn" style={{ margin: "4px 8px", flexShrink: 0 }} onClick={() => copyFormula(formula.beginner.sampleTable ? formula.beginner.sampleTable.usage : formula.beginner.example.formula)}>
                           {copied === (formula.beginner.sampleTable ? formula.beginner.sampleTable.usage : formula.beginner.example.formula) ? "✓ Copied!" : "Copy"}
                         </button>
                       </div>
-                      <div className="code-block">{formula.beginner.sampleTable ? formula.beginner.sampleTable.usage : formula.beginner.example.formula}</div>
                     </div>
 
-                    {/* Output */}
-                    <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                      <div style={{ flex: 1, minWidth: 140, background: "#061a0e", border: "1px solid #14532d", borderRadius: 8, padding: "12px 16px" }}>
-                        <div style={{ fontSize: 11, color: "#166534", marginBottom: 6, textTransform: "uppercase", letterSpacing: "1px" }}>✓ Output</div>
-                        <div style={{ fontSize: 14, color: "#4ade80", fontWeight: 600 }}>{formula.beginner.sampleTable ? formula.beginner.sampleTable.output : formula.beginner.example.result}</div>
+                    {/* Result + What's Happening */}
+                    <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                      <div style={{ background: "#052e16", border: "1px solid #166534", borderRadius: 6, padding: "12px 16px", minWidth: 130, flexShrink: 0 }}>
+                        <div style={{ fontSize: 10, color: "#15803d", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1.5px" }}>✓ Result</div>
+                        <div style={{ fontSize: 15, color: "#4ade80", fontWeight: 700, fontFamily: "Calibri, Arial, sans-serif" }}>
+                          {formula.beginner.sampleTable ? formula.beginner.sampleTable.output : formula.beginner.example.result}
+                        </div>
                       </div>
-                      <div style={{ flex: 2, minWidth: 180, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: "12px 16px" }}>
-                        <div style={{ fontSize: 11, color: "#475569", marginBottom: 6, textTransform: "uppercase", letterSpacing: "1px" }}>What's happening</div>
-                        <div style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.6 }}>{formula.beginner.sampleTable ? formula.beginner.sampleTable.whatsHappening : formula.beginner.example.context}</div>
+                      <div style={{ flex: 1, minWidth: 180, background: "#0d1117", border: "1px solid #1f2937", borderRadius: 6, padding: "12px 16px" }}>
+                        <div style={{ fontSize: 10, color: "#475569", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1.5px" }}>💡 What's Happening</div>
+                        <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7 }}>
+                          {formula.beginner.sampleTable && formula.beginner.sampleTable.whatsHappening ? formula.beginner.sampleTable.whatsHappening : formula.beginner.example.context}
+                        </div>
                       </div>
                     </div>
 
@@ -4413,348 +4587,294 @@ function App() {
 
           {/* PLAYGROUND TAB */}
           {tab === "playground" && (
-            <div style={{ maxWidth: 900 }}>
+            <div style={{ maxWidth: 1000 }}>
               {/* Header */}
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                <div style={{ width: 32, height: 32, background: "linear-gradient(135deg,#10b981,#059669)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🧪</div>
+                <div style={{ width: 32, height: 32, background: "linear-gradient(135deg,#10b981,#059669)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17 }}>🧪</div>
                 <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 22 }}>Formula Playground</div>
               </div>
               <div style={{ color: "#64748b", fontSize: 13, marginBottom: 20, lineHeight: 1.6 }}>
-                Practice formulas on real sample data. Type a formula and run it — the engine evaluates it live against the table below.
+                Practice on two linked datasets. Use formulas to explore each table — or cross-reference between them using VLOOKUP, XLOOKUP and more.
               </div>
 
-              {/* Mode toggle + Scenario picker */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, marginBottom: 16 }}>
-                <div style={{ display: "flex", gap: 6 }}>
-                  {["free", "challenges"].map(m => (
-                    <button key={m} className={`tab-btn ${pgMode === m ? "tab-active" : "tab-inactive"}`}
-                      style={{ fontSize: 12, padding: "7px 14px" }}
-                      onClick={() => { setPgMode(m); setPgResult(null); setPgFormula(""); setPgActiveChallenge(null); }}>
-                      {m === "free" ? "🔓 Free Practice" : "🎯 Challenges"}
-                    </button>
-                  ))}
-                </div>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                  {Object.entries(PLAYGROUND_SCENARIOS).map(([key, sc]) => (
-                    <button key={key} className={`pg-scenario-btn ${pgScenario === key ? "active" : ""}`}
-                      onClick={() => { setPgScenario(key); setPgResult(null); setPgFormula(""); setPgActiveChallenge(null); setPgCompleted({}); }}>
-                      {sc.label}
-                    </button>
-                  ))}
-                </div>
+              {/* Mode toggle */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+                {["free", "challenges", "cross"].map(m => (
+                  <button key={m} className={"tab-btn " + (pgMode === m ? "tab-active" : "tab-inactive")}
+                    style={{ fontSize: 12, padding: "7px 16px" }}
+                    onClick={() => { setPgMode(m); setPgResult(null); setPgFormula(""); setPgActiveChallenge(null); }}>
+                    {m === "free" ? "🔓 Free Practice" : m === "challenges" ? "🎯 Challenges" : "🔗 Cross-Reference"}
+                  </button>
+                ))}
               </div>
 
-              {/* Dataset description */}
-              <div style={{ fontSize: 12, color: "#475569", marginBottom: 12 }}>
-                📋 {PLAYGROUND_SCENARIOS[pgScenario].description} — columns A–F, rows 2–11
-              </div>
-
-              {/* Spreadsheet grid */}
-              <div style={{ overflowX: "auto", marginBottom: 18 }}>
-                <div style={{ display: "inline-block", minWidth: "100%" }}>
-                  {/* Column headers (A B C D E F) */}
-                  <div style={{ display: "flex" }}>
-                    <div className="pg-cell row-header header" style={{ height: 26 }}></div>
-                    {PLAYGROUND_SCENARIOS[pgScenario].cols.map((col, ci) => (
-                      <div key={ci} className="pg-cell header" style={{ height: 26, minWidth: 110 }}>
-                        {String.fromCharCode(65 + ci)}
-                      </div>
-                    ))}
-                  </div>
-                  {/* Row 1 — column labels */}
-                  <div style={{ display: "flex" }}>
-                    <div className="pg-cell row-header" style={{ background: "#0a0c12", color: "#334155", fontSize: 11, justifyContent: "center" }}>1</div>
-                    {PLAYGROUND_SCENARIOS[pgScenario].cols.map((col, ci) => (
-                      <div key={ci} className="pg-cell" style={{ minWidth: 110, background: "#111827", color: "#6366f1", fontWeight: 500, fontSize: 12 }}>
-                        {col}
-                      </div>
-                    ))}
-                  </div>
-                  {/* Data rows 2–11 */}
-                  {PLAYGROUND_SCENARIOS[pgScenario].rows.map((row, ri) => (
-                    <div key={ri} style={{ display: "flex" }}>
-                      <div className="pg-cell row-header">{ri + 2}</div>
-                      {row.map((cell, ci) => (
-                        <div key={ci} className="pg-cell" style={{ minWidth: 110, color: typeof cell === "number" ? "#93c5fd" : "#e2e8f0" }}>
-                          {typeof cell === "number" ? cell.toLocaleString() : cell}
+              {/* Both tables side by side */}
+              <div style={{ display: "flex", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
+                {Object.entries(PLAYGROUND_SCENARIOS).map(([key, sc]) => {
+                  const isActive = activeTable === key;
+                  return (
+                    <div key={key} style={{ flex: "1 1 400px", minWidth: 300 }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: isActive ? "#a5b4fc" : "#64748b" }}>{sc.label}</div>
+                          <div style={{ fontSize: 11, color: "#475569" }}>{sc.description}</div>
                         </div>
-                      ))}
+                        {pgMode === "free" && (
+                          <button onClick={() => setActiveTable(key)}
+                            style={{ fontSize: 11, padding: "4px 10px", borderRadius: 6, border: "1px solid " + (isActive ? "#6366f1" : "#1e2535"), background: isActive ? "#1e2040" : "transparent", color: isActive ? "#a5b4fc" : "#475569", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+                            {isActive ? "✓ Active" : "Use this"}
+                          </button>
+                        )}
+                      </div>
+                      <div style={{ overflowX: "auto", border: "2px solid " + (isActive ? "#3730a3" : "#1e2535"), borderRadius: 6, transition: "border-color 0.2s" }}>
+                        <table style={{ borderCollapse: "collapse", fontFamily: "Calibri, 'Segoe UI', sans-serif", fontSize: 12, width: "100%" }}>
+                          <thead>
+                            <tr>
+                              <td style={{ background: "#1d2433", border: "1px solid #374151", borderBottom: "2px solid #4b5563", width: 28, padding: "3px 0", textAlign: "center" }}></td>
+                              {sc.cols.map((col, ci) => (
+                                <td key={ci} style={{ background: "#1d2433", border: "1px solid #374151", borderBottom: "2px solid #4b5563", padding: "4px 8px", textAlign: "center", color: "#9ca3af", fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>
+                                  {String.fromCharCode(65 + ci)}
+                                </td>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr style={{ background: "#1e3a5f" }}>
+                              <td style={{ background: "#1d2433", border: "1px solid #374151", borderRight: "2px solid #4b5563", padding: "3px 0", textAlign: "center", color: "#6b7280", fontSize: 10 }}>1</td>
+                              {sc.cols.map((col, ci) => (
+                                <td key={ci} style={{ border: "1px solid #2d4a6a", padding: "4px 8px", color: "#93c5fd", fontWeight: 700, fontSize: 11, whiteSpace: "nowrap" }}>{col}</td>
+                              ))}
+                            </tr>
+                            {sc.rows.map((row, ri) => (
+                              <tr key={ri} style={{ background: ri % 2 === 0 ? "#0f172a" : "#111827" }}>
+                                <td style={{ background: "#1d2433", border: "1px solid #374151", borderRight: "2px solid #4b5563", padding: "3px 0", textAlign: "center", color: "#6b7280", fontSize: 10 }}>{ri + 2}</td>
+                                {row.map((cell, ci) => {
+                                  const isNum = typeof cell === "number";
+                                  return (
+                                    <td key={ci} style={{ border: "1px solid #1f2937", padding: "4px 8px", color: "#e2e8f0", textAlign: isNum ? "right" : "left", whiteSpace: "nowrap", fontSize: 12 }}>
+                                      {isNum ? cell.toLocaleString() : cell}
+                                    </td>
+                                  );
+                                })}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
 
-              {/* FREE PRACTICE MODE */}
+              {/* FREE PRACTICE */}
               {pgMode === "free" && (
                 <div>
-                  {/* Formula bar */}
                   <div className="card" style={{ padding: 16, marginBottom: 16 }}>
-                    <div className="section-title" style={{ marginBottom: 8 }}>Formula Bar</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                      <div style={{ fontSize: 12, color: "#64748b" }}>Running formula against:</div>
+                      <div style={{ display: "flex", gap: 6 }}>
+                        {Object.entries(PLAYGROUND_SCENARIOS).map(([key, sc]) => (
+                          <button key={key} onClick={() => setActiveTable(key)}
+                            style={{ fontSize: 11, padding: "3px 10px", borderRadius: 5, border: "1px solid " + (activeTable === key ? "#6366f1" : "#1e2535"), background: activeTable === key ? "#1e2040" : "transparent", color: activeTable === key ? "#a5b4fc" : "#475569", cursor: "pointer", fontFamily: "inherit" }}>
+                            {sc.tableLabel}
+                          </button>
+                        ))}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#334155", marginLeft: 4 }}>
+                        Cols: {PLAYGROUND_SCENARIOS[activeTable].cols.map((c,i) => String.fromCharCode(65+i)+"="+c).join("  ")}
+                      </div>
+                    </div>
                     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                      <div style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 6, padding: "8px 12px", fontSize: 13, color: "#4ade80", minWidth: 36, textAlign: "center" }}>fx</div>
-                      <input
-                        className="pg-formula-bar"
-                        placeholder='Try: =SUM(C2:C11)  or  =COUNTIF(A2:A11,"East")  or  =MAX(E2:E11)'
+                      <div style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 6, padding: "8px 12px", fontSize: 12, color: "#475569", fontStyle: "italic" }}>fx</div>
+                      <input className="pg-formula-bar"
+                        placeholder={'Try: =SUM(D2:D11)  or  =COUNTIF(C2:C11,"Sales")  or  =VLOOKUP("Eve",B2:F11,3,FALSE)'}
                         value={pgFormula}
                         onChange={e => { setPgFormula(e.target.value); setPgResult(null); }}
-                        onKeyDown={e => {
-                          if (e.key === "Enter") {
-                            const r = evalFormula(pgFormula, pgScenario);
-                            setPgResult(r);
-                          }
-                        }}
+                        onKeyDown={e => { if (e.key === "Enter") { const r = evalFormula(pgFormula, activeTable); setPgResult(r); } }}
                       />
-                      <button className="pg-run-btn" onClick={() => { const r = evalFormula(pgFormula, pgScenario); setPgResult(r); }}>
-                        ▶ Run
-                      </button>
+                      <button className="pg-run-btn" onClick={() => { const r = evalFormula(pgFormula, activeTable); setPgResult(r); }}>▶ Run</button>
                     </div>
-                    <div style={{ fontSize: 11, color: "#334155", marginTop: 8 }}>Press Enter or click Run. Columns: A={PLAYGROUND_SCENARIOS[pgScenario].cols[0]}, B={PLAYGROUND_SCENARIOS[pgScenario].cols[1]}, C={PLAYGROUND_SCENARIOS[pgScenario].cols[2]}, D={PLAYGROUND_SCENARIOS[pgScenario].cols[3]}, E={PLAYGROUND_SCENARIOS[pgScenario].cols[4]}, F={PLAYGROUND_SCENARIOS[pgScenario].cols[5]}</div>
                   </div>
-
-                  {/* Result */}
                   {pgResult && (
-                    <div className={`pg-result-box ${pgResult.error ? "pg-result-err" : "pg-result-ok"}`} style={{ marginBottom: 16 }}>
+                    <div className={"pg-result-box " + (pgResult.error ? "pg-result-err" : "pg-result-ok")} style={{ marginBottom: 16 }}>
                       {pgResult.error ? (
                         <div>
-                          <div style={{ fontWeight: 600, marginBottom: 6, color: "#f87171" }}>⚠ Something went wrong</div>
-                          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, background: "#0d0608", border: "1px solid #3a1010", borderRadius: 6, padding: "8px 12px", color: "#fca5a5", marginBottom: 8 }}>{pgResult.error}</div>
+                          <div style={{ fontWeight: 600, marginBottom: 6, color: "#f87171" }}>⚠ {pgResult.error}</div>
                           <div style={{ fontSize: 11, color: "#64748b" }}>
                             {pgResult.error.includes("not supported") ? "💡 This function isn't available in the playground engine yet." :
-                             pgResult.error.includes("start with =") ? "💡 All formulas must begin with = e.g. =SUM(C2:C11)" :
-                             "💡 Check your formula syntax — make sure ranges like A2:A11 are correct and strings are in quotes."}
+                             pgResult.error.includes("start with =") ? "💡 Formulas must start with = e.g. =SUM(D2:D11)" :
+                             "💡 Check your syntax — ranges like D2:D11, strings in quotes."}
                           </div>
                         </div>
                       ) : (
                         <div>
-                          <div style={{ fontSize: 11, color: "#10b981", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Result</div>
+                          <div style={{ fontSize: 11, color: "#10b981", marginBottom: 4, textTransform: "uppercase", letterSpacing: "1px" }}>Result</div>
                           <div style={{ fontSize: 22, fontWeight: 600 }}>
-                            {typeof pgResult.value === "number"
-                              ? (Number.isInteger(pgResult.value) ? pgResult.value.toLocaleString() : pgResult.value.toLocaleString(undefined, { maximumFractionDigits: 4 }))
+                            {Array.isArray(pgResult.value) ? "[" + pgResult.value.slice(0,5).join(", ") + (pgResult.value.length > 5 ? "... +" + (pgResult.value.length-5) + " more" : "") + "]"
+                              : typeof pgResult.value === "number" ? (Number.isInteger(pgResult.value) ? pgResult.value.toLocaleString() : pgResult.value.toLocaleString(undefined, {maximumFractionDigits: 4}))
                               : String(pgResult.value)}
                           </div>
                         </div>
                       )}
                     </div>
                   )}
-
-                  {/* Quick formula suggestions */}
+                  {/* Formula chips by category */}
                   <div>
-                    <div className="section-title">Try these formulas on this dataset</div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                      {(() => {
-                        const sc = pgScenario;
-                        const suggestions = {
-                          sales: [
-                            '=SUM(E2:E11)',
-                            '=AVERAGE(C2:C11)',
-                            '=MAX(E2:E11)',
-                            '=MIN(E2:E11)',
-                            '=COUNTIF(A2:A11,"East")',
-                            '=SUMIF(A2:A11,"East",E2:E11)',
-                            '=SUMIFS(E2:E11,A2:A11,"East",F2:F11,"Jan")',
-                            '=COUNTIFS(A2:A11,"East",F2:F11,"Jan")',
-                          ],
-                          employees: [
-                            '=AVERAGE(C2:C11)',
-                            '=MAX(E2:E11)',
-                            '=COUNTIF(F2:F11,"Active")',
-                            '=SUMIF(B2:B11,"IT",C2:C11)',
-                            '=AVERAGEIF(B2:B11,"Sales",C2:C11)',
-                            '=COUNTIFS(B2:B11,"IT",F2:F11,"Active")',
-                            '=SUMIFS(C2:C11,B2:B11,"Sales",F2:F11,"Active")',
-                            '=COUNTIF(D2:D11,">=5")',
-                          ],
-                          inventory: [
-                            '=SUMPRODUCT(C2:C11,E2:E11)',
-                            '=SUMIF(B2:B11,"Electronics",C2:C11)',
-                            '=MIN(E2:E11)',
-                            '=MAX(C2:C11)',
-                            '=COUNTIF(F2:F11,"TechCorp")',
-                            '=AVERAGEIF(B2:B11,"Electronics",E2:E11)',
-                            '=SUMIFS(C2:C11,B2:B11,"Furniture")',
-                            '=LARGE(E2:E11,3)',
-                          ]
-                        };
-                        return (suggestions[sc] || []).map(s => (
-                          <button key={s} style={{ background: "#0d1020", border: "1px solid #1e2535", borderRadius: 6, color: "#4ade80", padding: "6px 10px", fontFamily: "'DM Mono', monospace", fontSize: 11, cursor: "pointer", transition: "all 0.15s" }}
-                            onMouseEnter={e => e.currentTarget.style.borderColor = "#10b981"}
-                            onMouseLeave={e => e.currentTarget.style.borderColor = "#1e2535"}
-                            onClick={() => { setPgFormula(s); setPgResult(null); }}>
-                            {s}
-                          </button>
-                        ));
-                      })()}
-                    </div>
+                    <div className="section-title" style={{ marginBottom: 10 }}>Formulas to try — click to load an example</div>
+                    {[
+                      { cat: "📊 Math & Stats", color: "#10b981", fns: [
+                        { n: "SUM", f: '=SUM(D2:D11)' }, { n: "AVERAGE", f: '=AVERAGE(D2:D11)' }, { n: "COUNT", f: '=COUNT(D2:D11)' },
+                        { n: "COUNTA", f: '=COUNTA(B2:B11)' }, { n: "MAX", f: '=MAX(D2:D11)' }, { n: "MIN", f: '=MIN(D2:D11)' },
+                        { n: "LARGE", f: '=LARGE(D2:D11,2)' }, { n: "SMALL", f: '=SMALL(D2:D11,2)' },
+                        { n: "SUMIF", f: '=SUMIF(C2:C11,"Sales",D2:D11)' }, { n: "COUNTIF", f: '=COUNTIF(C2:C11,"Sales")' },
+                        { n: "AVERAGEIF", f: '=AVERAGEIF(C2:C11,"IT",D2:D11)' },
+                        { n: "SUMIFS", f: '=SUMIFS(D2:D11,C2:C11,"Sales",F2:F11,"Active")' },
+                        { n: "COUNTIFS", f: '=COUNTIFS(C2:C11,"IT",F2:F11,"Active")' },
+                        { n: "SUMPRODUCT", f: '=SUMPRODUCT(D2:D11,E2:E11)' },
+                        { n: "ROUND", f: '=ROUND(D2,-3)' }, { n: "MOD", f: '=MOD(D2,10000)' }, { n: "ABS", f: '=ABS(D2-D3)' },
+                      ]},
+                      { cat: "🔍 Lookup & Reference", color: "#6366f1", fns: [
+                        { n: "VLOOKUP", f: '=VLOOKUP("Eve",B2:F11,3,FALSE)' }, { n: "XLOOKUP", f: '=XLOOKUP("Hank",B2:B11,C2:C11)' },
+                        { n: "INDEX", f: '=INDEX(B2:F11,5,1)' }, { n: "MATCH", f: '=MATCH("Grace",B2:B11,0)' },
+                        { n: "FILTER", f: '=FILTER(B2:B11,F2:F11="Active")' }, { n: "UNIQUE", f: '=UNIQUE(C2:C11)' },
+                        { n: "SORT", f: '=SORT(B2:B11)' }, { n: "CHOOSECOLS", f: '=CHOOSECOLS(A2:F11,2,4)' },
+                      ]},
+                      { cat: "⚖️ Logic", color: "#f59e0b", fns: [
+                        { n: "IF", f: '=IF(D2>69400,"High","Low")' }, { n: "IFS", f: '=IFS(D2>=80000,"Senior",D2>=60000,"Mid",TRUE,"Junior")' },
+                        { n: "AND", f: '=AND(C2="Sales",F2="Active")' }, { n: "OR", f: '=OR(C2="HR",F2="Inactive")' },
+                        { n: "IFERROR", f: '=IFERROR(VLOOKUP("Zara",B2:D11,3,FALSE),"Not found")' },
+                        { n: "SWITCH", f: '=SWITCH(C2,"Sales","S","IT","I","HR","H")' },
+                        { n: "ISBLANK", f: '=ISBLANK(D2)' }, { n: "ISNUMBER", f: '=ISNUMBER(D2)' }, { n: "ISTEXT", f: '=ISTEXT(B2)' },
+                      ]},
+                      { cat: "📅 Date", color: "#ec4899", fns: [
+                        { n: "YEAR", f: '=YEAR(E2)' }, { n: "MONTH", f: '=MONTH(E2)' }, { n: "DAY", f: '=DAY(E2)' },
+                        { n: "WEEKDAY", f: '=WEEKDAY(E2,2)' }, { n: "NETWORKDAYS", f: '=NETWORKDAYS(E2,E3)' },
+                      ]},
+                      { cat: "🔤 Text", color: "#8b5cf6", fns: [
+                        { n: "UPPER", f: '=UPPER(B2)' }, { n: "LOWER", f: '=LOWER(C2)' }, { n: "PROPER", f: '=PROPER(B2)' },
+                        { n: "TRIM", f: '=TRIM(B2)' }, { n: "LEFT", f: '=LEFT(B2,3)' }, { n: "LEN", f: '=LEN(B2)' },
+                        { n: "CONCATENATE", f: '=CONCATENATE(B2," | ",C2)' }, { n: "SUBSTITUTE", f: '=SUBSTITUTE(C2,"Sales","Revenue")' },
+                        { n: "TEXTJOIN", f: '=TEXTJOIN(", ",TRUE,B2:B6)' },
+                      ]},
+                    ].map(group => (
+                      <div key={group.cat} style={{ marginBottom: 12 }}>
+                        <div style={{ fontSize: 11, color: group.color, marginBottom: 7, fontWeight: 600, textTransform: "uppercase", letterSpacing: "1px" }}>{group.cat}</div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                          {group.fns.map(fn => (
+                            <button key={fn.n}
+                              style={{ background: "#0d1020", border: "1px solid #1e2535", borderRadius: 6, color: "#94a3b8", padding: "5px 10px", fontFamily: "inherit", fontSize: 12, cursor: "pointer", transition: "all 0.12s" }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = group.color; e.currentTarget.style.color = "#e2e8f0"; e.currentTarget.style.background = "#12163a"; }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = "#1e2535"; e.currentTarget.style.color = "#94a3b8"; e.currentTarget.style.background = "#0d1020"; }}
+                              onClick={() => { setPgFormula(fn.f); setPgResult(null); }}>
+                              {fn.n}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {/* CHALLENGES MODE */}
+              {/* CHALLENGES */}
               {pgMode === "challenges" && (
                 <div>
+                  <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                    {Object.entries(PLAYGROUND_SCENARIOS).map(([key, sc]) => (
+                      <button key={key} onClick={() => { setActiveTable(key); setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}
+                        style={{ padding: "7px 18px", borderRadius: 8, border: "1px solid " + (activeTable === key ? "#6366f1" : "#1e2535"), background: activeTable === key ? "#1e2040" : "transparent", color: activeTable === key ? "#a5b4fc" : "#64748b", cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontWeight: activeTable === key ? 600 : 400 }}>
+                        {sc.label}
+                      </button>
+                    ))}
+                  </div>
                   {pgActiveChallenge === null ? (
                     <div>
                       <div style={{ color: "#64748b", fontSize: 13, marginBottom: 16 }}>
-                        Pick a challenge. Write the formula that produces the correct answer.
-                        {Object.keys(pgCompleted).length > 0 && <span style={{ color: "#4ade80", marginLeft: 8 }}>✓ {Object.keys(pgCompleted).length}/{PLAYGROUND_SCENARIOS[pgScenario].challenges.length} completed</span>}
+                        Pick a challenge below. Write the formula that produces the correct answer.
+                        {Object.keys(pgCompleted).length > 0 && <span style={{ color: "#4ade80", marginLeft: 8 }}>✓ {Object.keys(pgCompleted).length} completed</span>}
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                        {PLAYGROUND_SCENARIOS[pgScenario].challenges.map((ch, i) => (
-                          <button key={ch.id} className={`pg-challenge-card ${pgCompleted[ch.id] ? "done" : ""}`}
+                        {PLAYGROUND_SCENARIOS[activeTable].challenges.map((ch, i) => (
+                          <button key={ch.id} className={"pg-challenge-card " + (pgCompleted[ch.id] ? "done" : "")}
                             onClick={() => { setPgActiveChallenge(ch.id); setPgFormula(""); setPgResult(null); }}>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                                <div style={{ width: 26, height: 26, borderRadius: "50%", background: pgCompleted[ch.id] ? "#1a4a2a" : "#1e2535", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: pgCompleted[ch.id] ? "#4ade80" : "#64748b", flexShrink: 0 }}>
-                                  {pgCompleted[ch.id] ? "✓" : i + 1}
-                                </div>
-                                <div>
-                                  <div style={{ fontSize: 13, color: pgCompleted[ch.id] ? "#4ade80" : "#e2e8f0", fontWeight: 500 }}>{ch.label}</div>
-                                  <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>{ch.hint}</div>
-                                </div>
-                              </div>
-                              <div style={{ fontSize: 11, color: pgCompleted[ch.id] ? "#4ade80" : "#475569" }}>
-                                {pgCompleted[ch.id] ? "Solved ✓" : "→"}
-                              </div>
-                            </div>
+                            <span style={{ color: pgCompleted[ch.id] ? "#4ade80" : "#6366f1", marginRight: 8, fontSize: 13 }}>{pgCompleted[ch.id] ? "✓" : (i+1)}</span>
+                            {ch.label}
                           </button>
                         ))}
                       </div>
-
-                      {/* All done banner */}
-                      {Object.keys(pgCompleted).length === PLAYGROUND_SCENARIOS[pgScenario].challenges.length && (
-                        <div style={{ marginTop: 16, background: "linear-gradient(135deg,#0a2a0f,#0d1a20)", border: "1px solid #1a4a2a", borderRadius: 12, padding: "20px 24px", textAlign: "center" }}>
+                      {Object.keys(pgCompleted).length === PLAYGROUND_SCENARIOS[activeTable].challenges.length && (
+                        <div style={{ marginTop: 20, background: "linear-gradient(135deg,#0a2a0f,#0d1a20)", border: "1px solid #1a4a2a", borderRadius: 12, padding: 24, textAlign: "center" }}>
                           <div style={{ fontSize: 36, marginBottom: 8 }}>🏆</div>
-                          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "#4ade80", marginBottom: 4 }}>All challenges complete!</div>
-                          <div style={{ fontSize: 13, color: "#64748b" }}>Try a different dataset or switch to Free Practice.</div>
+                          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "#4ade80", marginBottom: 6 }}>All challenges complete!</div>
+                          <div style={{ fontSize: 13, color: "#64748b" }}>Try the other dataset or switch to Cross-Reference mode.</div>
                         </div>
                       )}
                     </div>
                   ) : (() => {
-                    const challenge = PLAYGROUND_SCENARIOS[pgScenario].challenges.find(c => c.id === pgActiveChallenge);
+                    const challenge = PLAYGROUND_SCENARIOS[activeTable].challenges.find(c => c.id === pgActiveChallenge);
                     if (!challenge) return null;
                     const isCorrect = pgResult && !pgResult.error && challenge.check(pgResult.value);
                     const isWrong = pgResult && !pgResult.error && !challenge.check(pgResult.value);
-
+                    const sc = PLAYGROUND_SCENARIOS[activeTable];
                     return (
                       <div>
-                        <button className="back-btn" style={{ marginBottom: 16 }} onClick={() => { setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}>← Back to challenges</button>
-
+                        <button className="back-btn" style={{ marginBottom: 16 }} onClick={() => { setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}>← All challenges</button>
                         <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-                          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+                          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
                             <div>
                               <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 17, color: "#e2e8f0", marginBottom: 4 }}>{challenge.label}</div>
                               <div style={{ fontSize: 13, color: "#64748b" }}>{challenge.hint}</div>
                             </div>
-                            <div style={{ background: "#0a1a0d", border: "1px solid #1a4a2a", borderRadius: 8, padding: "6px 14px", fontSize: 12, color: "#4ade80" }}>
+                            <div style={{ background: "#0a1a0d", border: "1px solid #1a4a2a", borderRadius: 8, padding: "8px 14px", fontSize: 13, color: "#4ade80", whiteSpace: "nowrap" }}>
                               Expected: <strong>{challenge.expected}</strong>
                             </div>
                           </div>
-
-                          <div className="section-title" style={{ marginBottom: 8 }}>Your Formula</div>
+                          <div style={{ fontSize: 11, color: "#334155", marginBottom: 8 }}>
+                            Columns: {sc.cols.map((c,i) => String.fromCharCode(65+i)+"="+c).join("  ")} · rows 2–{sc.rows.length+1}
+                          </div>
                           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                            <div style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 6, padding: "8px 12px", fontSize: 13, color: "#4ade80", minWidth: 36, textAlign: "center" }}>fx</div>
-                            <input
-                              className="pg-formula-bar"
+                            <div style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 6, padding: "8px 10px", fontSize: 12, color: "#475569", fontStyle: "italic" }}>fx</div>
+                            <input className="pg-formula-bar"
                               style={{ borderColor: isCorrect ? "#10b981" : isWrong ? "#ef4444" : undefined }}
                               placeholder="Type your formula here..."
                               value={pgFormula}
                               onChange={e => { setPgFormula(e.target.value); setPgResult(null); }}
-                              onKeyDown={e => {
-                                if (e.key === "Enter") {
-                                  const r = evalFormula(pgFormula, pgScenario);
-                                  setPgResult(r);
-                                  if (!r.error && challenge.check(r.value)) {
-                                    setPgCompleted(prev => ({ ...prev, [challenge.id]: true }));
-                                  }
-                                }
-                              }}
+                              onKeyDown={e => { if (e.key === "Enter") { const r = evalFormula(pgFormula, activeTable); setPgResult(r); if (!r.error && challenge.check(r.value)) setPgCompleted(prev => ({ ...prev, [challenge.id]: true })); }}}
                             />
-                            <button className="pg-run-btn" onClick={() => {
-                              const r = evalFormula(pgFormula, pgScenario);
-                              setPgResult(r);
-                              if (!r.error && challenge.check(r.value)) {
-                                setPgCompleted(prev => ({ ...prev, [challenge.id]: true }));
-                              }
-                            }}>▶ Run</button>
-                          </div>
-                          <div style={{ fontSize: 11, color: "#334155", marginTop: 6 }}>
-                            Hint: A={PLAYGROUND_SCENARIOS[pgScenario].cols[0]}, B={PLAYGROUND_SCENARIOS[pgScenario].cols[1]}, C={PLAYGROUND_SCENARIOS[pgScenario].cols[2]}, D={PLAYGROUND_SCENARIOS[pgScenario].cols[3]}, E={PLAYGROUND_SCENARIOS[pgScenario].cols[4]}, F={PLAYGROUND_SCENARIOS[pgScenario].cols[5]} — data in rows 2:11
+                            <button className="pg-run-btn" onClick={() => { const r = evalFormula(pgFormula, activeTable); setPgResult(r); if (!r.error && challenge.check(r.value)) setPgCompleted(prev => ({ ...prev, [challenge.id]: true })); }}>▶ Run</button>
                           </div>
                         </div>
-
-                        {/* Result feedback */}
                         {pgResult && (
                           <div style={{ marginBottom: 16 }}>
                             {pgResult.error ? (
                               <div className="pg-result-box pg-result-err">
-                                <div style={{ fontWeight: 600, marginBottom: 6 }}>⚠ Something went wrong</div>
-                                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, background: "#0d0608", border: "1px solid #3a1010", borderRadius: 6, padding: "8px 12px", marginBottom: 8 }}>{pgResult.error}</div>
-                                <div style={{ fontSize: 11, color: "#f87171", opacity: 0.7 }}>
-                                  {pgResult.error.includes("not supported") ? "💡 This function isn't available in the playground engine yet." :
-                                   pgResult.error.includes("start with =") ? "💡 Formulas must begin with = e.g. =SUM(C2:C11)" :
-                                   "💡 Check your syntax — ranges like C2:C11, strings in quotes e.g. 'East'"}
-                                </div>
+                                <div style={{ fontWeight: 600, marginBottom: 6, color: "#f87171" }}>⚠ {pgResult.error}</div>
+                                <div style={{ fontSize: 11, color: "#64748b" }}>{pgResult.error.includes("not supported") ? "💡 This function isn't in the playground engine yet." : "💡 Check your formula syntax."}</div>
                               </div>
                             ) : isCorrect ? (
-                              <div style={{ background: "linear-gradient(135deg,#0a2a0f,#0d2010)", border: "2px solid #10b981", borderRadius: 12, padding: "18px 22px" }}>
+                              <div style={{ background: "linear-gradient(135deg,#0a2a0f,#0d2010)", border: "2px solid #166534", borderRadius: 12, padding: 24, textAlign: "center" }}>
                                 <div style={{ fontSize: 28, marginBottom: 6 }}>🎉</div>
                                 <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "#4ade80", marginBottom: 4 }}>Correct!</div>
-                                <div style={{ fontSize: 13, color: "#86efac" }}>Your result: <strong>{typeof pgResult.value === "number" ? pgResult.value.toLocaleString(undefined, { maximumFractionDigits: 4 }) : String(pgResult.value)}</strong></div>
-                                <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-                                  <button className="pg-run-btn" style={{ background: "linear-gradient(135deg,#6366f1,#a855f7)" }} onClick={() => { setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}>Next Challenge →</button>
-                                </div>
+                                <div style={{ fontSize: 13, color: "#86efac", marginBottom: 16 }}>Your result: <strong>{String(pgResult.value)}</strong></div>
+                                <button className="pg-run-btn" style={{ background: "linear-gradient(135deg,#6366f1,#a855f7)" }} onClick={() => { setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}>← Next challenge</button>
                               </div>
                             ) : (
-                              <div style={{ background: "#120808", border: "1px solid #4a1a1a", borderRadius: 12, padding: "16px 20px" }}>
-                                <div style={{ fontSize: 14, color: "#f87171", marginBottom: 10, fontWeight: 600 }}>❌ Not quite — here's what went wrong</div>
-                                <div style={{ display: "flex", gap: 16, marginBottom: 12, flexWrap: "wrap" }}>
-                                  <div style={{ flex: 1, minWidth: 120, background: "#1a0808", border: "1px solid #3a1010", borderRadius: 8, padding: "8px 12px" }}>
-                                    <div style={{ fontSize: 10, color: "#f87171", textTransform: "uppercase", letterSpacing: 1, marginBottom: 3 }}>Your result</div>
-                                    <div style={{ fontSize: 16, color: "#fca5a5", fontWeight: 600 }}>{typeof pgResult.value === "number" ? pgResult.value.toLocaleString(undefined, { maximumFractionDigits: 4 }) : String(pgResult.value)}</div>
-                                  </div>
-                                  <div style={{ flex: 1, minWidth: 120, background: "#0a1a0d", border: "1px solid #1a4a2a", borderRadius: 8, padding: "8px 12px" }}>
-                                    <div style={{ fontSize: 10, color: "#4ade80", textTransform: "uppercase", letterSpacing: 1, marginBottom: 3 }}>Expected</div>
-                                    <div style={{ fontSize: 16, color: "#4ade80", fontWeight: 600 }}>{challenge.expected}</div>
-                                  </div>
+                              <div className="pg-result-box pg-result-err">
+                                <div style={{ display: "flex", gap: 16, marginBottom: 10, flexWrap: "wrap" }}>
+                                  <div style={{ flex: 1, minWidth: 120 }}><div style={{ fontSize: 10, color: "#f87171", textTransform: "uppercase", marginBottom: 3 }}>Your result</div><div style={{ fontSize: 16, color: "#fca5a5", fontWeight: 600 }}>{String(pgResult.value)}</div></div>
+                                  <div style={{ flex: 1, minWidth: 120 }}><div style={{ fontSize: 10, color: "#4ade80", textTransform: "uppercase", marginBottom: 3 }}>Expected</div><div style={{ fontSize: 16, color: "#4ade80", fontWeight: 600 }}>{challenge.expected}</div></div>
                                 </div>
-                                <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.7, background: "#0d0608", border: "1px solid #2a1010", borderRadius: 8, padding: "10px 14px" }}>
-                                  {(() => {
-                                    const got = pgResult.value;
-                                    const exp = challenge.expected;
-                                    const formula = pgFormula.toUpperCase();
-                                    if (typeof got === "number" && parseFloat(exp) && Math.abs(got - parseFloat(exp)) < Math.abs(got) * 0.5) {
-                                      return "💡 You're in the right ballpark! Double-check your range — make sure you're referencing the correct column (e.g. E2:E11 vs C2:C11).";
-                                    }
-                                    if (typeof got === "number" && got === 0) {
-                                      return "💡 Result is 0 — this usually means the criteria didn't match anything. Check your spelling or case in the condition string (e.g. 'East' not 'east').";
-                                    }
-                                    if (formula.indexOf("SUMIF") !== -1 && formula.indexOf("SUMIFS") === -1) {
-                                      return "💡 With SUMIF, the argument order is: =SUMIF(range_to_check, condition, range_to_sum). Make sure you haven't swapped the last two arguments.";
-                                    }
-                                    if (formula.indexOf("COUNTIF") !== -1) {
-                                      return "💡 With COUNTIF: =COUNTIF(range, condition). The condition must be in quotes for text, e.g. 'East'. For numbers use '>5' format.";
-                                    }
-                                    if (formula.indexOf("AVERAGE") !== -1) {
-                                      return "💡 Check you're averaging the right column. AVERAGEIF syntax is: =AVERAGEIF(criteria_range, condition, average_range).";
-                                    }
-                                    return "💡 Check your formula syntax — verify the range (e.g. C2:C11 or C:C), and that any text conditions are in double quotes like 'East'.";
-                                  })()}
-                                </div>
+                                <div style={{ fontSize: 12, color: "#94a3b8" }}>💡 Double-check your column references and condition strings.</div>
                               </div>
                             )}
                           </div>
                         )}
-
-                        {/* Show answer */}
                         <details style={{ marginTop: 4 }}>
                           <summary style={{ fontSize: 12, color: "#475569", cursor: "pointer", userSelect: "none" }}>💡 Show answer</summary>
-                          <div style={{ marginTop: 10, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: "12px 16px" }}>
-                            <div style={{ fontSize: 11, color: "#475569", marginBottom: 6 }}>One valid solution:</div>
-                            <div style={{ fontSize: 13, color: "#4ade80", fontFamily: "'DM Mono', monospace" }}>{challenge.target}</div>
-                            <button style={{ marginTop: 10, fontSize: 11, background: "#1e2535", border: "1px solid #2d3748", borderRadius: 5, color: "#94a3b8", padding: "4px 10px", cursor: "pointer", fontFamily: "'DM Mono', monospace" }}
-                              onClick={() => { setPgFormula(challenge.target); setPgResult(null); }}>
-                              Use this formula
-                            </button>
+                          <div style={{ marginTop: 10, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: 14 }}>
+                            <div style={{ fontSize: 13, color: "#4ade80", fontFamily: "'DM Mono', monospace", marginBottom: 8 }}>{challenge.target}</div>
+                            <button style={{ fontSize: 11, background: "#1e2535", border: "1px solid #2d3748", borderRadius: 6, color: "#94a3b8", padding: "5px 12px", cursor: "pointer", fontFamily: "inherit" }}
+                              onClick={() => { setPgFormula(challenge.target); setPgResult(null); }}>Use this formula</button>
                           </div>
                         </details>
                       </div>
@@ -4762,10 +4882,103 @@ function App() {
                   })()}
                 </div>
               )}
+
+              {/* CROSS-REFERENCE */}
+              {pgMode === "cross" && (
+                <div>
+                  <div style={{ background: "#0d1a30", border: "1px solid #1e3a5f", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+                    <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: "#93c5fd", marginBottom: 6 }}>🔗 How cross-referencing works</div>
+                    <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.8 }}>
+                      Both tables share an <strong style={{ color: "#a5b4fc" }}>EmpID</strong> column (A in Employees, B in Sales).<br/>
+                      Use <strong style={{ color: "#a5b4fc" }}>VLOOKUP / XLOOKUP</strong> to look up a value from one table while working in the other.<br/>
+                      Each challenge tells you which table to run your formula against.
+                    </div>
+                  </div>
+                  {pgActiveChallenge === null ? (
+                    <div>
+                      <div style={{ color: "#64748b", fontSize: 13, marginBottom: 16 }}>
+                        Each challenge uses data from both tables. Follow the instruction to know which table to run your formula against.
+                        {Object.keys(pgCompleted).filter(k => k.startsWith("x")).length > 0 && <span style={{ color: "#4ade80", marginLeft: 8 }}>✓ {Object.keys(pgCompleted).filter(k => k.startsWith("x")).length} / {CROSS_CHALLENGES.length} done</span>}
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {CROSS_CHALLENGES.map((ch, i) => (
+                          <button key={ch.id} className={"pg-challenge-card " + (pgCompleted[ch.id] ? "done" : "")}
+                            onClick={() => { setPgActiveChallenge(ch.id); setActiveTable(ch.activeTable); setPgFormula(""); setPgResult(null); }}>
+                            <span style={{ color: pgCompleted[ch.id] ? "#4ade80" : "#6366f1", marginRight: 8, fontSize: 13 }}>{pgCompleted[ch.id] ? "✓" : (i+1)}</span>
+                            <div style={{ textAlign: "left" }}>
+                              <div>{ch.label}</div>
+                              <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>Active table: {PLAYGROUND_SCENARIOS[ch.activeTable].tableLabel}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (() => {
+                    const challenge = CROSS_CHALLENGES.find(c => c.id === pgActiveChallenge);
+                    if (!challenge) return null;
+                    const isCorrect = pgResult && !pgResult.error && challenge.check(pgResult.value);
+                    const isWrong = pgResult && !pgResult.error && !challenge.check(pgResult.value);
+                    const sc = PLAYGROUND_SCENARIOS[challenge.activeTable];
+                    return (
+                      <div>
+                        <button className="back-btn" style={{ marginBottom: 16 }} onClick={() => { setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}>← All cross-reference challenges</button>
+                        <div style={{ background: "#0d1a30", border: "1px solid #1e3a5f", borderRadius: 8, padding: "10px 16px", marginBottom: 12, fontSize: 12, color: "#93c5fd" }}>
+                          📊 Active table: <strong>{sc.label}</strong> — {sc.cols.map((c,i) => String.fromCharCode(65+i)+"="+c).join("  ")}
+                        </div>
+                        <div className="card" style={{ padding: 20, marginBottom: 16 }}>
+                          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 17, color: "#e2e8f0", marginBottom: 6 }}>{challenge.label}</div>
+                          <div style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.7, marginBottom: 14 }}>{challenge.desc}</div>
+                          <div style={{ background: "#0a1a0d", border: "1px solid #1a4a2a", borderRadius: 6, padding: "8px 14px", fontSize: 13, color: "#4ade80", marginBottom: 14 }}>Expected: <strong>{challenge.expected}</strong></div>
+                          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                            <div style={{ background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 6, padding: "8px 10px", fontSize: 12, color: "#475569", fontStyle: "italic" }}>fx</div>
+                            <input className="pg-formula-bar"
+                              style={{ borderColor: isCorrect ? "#10b981" : isWrong ? "#ef4444" : undefined }}
+                              placeholder="Type your formula here..."
+                              value={pgFormula}
+                              onChange={e => { setPgFormula(e.target.value); setPgResult(null); }}
+                              onKeyDown={e => { if (e.key === "Enter") { const r = evalFormula(pgFormula, challenge.activeTable); setPgResult(r); if (!r.error && challenge.check(r.value)) setPgCompleted(prev => ({ ...prev, [challenge.id]: true })); }}}
+                            />
+                            <button className="pg-run-btn" onClick={() => { const r = evalFormula(pgFormula, challenge.activeTable); setPgResult(r); if (!r.error && challenge.check(r.value)) setPgCompleted(prev => ({ ...prev, [challenge.id]: true })); }}>▶ Run</button>
+                          </div>
+                        </div>
+                        {pgResult && (
+                          <div style={{ marginBottom: 16 }}>
+                            {pgResult.error ? (
+                              <div className="pg-result-box pg-result-err"><div style={{ fontWeight: 600, color: "#f87171" }}>⚠ {pgResult.error}</div></div>
+                            ) : isCorrect ? (
+                              <div style={{ background: "linear-gradient(135deg,#0a2a0f,#0d2010)", border: "2px solid #166534", borderRadius: 12, padding: 24, textAlign: "center" }}>
+                                <div style={{ fontSize: 28, marginBottom: 6 }}>🎉</div>
+                                <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "#4ade80", marginBottom: 4 }}>Correct!</div>
+                                <div style={{ fontSize: 13, color: "#86efac", marginBottom: 16 }}>Result: <strong>{String(pgResult.value)}</strong></div>
+                                <button className="pg-run-btn" style={{ background: "linear-gradient(135deg,#6366f1,#a855f7)" }} onClick={() => { setPgActiveChallenge(null); setPgResult(null); setPgFormula(""); }}>← Next challenge</button>
+                              </div>
+                            ) : (
+                              <div className="pg-result-box pg-result-err">
+                                <div style={{ display: "flex", gap: 16, marginBottom: 8, flexWrap: "wrap" }}>
+                                  <div style={{ flex: 1 }}><div style={{ fontSize: 10, color: "#f87171", textTransform: "uppercase", marginBottom: 3 }}>Your result</div><div style={{ fontSize: 16, color: "#fca5a5", fontWeight: 600 }}>{String(pgResult.value)}</div></div>
+                                  <div style={{ flex: 1 }}><div style={{ fontSize: 10, color: "#4ade80", textTransform: "uppercase", marginBottom: 3 }}>Expected</div><div style={{ fontSize: 16, color: "#4ade80", fontWeight: 600 }}>{challenge.expected}</div></div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        <details style={{ marginTop: 4 }}>
+                          <summary style={{ fontSize: 12, color: "#475569", cursor: "pointer", userSelect: "none" }}>💡 Show answer</summary>
+                          <div style={{ marginTop: 10, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: 14 }}>
+                            <div style={{ fontSize: 13, color: "#4ade80", fontFamily: "'DM Mono', monospace", marginBottom: 8 }}>{challenge.target}</div>
+                            <button style={{ fontSize: 11, background: "#1e2535", border: "1px solid #2d3748", borderRadius: 6, color: "#94a3b8", padding: "5px 12px", cursor: "pointer", fontFamily: "inherit" }}
+                              onClick={() => { setPgFormula(challenge.target); setPgResult(null); }}>Use this formula</button>
+                          </div>
+                        </details>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
             </div>
           )}
 
-          {/* HOME */}
           {tab === "learn" && !selectedFormula && (
             <div>
               <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 23, marginBottom: 6 }}>
