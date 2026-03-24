@@ -3928,7 +3928,7 @@ function App() {
                           {favorites.includes(f) && <span style={{ fontSize: 10 }}>⭐</span>}
                         </span>
                       </div>
-                      {FORMULAS[f] && <div style={{ fontSize: 11, color: "#475569", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{FORMULAS[f].tagline}</div>}
+                      {FORMULAS[f] && <div style={{ fontSize: 11, color: "#64748b", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{FORMULAS[f].tagline}</div>}
                     </button>
                   ))
                 }
@@ -4374,7 +4374,7 @@ function App() {
                 <div style={{ padding: "22px 26px 18px", borderBottom: "1px solid #1e2535", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
                   <div>
                     <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 20 }}>{expandedCategory}</div>
-                    <div style={{ fontSize: 12, color: "#475569", marginTop: 3 }}>{CATEGORIES[expandedCategory].length} formulas · click any to open it</div>
+                    <div style={{ fontSize: 12, color: "#64748b", marginTop: 3 }}>{CATEGORIES[expandedCategory].length} formulas · click any to open it</div>
                   </div>
                   <button onClick={() => setExpandedCategory(null)} style={{ background: "#1e2535", border: "1px solid #2d3748", color: "#94a3b8", borderRadius: 8, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 16, fontFamily: "inherit", flexShrink: 0 }}>✕</button>
                 </div>
@@ -4396,7 +4396,7 @@ function App() {
                         </div>
                         {FORMULAS[f] && <div style={{ fontSize: 12, color: "#64748b", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{FORMULAS[f].tagline}</div>}
                       </div>
-                      <span style={{ color: "#2d3748", fontSize: 16, flexShrink: 0 }}>›</span>
+                      <span style={{ color: "#4b5563", fontSize: 16, flexShrink: 0 }}>›</span>
                     </button>
                   ))}
                 </div>
@@ -4411,13 +4411,13 @@ function App() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                   <div>
                     <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 20, marginBottom: 2 }}>⚡ All {Object.keys(FORMULAS).length} Formulas</div>
-                    <div style={{ fontSize: 12, color: "#475569" }}>Click any formula to open it. Green = already explored.</div>
+                    <div style={{ fontSize: 12, color: "#64748b" }}>Click any formula to open it. Green = already explored.</div>
                   </div>
                   <button onClick={() => setShowAllFormulas(false)} style={{ background: "#1e2535", border: "1px solid #2d3748", color: "#94a3b8", borderRadius: 8, padding: "6px 14px", cursor: "pointer", fontFamily: "inherit", fontSize: 13 }}>✕ Close</button>
                 </div>
                 {Object.entries(CATEGORIES).map(([cat, fmls]) => (
                   <div key={cat} style={{ marginBottom: 22 }}>
-                    <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2, color: "#475569", marginBottom: 8, fontFamily: "'Syne', sans-serif" }}>{cat}</div>
+                    <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2, color: "#64748b", marginBottom: 8, fontFamily: "'Syne', sans-serif" }}>{cat}</div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                       {fmls.map(f => (
                         <button key={f} onClick={() => { handleFormulaSelect(f); setShowAllFormulas(false); }} style={{ background: progress[f] ? "#0d1f0d" : "#0d1117", border: "1px solid " + (progress[f] ? "#2d5a2d" : "#1e2535"), color: progress[f] ? "#4ade80" : "#94a3b8", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontFamily: "inherit", fontSize: 13, display: "flex", alignItems: "center", gap: 5, transition: "all 0.12s" }}
@@ -4530,13 +4530,13 @@ function App() {
                     {/* Result + What's Happening */}
                     <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                       <div style={{ background: "#052e16", border: "1px solid #166534", borderRadius: 6, padding: "12px 16px", minWidth: 130, flexShrink: 0 }}>
-                        <div style={{ fontSize: 10, color: "#15803d", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1.5px" }}>✓ Result</div>
+                        <div style={{ fontSize: 10, color: "#34d399", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1.5px" }}>✓ Result</div>
                         <div style={{ fontSize: 15, color: "#4ade80", fontWeight: 700, fontFamily: "Calibri, Arial, sans-serif" }}>
                           {formula.beginner.sampleTable ? formula.beginner.sampleTable.output : formula.beginner.example.result}
                         </div>
                       </div>
                       <div style={{ flex: 1, minWidth: 180, background: "#0d1117", border: "1px solid #1f2937", borderRadius: 6, padding: "12px 16px" }}>
-                        <div style={{ fontSize: 10, color: "#475569", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1.5px" }}>💡 What's Happening</div>
+                        <div style={{ fontSize: 10, color: "#64748b", marginBottom: 5, textTransform: "uppercase", letterSpacing: "1.5px" }}>💡 What's Happening</div>
                         <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7 }}>
                           {formula.beginner.sampleTable && formula.beginner.sampleTable.whatsHappening ? formula.beginner.sampleTable.whatsHappening : formula.beginner.example.context}
                         </div>
@@ -4547,7 +4547,7 @@ function App() {
                       <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #1e2535" }}>
                         <div style={{ fontSize: 11, color: "#475569", marginBottom: 6, textTransform: "uppercase", letterSpacing: "1px" }}>Range variant</div>
                         <div className="code-block">{formula.beginner.rangeExample.formula}</div>
-                        <div style={{ fontSize: 12, color: "#475569", marginTop: 6 }}>{formula.beginner.rangeExample.context}</div>
+                        <div style={{ fontSize: 12, color: "#64748b", marginTop: 6 }}>{formula.beginner.rangeExample.context}</div>
                       </div>
                     )}
                   </div>
@@ -4614,18 +4614,18 @@ function App() {
                   const isActive = activeTable === key;
                   return (
                     <div key={key} style={{ flex: "1 1 400px", minWidth: 300 }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: isActive ? "#a5b4fc" : "#94a3b8" }}>{sc.label}</div>
-                          <div style={{ fontSize: 11, color: "#64748b" }}>{sc.description}</div>
-                        </div>
-                        {pgMode === "free" && (
-                          <button onClick={() => setActiveTable(key)}
-                            style={{ fontSize: 11, padding: "4px 10px", borderRadius: 6, border: "1px solid " + (isActive ? "#6366f1" : "#1e2535"), background: isActive ? "#1e2040" : "transparent", color: isActive ? "#a5b4fc" : "#475569", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>
-                            {isActive ? "✓ Active" : "Use this"}
-                          </button>
-                        )}
-                      </div>
+                       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8, gap: 10 }}>
+                         <div>
+                           <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: isActive ? "#a5b4fc" : "#cbd5e1", marginBottom: 3 }}>{sc.label}</div>
+                           <div style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.5 }}>{sc.description}</div>
+                         </div>
+                         {pgMode === "free" && (
+                           <button onClick={() => setActiveTable(key)}
+                             style={{ fontSize: 11, padding: "4px 10px", borderRadius: 6, border: "1px solid " + (isActive ? "#6366f1" : "#374151"), background: isActive ? "#1e2040" : "#161b27", color: isActive ? "#a5b4fc" : "#cbd5e1", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap", flexShrink: 0 }}>
+                             {isActive ? "✓ Active" : "Use this"}
+                           </button>
+                         )}
+                       </div>
                       <div style={{ overflowX: "auto", border: "2px solid " + (isActive ? "#3730a3" : "#1e2535"), borderRadius: 6, transition: "border-color 0.2s" }}>
                         <table style={{ borderCollapse: "collapse", fontFamily: "Calibri, 'Segoe UI', sans-serif", fontSize: 12, width: "100%" }}>
                           <thead>
@@ -4674,13 +4674,12 @@ function App() {
                       <div style={{ fontSize: 12, color: "#94a3b8" }}>Running formula against:</div>
                       <div style={{ display: "flex", gap: 6 }}>
                         {Object.entries(PLAYGROUND_SCENARIOS).map(([key, sc]) => (
-                          <button key={key} onClick={() => setActiveTable(key)}
-                            style={{ fontSize: 11, padding: "3px 10px", borderRadius: 5, border: "1px solid " + (activeTable === key ? "#6366f1" : "#1e2535"), background: activeTable === key ? "#1e2040" : "transparent", color: activeTable === key ? "#a5b4fc" : "#475569", cursor: "pointer", fontFamily: "inherit" }}>
-                            {sc.tableLabel}
+                           <button key={key} onClick={() => setActiveTable(key)}
+                             style={{ fontSize: 11, padding: "3px 10px", borderRadius: 5, border: "1px solid " + (activeTable === key ? "#6366f1" : "#374151"), background: activeTable === key ? "#1e2040" : "#161b27", color: activeTable === key ? "#a5b4fc" : "#cbd5e1", cursor: "pointer", fontFamily: "inherit" }}>
                           </button>
                         ))}
                       </div>
-                      <div style={{ fontSize: 11, color: "#94a3b8", marginLeft: 4 }}>
+                       <div style={{ fontSize: 11, color: "#94a3b8", marginLeft: 4, flexWrap: "wrap" }}>
                         Cols: {PLAYGROUND_SCENARIOS[activeTable].cols.map((c,i) => String.fromCharCode(65+i)+"="+c).join("  ")}
                       </div>
                     </div>
@@ -4761,9 +4760,8 @@ function App() {
                         <div style={{ fontSize: 11, color: group.color, marginBottom: 7, fontWeight: 600, textTransform: "uppercase", letterSpacing: "1px" }}>{group.cat}</div>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                           {group.fns.map(fn => (
-                            <button key={fn.n}
-                              style={{ background: "#0d1020", border: "1px solid #1e2535", borderRadius: 6, color: "#94a3b8", padding: "5px 10px", fontFamily: "inherit", fontSize: 12, cursor: "pointer", transition: "all 0.12s" }}
-                              onMouseEnter={e => { e.currentTarget.style.borderColor = group.color; e.currentTarget.style.color = "#e2e8f0"; e.currentTarget.style.background = "#12163a"; }}
+                             <button key={fn.n}
+                               style={{ background: "#0d1020", border: "1px solid #2d3748", borderRadius: 6, color: "#cbd5e1", padding: "5px 12px", fontFamily: "inherit", fontSize: 12, cursor: "pointer", transition: "all 0.12s", fontWeight: 500 }}
                               onMouseLeave={e => { e.currentTarget.style.borderColor = "#1e2535"; e.currentTarget.style.color = "#94a3b8"; e.currentTarget.style.background = "#0d1020"; }}
                               onClick={() => { setPgFormula(fn.f); setPgResult(null); }}>
                               {fn.n}
@@ -5011,10 +5009,10 @@ function App() {
                   <div key={cat} className="cat-card" onClick={() => setExpandedCategory(cat)} style={{ cursor: "pointer" }}>
                     <div style={{ fontSize: 20, marginBottom: 6 }}>{cat.split(" ")[0]}</div>
                     <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, marginBottom: 4 }}>{cat.slice(3)}</div>
-                    <div style={{ fontSize: 11, color: "#475569" }}>{fmls.length} formulas</div>
+                    <div style={{ fontSize: 11, color: "#64748b" }}>{fmls.length} formulas</div>
                     <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 4 }}>
                       {fmls.slice(0, 4).map(f => <span key={f} style={{ fontSize: 10, color: "#6366f1", background: "#1e2040", padding: "2px 6px", borderRadius: 4 }}>{f}</span>)}
-                      {fmls.length > 4 && <span style={{ fontSize: 10, color: "#475569" }}>+{fmls.length - 4}</span>}
+                      {fmls.length > 4 && <span style={{ fontSize: 10, color: "#64748b" }}>+{fmls.length - 4}</span>}
                     </div>
                   </div>
                 ))}
