@@ -4015,7 +4015,7 @@ function App() {
                         ✓ Key saved in browser storage — ready to use
                       </div>
                     )}
-                    <div style={{ marginTop: 10, fontSize: 11, color: "#334155", lineHeight: 1.6 }}>
+                    <div style={{ marginTop: 10, fontSize: 11, color: "#64748b", lineHeight: 1.6 }}>
                       🔒 Your key is stored in localStorage on your device only. It is sent directly to api.anthropic.com and nowhere else.
                     </div>
                   </div>
@@ -4593,7 +4593,7 @@ function App() {
                 <div style={{ width: 32, height: 32, background: "linear-gradient(135deg,#10b981,#059669)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17 }}>🧪</div>
                 <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 22 }}>Formula Playground</div>
               </div>
-              <div style={{ color: "#64748b", fontSize: 13, marginBottom: 20, lineHeight: 1.6 }}>
+              <div style={{ color: "#94a3b8", fontSize: 13, marginBottom: 20, lineHeight: 1.6 }}>
                 Practice on two linked datasets. Use formulas to explore each table — or cross-reference between them using VLOOKUP, XLOOKUP and more.
               </div>
 
@@ -4616,8 +4616,8 @@ function App() {
                     <div key={key} style={{ flex: "1 1 400px", minWidth: 300 }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: isActive ? "#a5b4fc" : "#64748b" }}>{sc.label}</div>
-                          <div style={{ fontSize: 11, color: "#475569" }}>{sc.description}</div>
+                          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: isActive ? "#a5b4fc" : "#94a3b8" }}>{sc.label}</div>
+                          <div style={{ fontSize: 11, color: "#64748b" }}>{sc.description}</div>
                         </div>
                         {pgMode === "free" && (
                           <button onClick={() => setActiveTable(key)}
@@ -4671,7 +4671,7 @@ function App() {
                 <div>
                   <div className="card" style={{ padding: 16, marginBottom: 16 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                      <div style={{ fontSize: 12, color: "#64748b" }}>Running formula against:</div>
+                      <div style={{ fontSize: 12, color: "#94a3b8" }}>Running formula against:</div>
                       <div style={{ display: "flex", gap: 6 }}>
                         {Object.entries(PLAYGROUND_SCENARIOS).map(([key, sc]) => (
                           <button key={key} onClick={() => setActiveTable(key)}
@@ -4680,7 +4680,7 @@ function App() {
                           </button>
                         ))}
                       </div>
-                      <div style={{ fontSize: 11, color: "#334155", marginLeft: 4 }}>
+                      <div style={{ fontSize: 11, color: "#94a3b8", marginLeft: 4 }}>
                         Cols: {PLAYGROUND_SCENARIOS[activeTable].cols.map((c,i) => String.fromCharCode(65+i)+"="+c).join("  ")}
                       </div>
                     </div>
@@ -4700,7 +4700,7 @@ function App() {
                       {pgResult.error ? (
                         <div>
                           <div style={{ fontWeight: 600, marginBottom: 6, color: "#f87171" }}>⚠ {pgResult.error}</div>
-                          <div style={{ fontSize: 11, color: "#64748b" }}>
+                          <div style={{ fontSize: 11, color: "#94a3b8" }}>
                             {pgResult.error.includes("not supported") ? "💡 This function isn't available in the playground engine yet." :
                              pgResult.error.includes("start with =") ? "💡 Formulas must start with = e.g. =SUM(D2:D11)" :
                              "💡 Check your syntax — ranges like D2:D11, strings in quotes."}
@@ -4789,7 +4789,7 @@ function App() {
                   </div>
                   {pgActiveChallenge === null ? (
                     <div>
-                      <div style={{ color: "#64748b", fontSize: 13, marginBottom: 16 }}>
+                      <div style={{ color: "#94a3b8", fontSize: 13, marginBottom: 16 }}>
                         Pick a challenge below. Write the formula that produces the correct answer.
                         {Object.keys(pgCompleted).length > 0 && <span style={{ color: "#4ade80", marginLeft: 8 }}>✓ {Object.keys(pgCompleted).length} completed</span>}
                       </div>
@@ -4806,7 +4806,7 @@ function App() {
                         <div style={{ marginTop: 20, background: "linear-gradient(135deg,#0a2a0f,#0d1a20)", border: "1px solid #1a4a2a", borderRadius: 12, padding: 24, textAlign: "center" }}>
                           <div style={{ fontSize: 36, marginBottom: 8 }}>🏆</div>
                           <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: "#4ade80", marginBottom: 6 }}>All challenges complete!</div>
-                          <div style={{ fontSize: 13, color: "#64748b" }}>Try the other dataset or switch to Cross-Reference mode.</div>
+                          <div style={{ fontSize: 13, color: "#94a3b8" }}>Try the other dataset or switch to Cross-Reference mode.</div>
                         </div>
                       )}
                     </div>
@@ -4823,13 +4823,13 @@ function App() {
                           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
                             <div>
                               <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 17, color: "#e2e8f0", marginBottom: 4 }}>{challenge.label}</div>
-                              <div style={{ fontSize: 13, color: "#64748b" }}>{challenge.hint}</div>
+                              <div style={{ fontSize: 13, color: "#94a3b8" }}>{challenge.hint}</div>
                             </div>
                             <div style={{ background: "#0a1a0d", border: "1px solid #1a4a2a", borderRadius: 8, padding: "8px 14px", fontSize: 13, color: "#4ade80", whiteSpace: "nowrap" }}>
                               Expected: <strong>{challenge.expected}</strong>
                             </div>
                           </div>
-                          <div style={{ fontSize: 11, color: "#334155", marginBottom: 8 }}>
+                          <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 8 }}>
                             Columns: {sc.cols.map((c,i) => String.fromCharCode(65+i)+"="+c).join("  ")} · rows 2–{sc.rows.length+1}
                           </div>
                           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -4849,7 +4849,7 @@ function App() {
                             {pgResult.error ? (
                               <div className="pg-result-box pg-result-err">
                                 <div style={{ fontWeight: 600, marginBottom: 6, color: "#f87171" }}>⚠ {pgResult.error}</div>
-                                <div style={{ fontSize: 11, color: "#64748b" }}>{pgResult.error.includes("not supported") ? "💡 This function isn't in the playground engine yet." : "💡 Check your formula syntax."}</div>
+                                <div style={{ fontSize: 11, color: "#94a3b8" }}>{pgResult.error.includes("not supported") ? "💡 This function isn't in the playground engine yet." : pgResult.error.includes("start with =") ? "💡 Formulas must begin with = e.g. =SUM(C2:C11)" : "💡 Check your syntax — ranges like C2:C11, strings in quotes."}</div>
                               </div>
                             ) : isCorrect ? (
                               <div style={{ background: "linear-gradient(135deg,#0a2a0f,#0d2010)", border: "2px solid #166534", borderRadius: 12, padding: 24, textAlign: "center" }}>
@@ -4870,7 +4870,7 @@ function App() {
                           </div>
                         )}
                         <details style={{ marginTop: 4 }}>
-                          <summary style={{ fontSize: 12, color: "#475569", cursor: "pointer", userSelect: "none" }}>💡 Show answer</summary>
+                          <summary style={{ fontSize: 12, color: "#94a3b8", cursor: "pointer", userSelect: "none" }}>💡 Show answer</summary>
                           <div style={{ marginTop: 10, background: "#0a0c12", border: "1px solid #1e2535", borderRadius: 8, padding: 14 }}>
                             <div style={{ fontSize: 13, color: "#4ade80", fontFamily: "'DM Mono', monospace", marginBottom: 8 }}>{challenge.target}</div>
                             <button style={{ fontSize: 11, background: "#1e2535", border: "1px solid #2d3748", borderRadius: 6, color: "#94a3b8", padding: "5px 12px", cursor: "pointer", fontFamily: "inherit" }}
