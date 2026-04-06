@@ -3777,7 +3777,7 @@ function App() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             contents: [{ parts: [{ text: systemPrompt + "\n\nUser request: " + aiQuery }] }],
-            generationConfig: { temperature: 0.3, maxOutputTokens: 1000 }
+            generationConfig: { temperature: 0.3, maxOutputTokens: 4096 }
           })
         });
       } catch(fetchErr) {
@@ -3824,7 +3824,10 @@ function App() {
       let parsed;
       try {
         const clean = text.replace(/```json|```/g, "").trim();
-        parsed = JSON.parse(clean);
+        const jsonStart = clean.indexOf("{");
+        const jsonEnd = clean.lastIndexOf("}");
+        if (jsonStart === -1 || jsonEnd === -1) throw new Error("No JSON object found");
+        parsed = JSON.parse(clean.slice(jsonStart, jsonEnd + 1));
       } catch(parseErr) {
         setAiError("❌ Gemini responded but not in the expected JSON format. Try again.\nRaw response: " + text.slice(0, 300));
         return;
