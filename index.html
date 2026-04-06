@@ -3769,7 +3769,7 @@ function App() {
     const systemPrompt = "You are an expert Excel and Google Sheets formula advisor. Given a user's description of what they want to achieve, recommend the best formulas from this list:\n\n" + formulaList + "\n\nRespond ONLY with valid JSON in this exact format, no markdown, no explanation outside the JSON:\n{\n  \"recommendations\": [\n    {\n      \"formula\": \"FORMULA_NAME\",\n      \"confidence\": 95,\n      \"reason\": \"One sentence explaining why this formula fits\",\n      \"example\": \"A short example formula string\",\n      \"tip\": \"One practical tip for using it in this context\"\n    }\n  ],\n  \"strategy\": \"A 1-2 sentence explanation of how to approach this problem overall\"\n}\n\nReturn 2-4 recommendations, ordered by relevance. confidence is a number 1-100. Only recommend formulas from the provided list.";
 
     try {
-      const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key=" + keyToUse;
+      const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + keyToUse;
       const response = await fetch(geminiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
