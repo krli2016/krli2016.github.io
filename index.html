@@ -3766,7 +3766,7 @@ function App() {
       return name + ": " + f.tagline + " | syntax: " + f.syntax;
     }).join("\n");
 
-    const systemPrompt = "You are an expert Excel and Google Sheets formula advisor. Given a user's description of what they want to achieve, recommend the best formulas from this list:\n\n" + formulaList + "\n\nRespond ONLY with valid JSON in this exact format, no markdown, no explanation outside the JSON:\n{\n  \"recommendations\": [\n    {\n      \"formula\": \"FORMULA_NAME\",\n      \"confidence\": 95,\n      \"reason\": \"One sentence explaining why this formula fits\",\n      \"example\": \"A short example formula string\",\n      \"tip\": \"One practical tip for using it in this context\"\n    }\n  ],\n  \"strategy\": \"A 1-2 sentence explanation of how to approach this problem overall\"\n}\n\nReturn 2-4 recommendations, ordered by relevance. confidence is a number 1-100. Only recommend formulas from the provided list.";
+    const systemPrompt = "You are an Excel and Google Sheets formula expert. Recommend the best formulas from this list for the user's task:\n\n" + formulaList + "\n\nRespond ONLY with valid JSON. No markdown. No text outside the JSON. Keep all string values SHORT (under 20 words each):\n{\"recommendations\":[{\"formula\":\"NAME\",\"confidence\":95,\"reason\":\"brief reason\",\"example\":\"=FORMULA()\",\"tip\":\"brief tip\"}],\"strategy\":\"brief overview\"}\n\nReturn 2-3 recommendations max. confidence is 1-100. Only use formulas from the list above.";
 
     try {
       const geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + keyToUse;
@@ -3829,8 +3829,26 @@ function App() {
         if (jsonStart === -1 || jsonEnd === -1) throw new Error("No JSON object found");
         parsed = JSON.parse(clean.slice(jsonStart, jsonEnd + 1));
       } catch(parseErr) {
-        setAiError("❌ Gemini responded but not in the expected JSON format. Try again.\nRaw response: " + text.slice(0, 300));
-        return;
+        // Try to recover truncated JSON by finding complete recommendation objects
+        try {
+          const jsonStart = text.indexOf("{");
+          if (jsonStart !== -1) {
+            const partial = text.slice(jsonStart);
+            // Extract any complete recommendation objects
+            const recMatches = partial.match(/\{\s*"formula"\s*:\s*"[^"]+"\s*,\s*"confidence"\s*:\s*\d+\s*,\s*"reason"\s*:\s*"[^"]+"\s*,\s*"example"\s*:\s*"[^"]+"\s*,\s*"tip"\s*:\s*"[^"]+"\s*\}/g);
+            if (recMatches && recMatches.length > 0) {
+              const recs = recMatches.map(r => JSON.parse(r));
+              parsed = { recommendations: recs, strategy: "See recommendations above." };
+            } else {
+              throw new Error("No complete recommendations found");
+            }
+          } else {
+            throw new Error("No JSON found");
+          }
+        } catch(recoveryErr) {
+          setAiError("❌ Gemini responded but not in the expected JSON format. Try again.\nRaw response: " + text.slice(0, 300));
+          return;
+        }
       }
 
       if (!parsed.recommendations || !Array.isArray(parsed.recommendations)) {
